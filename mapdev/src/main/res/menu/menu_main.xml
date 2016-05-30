@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/import_raster"
+            android:icon="@drawable/ic_import_raster"
+            android:title="@string/import_raster"/>
+        <item
+            android:id="@+id/import_vector"
+            android:icon="@drawable/ic_import_vector"
+            android:title="@string/import_vector"/>
+        <item android:id="@+id/layer_manager"
+              android:icon="@drawable/ic_layer_manage"
+              android:title="@string/layer_manager"/>
+    </group>
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/gps_track_start"
+            android:icon="@drawable/ic_action_start"
+            android:title="@string/gps_track_start"/>
+        <item
+            android:id="@+id/gps_track_stop"
+            android:icon="@drawable/ic_action_stop"
+            android:title="@string/gps_track_stop"/>
+        <item android:id="@+id/gps_track_view"
+              android:icon="@drawable/ic_gps_track_start"
+              android:title="@string/gps_track_view"/>
+        <item android:id="@+id/gps_track_export"
+              android:icon="@drawable/ic_gps_track_export"
+              android:title="@string/gps_track_export"/>
+    </group>
+    <group
+        android:checkableBehavior="single">
+        <item android:id="@+id/photo_survey_export"
+              android:icon="@drawable/ic_photo_export"
+              android:title="@string/photo_survey_export"/>
+    </group>
+    <group
+        android:checkableBehavior="single">
+        <item android:id="@+id/photo_survey_import"
+              android:icon="@drawable/ic_photo_survey"
+              android:title="@string/photo_survey_load"/>
+    </group>
+    <group
+        android:checkableBehavior="single">
+        <item android:id="@+id/mapview_setting"
+              android:icon="@drawable/ic_mapview_setting"
+              android:title="@string/mapview_setting"/>
+        <item android:id="@+id/help_about"
+              android:icon="@drawable/ic_help_about"
+              android:title="关于"/>
+    </group>
+</menu>

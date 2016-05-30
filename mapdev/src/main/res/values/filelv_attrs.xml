@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FileSelectView">
+        <attr name="suffix_name" format="string"/>
+        <attr name="default_path" format="string"/>
+    </declare-styleable>
+    <!-- 自定义控件的名称 -->
+    <declare-styleable name="StrokeTextView">
+        <!-- 自定义的属性名称 和对应的单位 -->
+        <attr name="outerColor" format="color|reference" />
+        <attr name="innerColor" format="color|reference" />
+    </declare-styleable>
+</resources>

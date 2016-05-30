@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.esri.arcgis.android</groupId>
+  <artifactId>arcgis-android</artifactId>
+  <version>10.2.7</version>
+  <packaging>aar</packaging>
+  <licenses>
+    <license>
+      <name>Esri License Agreement, E204</name>
+      <url>http://www.esri.com/~/media/Files/Pdfs/legal/pdfs/mla_e204_e300/english</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+</project>
