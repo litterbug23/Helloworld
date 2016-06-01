@@ -34,6 +34,7 @@ import com.esri.android.map.event.OnPinchListener;
  * update the compass rotation angle when the pinch gesture is used on the MapView.
  * created by caizhihuang
  * date 2016.06.23
+ *
  */
 public class Compass extends View {
 
