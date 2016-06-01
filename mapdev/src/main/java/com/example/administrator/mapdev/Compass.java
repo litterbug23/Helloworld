@@ -33,6 +33,7 @@ import com.esri.android.map.event.OnPinchListener;
  * setRotationAngle method is called. If a MapView is passed to the constructor, an OnPinchListener is set in order to
  * update the compass rotation angle when the pinch gesture is used on the MapView.
  * created by caizhihuang
+ * date 2016.06.23
  */
 public class Compass extends View {
 
