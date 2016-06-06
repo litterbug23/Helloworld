@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import org.gdal.gdal.gdal;
 import org.gdal.ogr.DataSource;
+import org.gdal.ogr.Driver;
 import org.gdal.ogr.Feature;
 import org.gdal.ogr.FeatureDefn;
 import org.gdal.ogr.FieldDefn;
@@ -60,6 +61,7 @@ public class MainActivityFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		this.setRetainInstance(true);
 		WriteVectorFile();
+		WriteKmlPiont();
 	}
 
 	@Override
@@ -300,5 +302,135 @@ public class MainActivityFragment extends Fragment {
 		oLayer.CreateFeature(oFeaturePentagon);
 		System.out.println("\n数据集创建完成！\n");
 		oDS.SyncToDisk();
+	}
+
+	public void WriteKmlPiont()
+	{
+		File path = Environment.getExternalStorageDirectory();
+		File base = new File(path.getAbsolutePath() + "/mapdev");
+		if (!base.exists())
+			base.mkdir();
+		String strVectorFile =base.getAbsolutePath()+"/test.kml";
+		// 注册所有的驱动
+		ogr.RegisterAll();
+		// 为了支持中文路径，请添加下面这句代码
+		gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+		// 为了使属性表字段支持中文，请添加下面这句
+		gdal.SetConfigOption("SHAPE_ENCODING","");
+		//创建数据，这里以创建ESRI的shp文件为例
+		String strDriverName = "KML";
+		org.gdal.ogr.Driver oDriver =ogr.GetDriverByName(strDriverName);
+		if (oDriver == null)
+		{
+			System.out.println(strVectorFile+ " 驱动不可用！\n");
+			return;
+		}
+
+		DataSource oDS = oDriver.Open(strVectorFile);
+		if(oDS != null){
+			oDriver.DeleteDataSource(strVectorFile);
+		}
+
+		// 创建数据源
+		oDS = oDriver.CreateDataSource(strVectorFile,null);
+		if (oDS == null)
+		{
+			System.out.println("创建矢量文件【"+ strVectorFile +"】失败！\n" );
+			return;
+		}
+
+		// 创建图层，创建一个多边形图层，这里没有指定空间参考，如果需要的话，需要在这里进行指定
+		SpatialReference sr =new SpatialReference(osr.SRS_WKT_WGS84);
+		Layer oLayer =oDS.CreateLayer("TestPolygon", sr, ogr.wkbPolygon, null);
+
+		if (oLayer == null)
+		{
+			System.out.println("图层创建失败！\n");
+			return;
+		}
+		// 下面创建属性表
+		// 先创建一个叫FieldID的整型属性
+		FieldDefn oFieldID = new FieldDefn("FieldID", ogr.OFTInteger);
+		oLayer.CreateField(oFieldID, 1);
+		// 再创建一个叫FeatureName的字符型属性，字符长度为50
+		FieldDefn oFieldName = new FieldDefn("FieldName", ogr.OFTString);
+		oFieldName.SetWidth(100);
+		oLayer.CreateField(oFieldName, 1);
+		FeatureDefn oDefn =oLayer.GetLayerDefn();
+		// 创建三角形要素
+		Feature oFeatureTriangle = new Feature(oDefn);
+		oFeatureTriangle.SetField(0, 0);
+		oFeatureTriangle.SetField(1, "三角形");
+		Geometry geomTriangle = Geometry.CreateFromWkt("POLYGON ((0 0,20 0,10 15,0 0))");
+		oFeatureTriangle.SetGeometry(geomTriangle);
+		oLayer.CreateFeature(oFeatureTriangle);
+		// 创建矩形要素
+		Feature oFeatureRectangle = new Feature(oDefn);
+		oFeatureRectangle.SetField(0, 1);
+		oFeatureRectangle.SetField(1, "矩形");
+		Geometry geomRectangle =Geometry.CreateFromWkt("POLYGON ((30 0,60 0,60 30,30 30,30 0))");
+		Geometry geom= new Geometry(ogr.wkbPolygon);
+
+		oFeatureRectangle.SetGeometry(geomRectangle);
+		oLayer.CreateFeature(oFeatureRectangle);
+		// 创建五角形要素
+		Feature oFeaturePentagon = new Feature(oDefn);
+		oFeaturePentagon.SetField(0, 2);
+		oFeaturePentagon.SetField(1, "五角形");
+		Geometry geomPentagon =Geometry.CreateFromWkt("POLYGON ((70 0,85 0,90 15,80 30,65 15,70 0))");
+		oFeaturePentagon.SetGeometry(geomPentagon);
+		oLayer.CreateFeature(oFeaturePentagon);
+		System.out.println("\n数据集创建完成！\n");
+		oLayer.SyncToDisk();
+		oDS.SyncToDisk();
+
+		oDS.delete();
+//		String driverName = "GML"; //MapInfo File
+//
+//		gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+//		// 为了使属性表字段支持中文，请添加下面这句SHAPE_ENCODING
+//
+//		//UTF-8 to ISO-8859-1.
+//		gdal.SetConfigOption("SHAPE_ENCODING", "");
+//		//注册
+//		ogr.RegisterAll();
+//
+//		int driverCount = ogr.GetDriverCount();
+//		for(int i=0;i<driverCount;i++){
+//			Driver driversName = ogr.GetDriver(i);
+//			System.out.print(driversName.GetName());
+//		}
+//		Driver ogrDriver = ogr.GetDriverByName(driverName);
+//
+//		DataSource ogrDS = ogrDriver.CreateDataSource("/sdcard/mapdev/test.gml", null);
+//
+//		// string fileName = DateTime.Now.ToString("yyyyMMddHHmmss");
+//
+//		Layer ogrlayer = ogrDS.CreateLayer("kml", null, ogr.wkbPoint, null);
+//
+//		FieldDefn fdefn = new FieldDefn("Name", ogr.OFTString);
+//		fdefn.SetWidth(32);
+//		ogrlayer.CreateField(fdefn,1);
+//
+//		fdefn = new FieldDefn("IntField", ogr.OFTInteger);
+//		ogrlayer.CreateField(fdefn, 1);
+//
+//		fdefn = new FieldDefn("DbleField", ogr.OFTReal);
+//		ogrlayer.CreateField(fdefn, 1);
+//
+//		fdefn = new FieldDefn("DateField", ogr.OFTDate);
+//		ogrlayer.CreateField(fdefn, 1);
+//
+//		Feature feature = new Feature(ogrlayer.GetLayerDefn());
+//		feature.SetField("Name", "新增kml");
+//		feature.SetField("IntField", (int)123);
+//		feature.SetField("DbleField", (double)12.345);
+//		feature.SetField("DateField", 2007, 3, 15, 18, 24, 30, 0);
+//
+//
+//		Geometry geom = Geometry.CreateFromWkt("POINT(115.91466833333 28.668223333)");
+//		feature.SetGeometry(geom);
+//		ogrlayer.CreateFeature(feature);
+//		ogrDS.SyncToDisk();
 	}
 }
