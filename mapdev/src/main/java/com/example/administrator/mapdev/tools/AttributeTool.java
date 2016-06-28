@@ -135,6 +135,7 @@ public class AttributeTool extends BaseTool {
                         }
                         featureSet.setGraphics(graphics);
                         listAdapter.setFeatureSet(featureSet);
+
                         PopupDialogEx popupDialog = new PopupDialogEx(mapView.getContext(),
                                 listAdapter);
                         popupDialog.show();
@@ -166,7 +167,7 @@ public class AttributeTool extends BaseTool {
         private AttributeListAdapter listAdapter;
 
         public PopupDialogEx(Context context, AttributeListAdapter listAdapter) {
-            super(context, R.style.AppTheme);
+            super(context, R.style.AppDialogTheme);
             this.listAdapter = listAdapter;
         }
 

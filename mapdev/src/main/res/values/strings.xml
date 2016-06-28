@@ -31,6 +31,8 @@
     <string name="photo_survey_export">采集数据导出</string>
 
     <string name="mapview_setting">地图设置</string>
+    <string name="btn_edit_apply">应用</string>
+    <string name="btn_edit_discard">取消</string>
 
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>

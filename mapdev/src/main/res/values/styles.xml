@@ -24,6 +24,9 @@
         <item name="android:selectableItemBackground">@drawable/selectable_item_background</item>
     </style>
 
+    <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+    </style>
+
     <style name="AppBaseToolBarMenuDropDownStyle" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">
         <item name="overlapAnchor">false</item>
         <item name="android:popupBackground">?attr/colorPrimary</item>
