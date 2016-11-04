@@ -19,7 +19,6 @@ import com.esri.core.symbol.MarkerSymbol;
 import com.esri.core.symbol.SimpleFillSymbol;
 import com.esri.core.symbol.SimpleLineSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
-import com.example.administrator.mapdev.DrawEvent;
 import com.example.administrator.mapdev.LayersManager;
 
 /**
@@ -278,10 +277,10 @@ public class DrawTool extends BaseTool {
 
         public boolean onDoubleTap(MotionEvent event) {
             Point point = mapView.toMapPoint(event.getX(), event.getY());
-            if (active && (toolType==POINT || toolType == POLYGON || toolType == POLYLINE)) {
+            if (active && (toolType == POINT || toolType == POLYGON || toolType == POLYLINE)) {
                 switch (toolType) {
                     case DrawTool.POINT:
-                        DrawTool.this.point=point;
+                        DrawTool.this.point = point;
                         break;
                     case DrawTool.POLYGON:
                         polygon.lineTo(point);
