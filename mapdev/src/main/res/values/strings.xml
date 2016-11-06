@@ -10,6 +10,9 @@
     <string name="gps_track_export">GPS轨迹导出</string>
     <string name="gps_track_manager">GPS轨迹管理</string>
 
+    <string name="create_map_scene">新建地图</string>
+    <string name="open_recent_map">打开最近地图</string>
+
     <string name="file_browser">文件浏览</string>
     <string name="import_raster">加载栅格</string>
     <string name="import_vector">加载矢量</string>

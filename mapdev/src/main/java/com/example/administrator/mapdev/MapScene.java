@@ -8,9 +8,10 @@ import java.util.List;
 /**
  * Created by caizhihuan on 2016/11/4.
  * 地图工程管理类
- * 每次出去作外业数据采集，可能都会重新再建外业数据的类型
+ * 每次出去作外业数据采集，可能都会重新再型建外业数据的类
  */
 public class MapScene extends DataSupport {
+
     public String getSceneName() {
         return sceneName;
     }
@@ -43,17 +44,40 @@ public class MapScene extends DataSupport {
         this.createDate = createDate;
     }
 
-    public List<MapLayer> getMapLayers() {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getLastOpenDate() {
+        return lastOpenDate;
+    }
+
+    public void setLastOpenDate(Date lastOpenDate) {
+        this.lastOpenDate = lastOpenDate;
+    }
+
+    public List<LayerItemData> getMapLayers() {
         return mapLayers;
     }
 
-    public void setMapLayers(List<MapLayer> mapLayers) {
+    public void setMapLayers(List<LayerItemData> mapLayers) {
         this.mapLayers = mapLayers;
+    }
+
+    @Override
+    public long getBaseObjId() {
+        return super.getBaseObjId();
     }
 
     private String sceneName;
     private String userName;
+    private String description;
     private String wktExt;
     private Date createDate;
-    private List<MapLayer> mapLayers;
+    private Date lastOpenDate;
+    private List<LayerItemData> mapLayers;
 }

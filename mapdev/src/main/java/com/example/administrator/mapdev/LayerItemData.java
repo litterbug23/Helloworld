@@ -32,7 +32,8 @@ public class LayerItemData extends DataSupport {
 	public static int POLYLINE = 2;
 	public static int POLYGON = 3;
 	public static int RASTER = 4;
-	public static int GRAPHIC = 5;
+
+
 	public static int FEATURE_LAYER = 0;
 	public static int GRAPHIC_LAYER = 1;
 	public static int RASTER_LAYER = 2;
@@ -46,19 +47,23 @@ public class LayerItemData extends DataSupport {
 	public static String KML_LAYER_TYPE = "KmlLayer";
 	public static String WEB_LAYER_TYPE = "WebTileLayer";
 
-	private static String[] layerTypeStrings = {FEATURE_LAYER_TYPE, GRAPHIC_LAYER_TYPE,
+	private static String[] layerTypeStrings = {
+			FEATURE_LAYER_TYPE,
+			GRAPHIC_LAYER_TYPE,
 			RASTER_LAYER_TYPE,
 			KML_LAYER_TYPE,
 			WEB_LAYER_TYPE};
-	//图层类型
-	private int layerType;
-	//几何数据类型
-	private int geometryType;
-	//数据类型
-	private String dataSource;
-	//图层在地图中的叠加次序
-	private int orderId;
+
+	private int layerType; ///图层类型
+
+	private int geometryType; //几何数据类型
+
+	private String dataSource; //数据类型
+
+	private int orderId; 	//图层在地图中的叠加次序
+
 	private boolean visible=true;
+
 	protected Layer layer;
 
 	public Layer getLayer() { return layer; }
@@ -109,8 +114,6 @@ public class LayerItemData extends DataSupport {
 			return "";
 	}
 
-	public boolean isVisible() {return visible;}
-
 	public boolean getVisible() {
 		return visible;
 	}
@@ -119,22 +122,4 @@ public class LayerItemData extends DataSupport {
 		this.visible = visible;
 	}
 
-//	int src;
-//	String coin;
-//
-//	public int getSrc() {
-//		return src;
-//	}
-//
-//	public void setSrc(int src) {
-//		this.src = src;
-//	}
-//
-//	public String getCoin() {
-//		return coin;
-//	}
-//
-//	public void setCoin(String coin) {
-//		this.coin = coin;
-//	}
 }

@@ -36,5 +36,6 @@
         <mapping class="com.example.administrator.mapdev.PhotoSurvey"></mapping>
         <mapping class="com.example.administrator.mapdev.GpsLocation"></mapping>
         <mapping class="com.example.administrator.mapdev.SurveyData"></mapping>
+        <mapping class="com.example.administrator.mapdev.MapScene"></mapping>
     </list>
 </litepal>

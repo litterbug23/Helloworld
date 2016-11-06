@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/create_map_scene"
+            android:icon="@drawable/ic_import_raster"
+            android:title="@string/create_map_scene"/>
+        <item
+            android:id="@+id/open_recent_map"
+            android:icon="@drawable/ic_import_vector"
+            android:title="@string/open_recent_map"/>
+    </group>
     <group
         android:checkableBehavior="single">
         <item
