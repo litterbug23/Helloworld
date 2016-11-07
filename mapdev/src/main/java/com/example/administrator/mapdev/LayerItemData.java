@@ -54,6 +54,8 @@ public class LayerItemData extends DataSupport {
 			KML_LAYER_TYPE,
 			WEB_LAYER_TYPE};
 
+	private int id;
+
 	private int layerType; ///图层类型
 
 	private int geometryType; //几何数据类型
@@ -69,6 +71,14 @@ public class LayerItemData extends DataSupport {
 	public Layer getLayer() { return layer; }
 
 	public void setLayer(Layer layer) { this.layer=layer;}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public int getLayerType() {
 		return layerType;

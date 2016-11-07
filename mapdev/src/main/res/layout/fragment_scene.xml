@@ -12,7 +12,7 @@
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/layer_toolbar"
+        android:id="@+id/scene_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -62,14 +62,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="确定"
-        android:id="@+id/button"
+        android:id="@+id/ok"
         android:layout_gravity="center_horizontal" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="取消"
-        android:id="@+id/button2"
+        android:id="@+id/cancel"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

@@ -68,11 +68,21 @@ public class MapScene extends DataSupport {
         this.mapLayers = mapLayers;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public long getBaseObjId() {
         return super.getBaseObjId();
     }
 
+
+    private int id;
     private String sceneName;
     private String userName;
     private String description;

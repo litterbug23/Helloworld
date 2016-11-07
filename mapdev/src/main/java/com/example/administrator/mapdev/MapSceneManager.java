@@ -9,13 +9,21 @@ import java.util.List;
  * Created by Administrator on 2016/11/6.
  */
 public class MapSceneManager {
+
+
     private MapScene currentScene;
 
     public MapSceneManager() {
 
     }
 
+    public MapScene getCurrentScene() {
+        return currentScene;
+    }
 
+    public void setCurrentScene(MapScene currentScene) {
+        this.currentScene = currentScene;
+    }
 
     /**
      *打开场景
@@ -23,11 +31,10 @@ public class MapSceneManager {
      * @return
      */
     public MapScene loadMapScene(String sceneName){
-        List<MapScene> mapScenes = DataSupport.where("sceneName = ?",sceneName).find(MapScene.class);
+        List<MapScene> mapScenes = DataSupport.where("sceneName = ?", sceneName).find(MapScene.class);
         if(mapScenes == null || mapScenes.size()<1 )
             return null;
         currentScene=mapScenes.get(0);
-
         return currentScene;
     }
 
@@ -43,12 +50,6 @@ public class MapSceneManager {
         }
         return mapSceneNames;
     }
-
-    public List<LayerItemData> loadRasterLayers()
-    {
-        currentScene.getMapLayers();
-    }
-
 
 
 }

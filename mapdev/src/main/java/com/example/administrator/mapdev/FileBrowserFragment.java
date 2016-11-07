@@ -82,7 +82,7 @@ public class FileBrowserFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_file_browser, container, false);
 
-		final Toolbar toolbar = (Toolbar) view.findViewById(R.id.filetoolbar);
+		final Toolbar toolbar = (Toolbar) view.findViewById(R.id.file_toolbar);
 		toolbar.setNavigationIcon(R.drawable.ic_action_back);
 		toolbar.setTitle(mInitialDir);
 		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -124,10 +124,10 @@ public class FileBrowserFragment extends Fragment {
 			@Override
 			public void onSelectFile(String path, String filename) {
 				toolbar.setTitle(path + filename);
-				Bundle argumens = new Bundle();
-				argumens.putString("path", path);
-				argumens.putString("file", filename);
-				onButtonPressed(getId(), ACTION_FILE, mDataType, argumens);
+				Bundle arguments = new Bundle();
+				arguments.putString("path", path);
+				arguments.putString("file", filename);
+				onButtonPressed(getId(), ACTION_FILE, mDataType, arguments);
 			}
 		});
 		return view;
