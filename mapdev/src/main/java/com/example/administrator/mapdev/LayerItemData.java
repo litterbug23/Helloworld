@@ -33,11 +33,10 @@ public class LayerItemData extends DataSupport {
 	public static int POLYGON = 3;
 	public static int RASTER = 4;
 
-
-	public static int FEATURE_LAYER = 0;
-	public static int GRAPHIC_LAYER = 1;
-	public static int RASTER_LAYER = 2;
-	public static int KML_LAYER = 3;
+	public static int GRAPHIC_LAYER = 0;
+	public static int FEATURE_LAYER = 1;
+	public static int KML_LAYER = 2;
+	public static int RASTER_LAYER = 3;
 	public static int WEB_LAYER = 4;
 	public static int MAX_LAYER_TYPE = WEB_LAYER;
 
@@ -48,10 +47,10 @@ public class LayerItemData extends DataSupport {
 	public static String WEB_LAYER_TYPE = "WebTileLayer";
 
 	private static String[] layerTypeStrings = {
-			FEATURE_LAYER_TYPE,
 			GRAPHIC_LAYER_TYPE,
-			RASTER_LAYER_TYPE,
+			FEATURE_LAYER_TYPE,
 			KML_LAYER_TYPE,
+			RASTER_LAYER_TYPE,
 			WEB_LAYER_TYPE};
 
 	private int id;
@@ -66,6 +65,8 @@ public class LayerItemData extends DataSupport {
 
 	private boolean visible=true;
 
+	private MapScene mapScene;
+
 	protected Layer layer;
 
 	public Layer getLayer() { return layer; }
@@ -78,6 +79,14 @@ public class LayerItemData extends DataSupport {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public MapScene getMapScene() {
+		return mapScene;
+	}
+
+	public void setMapScene(MapScene mapScene) {
+		this.mapScene = mapScene;
 	}
 
 	public int getLayerType() {
@@ -132,4 +141,5 @@ public class LayerItemData extends DataSupport {
 		this.visible = visible;
 	}
 
+	public boolean isVisible() { return visible;}
 }

@@ -2,6 +2,7 @@ package com.example.administrator.mapdev;
 
 import android.content.res.Configuration;
 import android.os.Environment;
+import android.widget.Toast;
 
 import org.litepal.LitePalApplication;
 
@@ -19,9 +20,22 @@ public class MapApplication extends LitePalApplication {
 	private String outputPath ="/mapdev/output";
 	private String photoPath = "/mapdev/output/photo";
 	private String smallPhotoPath="/mapdev/output/smallPhoto";
+	private LayersManager layersManager;
 
 	static public MapApplication instance(){
 		return (MapApplication)getContext();
+	}
+
+	static public void showMessage(String message) {
+		Toast.makeText(MapApplication.getContext(), message, Toast.LENGTH_LONG).show();
+	}
+
+	public LayersManager getLayersManager() {
+		return layersManager;
+	}
+
+	public void setLayersManager(LayersManager layersManager) {
+		this.layersManager = layersManager;
 	}
 
 	public String getBasePath() {

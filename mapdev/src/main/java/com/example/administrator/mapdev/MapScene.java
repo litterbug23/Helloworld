@@ -1,7 +1,9 @@
 package com.example.administrator.mapdev;
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +13,16 @@ import java.util.List;
  * 每次出去作外业数据采集，可能都会重新再型建外业数据的类
  */
 public class MapScene extends DataSupport {
+
+    private int id;
+    @Column(unique = true)
+    private String sceneName;
+    private String userName;
+    private String description;
+    private String wktExt;
+    private Date createDate;
+    private Date lastOpenDate;
+    private List<LayerItemData> mapLayers = new ArrayList<>();
 
     public String getSceneName() {
         return sceneName;
@@ -76,18 +88,12 @@ public class MapScene extends DataSupport {
         this.id = id;
     }
 
-    @Override
-    public long getBaseObjId() {
-        return super.getBaseObjId();
+    /**
+     * 按照orderID进行排序的列表
+     * @return
+     */
+    public List<LayerItemData> getOrderMapLayers() {
+       return  DataSupport.where( "MapScene_id = ?",
+                String.valueOf(getId()) ).order("layerType asc,orderId asc").find(LayerItemData.class);
     }
-
-
-    private int id;
-    private String sceneName;
-    private String userName;
-    private String description;
-    private String wktExt;
-    private Date createDate;
-    private Date lastOpenDate;
-    private List<LayerItemData> mapLayers;
 }

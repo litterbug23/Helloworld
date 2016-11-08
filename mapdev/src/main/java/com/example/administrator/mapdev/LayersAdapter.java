@@ -1,19 +1,15 @@
 package com.example.administrator.mapdev;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -71,7 +67,7 @@ public class LayersAdapter extends BaseAdapter {
 		if (convertView == null) {
 			viewHolder = new ViewHolder(item);
 			convertView = LayoutInflater.from(context).inflate(R.layout.item_layerlist, null);
-			viewHolder.setCheckBox((CheckBox) convertView.findViewById(R.id.checkBox));
+			viewHolder.setCheckBox((CheckBox) convertView.findViewById(R.id.checkBox2));
 			viewHolder.setDataSource( (TextView) convertView.findViewById(R.id.data_source));
 			viewHolder.setLayerType( (TextView) convertView.findViewById(R.id.layer_type));
 			viewHolder.setGeometryType( (ImageView) convertView.findViewById(R.id.geometry_type));

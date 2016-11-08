@@ -326,7 +326,7 @@ public class MapFragment extends Fragment {
 //		mMapView.addLayer(graphLayer);
         mLayersManager = new LayersManager(mMapView);
         mLayersManager.setScreenWidthMeter(mScreenWidthMeter);
-        mLayersManager.loadMapLayers();
+        //mLayersManager.loadMapLayers();
         mLayersManager.setOnStatusChangedListener(onStatusChangedListener);
         //MapView的缺省地图范围和坐标参考系是根据BaseLayer来决定
 //		mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {

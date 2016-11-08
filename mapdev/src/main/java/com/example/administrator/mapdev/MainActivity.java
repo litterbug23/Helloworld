@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements
 		mMapView = (MapView) findViewById(R.id.map);
 		mMapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
 		mLayerManager = mMapFragment.getLayersManager();
+		mApplication.setLayersManager(mLayerManager);
 		getDefaultStartDirectory();
 		initToolbar();
 		initDrawerLayout();
@@ -159,14 +160,27 @@ public class MainActivity extends AppCompatActivity implements
 				mDrawerLayout.closeDrawers();
 				int menuId = menuItem.getItemId();
 				switch (menuId) {
+					case R.id.create_map_scene:
+						openCreateSceneFragment();
+						break;
+					case R.id.open_recent_map:
+						openRecentSceneFragment();
+						break;
 					case R.id.import_raster:
-						openFileBrowser(RASTER_DATA_TYPE);
+						if( mLayerManager.hasMapScene() )
+							openFileBrowser(RASTER_DATA_TYPE);
+						else
+							MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
 						break;
 					case R.id.import_vector:
-						openFileBrowser(SHP_DATA_TYPE);
+						if( mLayerManager.hasMapScene() )
+							openFileBrowser(SHP_DATA_TYPE);
+						else
+							MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
 						break;
 					case R.id.layer_manager:
-						openLayersFragment();
+						//openLayersFragment();
+						openLayers2Fragment();
 						break;
 					case R.id.photo_survey_import:
 						if(mMapFragment!=null){
@@ -237,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements
 //		mMapView.addLayer(graphLayer);
 		mLayerManager = new LayersManager(mMapView);
 		mLayerManager.setScreenWidthMeter(mScreenWidthMeter);
-		mLayerManager.loadMapLayers();
+		//mLayerManager.loadMapLayers();
 		//MapView的缺省地图范围和坐标参考系是根据BaseLayer来决定
 //		mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
 //			@Override
@@ -345,6 +359,27 @@ public class MainActivity extends AppCompatActivity implements
 		RouteExportFragment routeExportFragment =  RouteExportFragment.newInstance(mMapFragment.getGpsRouteTracker());
 		getSupportFragmentManager().beginTransaction()
 				.add(android.R.id.content, routeExportFragment).addToBackStack(null)
+				.commit();
+	}
+
+	private void openCreateSceneFragment(){
+		SceneFragment sceneFragment= SceneFragment.newInstance();
+		getSupportFragmentManager().beginTransaction()
+				.add(android.R.id.content,sceneFragment).addToBackStack(null)
+				.commit();
+	}
+
+	private void openRecentSceneFragment(){
+		RecentSceneFragment recentSceneFragment = new RecentSceneFragment();
+		getSupportFragmentManager().beginTransaction()
+				.add(android.R.id.content,recentSceneFragment).addToBackStack(null)
+				.commit();
+	}
+
+	private void openLayers2Fragment() {
+		Layers2Fragment layers2Fragment = Layers2Fragment.newInstance(this.mLayerManager);
+		getSupportFragmentManager().beginTransaction()
+				.add(android.R.id.content,layers2Fragment).addToBackStack(null)
 				.commit();
 	}
 

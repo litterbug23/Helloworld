@@ -1,10 +1,8 @@
 package com.example.administrator.mapdev;
 
 
-import android.app.Application;
-import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -24,8 +22,16 @@ import java.util.Date;
  */
 public class SceneFragment extends Fragment {
 
+    MapSceneManager mapSceneManager;
+
     public SceneFragment() {
         // Required empty public constructor
+        mapSceneManager = MapApplication.instance().getLayersManager();
+    }
+
+    public static SceneFragment newInstance() {
+        SceneFragment fragment = new SceneFragment();
+        return fragment;
     }
 
     @Override
@@ -35,20 +41,18 @@ public class SceneFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_scene, container, false);
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.scene_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle args = new Bundle();
-                onButtonPressed(args);
+                onButtonPressed();
             }
         });
-
         Button okButton = (Button)view.findViewById(R.id.ok);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveMapScene();
+                onButtonPressed();
             }
         });
 
@@ -56,15 +60,14 @@ public class SceneFragment extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle args = new Bundle();
-                onButtonPressed(args);
+                onButtonPressed();
             }
         });
         return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed( @Nullable Bundle args) {
+    public void onButtonPressed() {
         getFragmentManager().popBackStack();
     }
 
@@ -74,32 +77,30 @@ public class SceneFragment extends Fragment {
     private void saveMapScene(){
         View view = getView();
         EditText mapNameET = (EditText)view.findViewById(R.id.mapName);
-        String mapName=mapNameET.getText().toString();
-        if( mapName.length() <1 ) {
+        String sceneName=mapNameET.getText().toString();
+        if( sceneName.length() <1 ) {
             Toast.makeText(MapApplication.getContext(), "地图名称不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        int count = DataSupport.select("mapName").where("mapName = ?", mapName ).count(MapScene.class);
+        int count = DataSupport.select("sceneName").where("sceneName = ?", sceneName ).count(MapScene.class);
         if(count>0)
         {
             Toast.makeText(MapApplication.getContext(), "地图已经存在", Toast.LENGTH_SHORT).show();
             return;
         }
-
         EditText mapUserET = (EditText)view.findViewById(R.id.mapUser);
         String mapUser = mapUserET.getText().toString();
         EditText mapDescriptionET = (EditText)view.findViewById(R.id.mapDescription);
         String mapDescription = mapDescriptionET.getText().toString();
         Date date=  new Date();
-
         MapScene mapScene = new MapScene();
-        mapScene.setSceneName(mapName);
+        mapScene.setSceneName(sceneName);
         mapScene.setUserName(mapUser);
         mapScene.setDescription(mapDescription);
         mapScene.setLastOpenDate(date);
         mapScene.setCreateDate(date);
-
-        mapScene.save();
+        if( mapScene.save() )
+            mapSceneManager.setCurrentScene(mapScene);
     }
 
 }

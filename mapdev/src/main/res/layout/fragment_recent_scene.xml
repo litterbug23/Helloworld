@@ -12,7 +12,7 @@ tools:context="com.example.administrator.mapdev.RecentSceneFragment"
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layer_toolbar"
+    android:id="@+id/recent_scene_toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
@@ -24,7 +24,7 @@ tools:context="com.example.administrator.mapdev.RecentSceneFragment"
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listView" />
+        android:id="@+id/recent_scene_listView" />
 
 
 </LinearLayout>

@@ -48,8 +48,9 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/3/15.
  * 图层管理类
+ * 图层分为 GraphicLayer, FeatureLayer , RasterLayer 几个大类
  */
-public class LayersManager {
+public class LayersManager extends  MapSceneManager {
 	static final public double METER_PER_INCH = 0.0254;
 	static final public int UNKNOWN_DATA_SOURCE = -1;
 	static final public int FILE_RASTER_DATA_SOURCE = 0;
@@ -70,6 +71,9 @@ public class LayersManager {
 //	private FeatureLayer surveyLayer;   //存储实地采集照片的信息(点图层）
 //	private FeatureLayer userPolylineLayer; //存储用户绘制的点信息
 //	private FeatureLayer userPolygonLayer;  //存储用户绘制的面信息
+	private GraphicsLayer photoDrawerLayer;	//存储实地采集照片的信息(点图层）
+	private GraphicsLayer surveryPolyLineLayer; //采集线数据
+	private GraphicsLayer surveryPolygonLayer;  //采集面数据
 
 	public List<LayerItemData> getLayerItems() {
 		return layerItems;
@@ -112,16 +116,28 @@ public class LayersManager {
 		//Toast.makeText(context,dataCache,Toast.LENGTH_LONG).show();
 	}
 
+	@Override
+	public MapScene loadMapScene(String sceneName){
+		MapScene mapScene = super.loadMapScene(sceneName);
+		return mapScene;
+	}
+
+	@Override
+	void onCurrentMapSceneChanged(MapScene oldScene,MapScene currentScene){
+		reloadMapLayers();
+	}
+
 	/**
 	 * 从数据库中加载所有图层到当前地图中
 	 */
-	public void loadMapLayers() {
+	private void loadMapLayers() {
 		//按照图层的优先级次序重新排列图层并加载地图中
-		layerItems = DataSupport.order("orderId asc").find(LayerItemData.class);
+		layerItems = getCurrentScene().getOrderMapLayers();
+		//layerItems = DataSupport.order("orderId asc").find(LayerItemData.class);
 		//HashMap<String,Object> dataSources=new HashMap<>();
 		for (LayerItemData layerItem : layerItems) {
 			//Object data_source=dataSources.get(layerItem.getDataSource());
-			//if(data_source == null ){
+			//if(data_source == null ){`
 			int data_source_type = getDataSourceTypeByPath(layerItem.getDataSource());
 			Layer layer;
 			switch (data_source_type) {
@@ -143,7 +159,7 @@ public class LayersManager {
 	/**
 	 * 重新加载当前地图图层
 	 */
-	public void reloadMapLayers() {
+	private void reloadMapLayers() {
 		mapView.removeAll();
 		loadMapLayers();
 	}
@@ -338,9 +354,14 @@ public class LayersManager {
 					layerItem.setGeometryType(LayerItemData.UNKNOWN);
 					break;
 			}
+			layerItem.setMapScene(getCurrentScene());
 			layerItems.add(layerItem);
 			//保存图层信息数据到数据库
-			layerItem.save();
+			if( layerItem.save() ){
+				MapApplication.showMessage("保存图层数据成功");
+			}else{
+				MapApplication.showMessage("保存图层数据失败");
+			}
 		} else if (layer instanceof RasterLayer) {
 			LayerItemData layerItem = new LayerItemData();
 			layerItem.setLayer(layer);
@@ -348,18 +369,28 @@ public class LayersManager {
 			layerItem.setDataSource(dataSource);
 			layerItem.setLayerType(LayerItemData.RASTER_LAYER);
 			layerItem.setGeometryType(LayerItemData.RASTER);
+			layerItem.setMapScene(getCurrentScene());
 			layerItems.add(layerItem);
 			//保存图层信息数据到数据库
-			layerItem.save();
+			if( layerItem.save() ){
+				MapApplication.showMessage("保存图层数据成功");
+			}else{
+				MapApplication.showMessage("保存图层数据失败");
+			}
 		} else if (layer instanceof KmlLayer) {
 			LayerItemData layerItem = new LayerItemData();
 			layerItem.setLayer(layer);
 			layerItem.setDataSource(dataSource);
 			layerItem.setLayerType(LayerItemData.KML_LAYER);
 			layerItem.setGeometryType(LayerItemData.UNKNOWN);
+			layerItem.setMapScene(getCurrentScene());
 			layerItems.add(layerItem);
 			//保存图层信息数据到数据库
-			layerItem.save();
+			if( layerItem.save() ){
+				MapApplication.showMessage("保存图层数据成功");
+			}else{
+				MapApplication.showMessage("保存图层数据失败");
+			}
 		}
 	}
 

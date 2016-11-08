@@ -5,16 +5,27 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by Administrator on 2016/11/6.
  */
-public class MapSceneManager {
-
+public abstract class MapSceneManager {
 
     private MapScene currentScene;
+    private OnCurrentMapSceneChangedListener listener;
 
     public MapSceneManager() {
 
+    }
+
+    public void setCurrentMapSceneChangedListener(OnCurrentMapSceneChangedListener listener){
+        this.listener = listener;
+    }
+
+    public boolean hasMapScene(){
+        if(currentScene == null)
+            return false;
+        return true;
     }
 
     public MapScene getCurrentScene() {
@@ -22,7 +33,13 @@ public class MapSceneManager {
     }
 
     public void setCurrentScene(MapScene currentScene) {
-        this.currentScene = currentScene;
+        if(this.currentScene != currentScene ){
+            MapScene oldScene = this.currentScene;
+            this.currentScene = currentScene;
+            if(listener != null )
+                listener.onCurrentMapSceneChanged(oldScene,this.currentScene);
+            onCurrentMapSceneChanged(oldScene,this.currentScene);
+        }
     }
 
     /**
@@ -31,10 +48,19 @@ public class MapSceneManager {
      * @return
      */
     public MapScene loadMapScene(String sceneName){
-        List<MapScene> mapScenes = DataSupport.where("sceneName = ?", sceneName).find(MapScene.class);
+        if( hasMapScene() ){
+            if( currentScene.getSceneName() == sceneName )
+                return currentScene;
+        }
+        //后面的参数使用true，表示要进行关联查询
+        List<MapScene> mapScenes = DataSupport.where("sceneName = ?", sceneName).find(MapScene.class,true);
         if(mapScenes == null || mapScenes.size()<1 )
             return null;
-        currentScene=mapScenes.get(0);
+        MapScene oldScene = this.currentScene;
+        this.currentScene = mapScenes.get(0);
+        if(listener != null )
+            listener.onCurrentMapSceneChanged(oldScene,this.currentScene);
+        onCurrentMapSceneChanged(oldScene,this.currentScene);
         return currentScene;
     }
 
@@ -51,5 +77,18 @@ public class MapSceneManager {
         return mapSceneNames;
     }
 
+    public List<MapScene> loadMapScenes() {
+        List<MapScene> mapScenes = DataSupport.order("lastOpenDate desc").find(MapScene.class);
+        return mapScenes;
+    }
 
+    abstract void onCurrentMapSceneChanged(MapScene oldScene,MapScene currentScene);
+
+    public interface OnCurrentMapSceneChangedListener
+    {
+        void onCurrentMapSceneChanged(MapScene oldScene,MapScene currentScene);
+    }
 }
+
+
+

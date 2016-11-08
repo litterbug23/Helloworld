@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,10 +82,16 @@ public class LayersFragment extends Fragment {
 	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_layers, container, false);
-
+		final Toolbar toolbar = (Toolbar) view.findViewById(R.id.layer_toolbar);
+		toolbar.setNavigationIcon(R.drawable.ic_action_back);
+		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onButtonPressed();
+			}
+		});
 		//listData
 		listView = (DragSortListView) view.findViewById(R.id.layer_list);
-
 		//得到滑动listView并且设置监听器。
 		listView.setDropListener(onDrop);
 		listView.setRemoveListener(onRemove);
@@ -108,6 +115,10 @@ public class LayersFragment extends Fragment {
 		if (mListener != null) {
 			mListener.onFragmentInteraction(uri);
 		}
+	}
+
+	public void onButtonPressed() {
+		getFragmentManager().popBackStack();
 	}
 
 	@Override
