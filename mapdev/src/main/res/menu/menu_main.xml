@@ -26,6 +26,33 @@
     </group>
     <group
         android:checkableBehavior="single">
+        <item android:id="@+id/gps_position_survey"
+              android:icon="@drawable/ic_action_editor"
+              android:title="@string/photo_survey_export"/>
+        <item android:id="@+id/draw_position_survey"
+              android:icon="@drawable/ic_action_editor"
+              android:title="@string/photo_survey_export"/>
+    </group>
+    <group
+        android:checkableBehavior="single">
+        <item android:id="@+id/survey_attribute_edit"
+              android:icon="@drawable/ic_action_editor"
+              android:title="@string/survey_edit"/>
+        <item android:id="@+id/photo_survey"
+              android:icon="@drawable/ic_photo_export"
+              android:title="@string/photo_survey"/>
+    </group>
+    <group
+        android:checkableBehavior="single">
+        <item android:id="@+id/photo_survey_import"
+              android:icon="@drawable/ic_photo_survey"
+              android:title="@string/photo_survey_load"/>
+        <item android:id="@+id/photo_survey_export"
+              android:icon="@drawable/ic_photo_export"
+              android:title="@string/photo_survey_export"/>
+    </group>
+    <group
+        android:checkableBehavior="single">
         <item
             android:id="@+id/gps_track_start"
             android:icon="@drawable/ic_action_start"
@@ -40,18 +67,6 @@
         <item android:id="@+id/gps_track_export"
               android:icon="@drawable/ic_gps_track_export"
               android:title="@string/gps_track_export"/>
-    </group>
-    <group
-        android:checkableBehavior="single">
-        <item android:id="@+id/photo_survey_export"
-              android:icon="@drawable/ic_photo_export"
-              android:title="@string/photo_survey_export"/>
-    </group>
-    <group
-        android:checkableBehavior="single">
-        <item android:id="@+id/photo_survey_import"
-              android:icon="@drawable/ic_photo_survey"
-              android:title="@string/photo_survey_load"/>
     </group>
     <group
         android:checkableBehavior="single">

@@ -18,6 +18,14 @@
     <string name="import_vector">加载矢量</string>
     <string name="layer_manager">图层管理</string>
 
+    <string name="gps_position_survey">GPS点位采集</string>
+    <string name="draw_position_survey">手动采集</string>
+    <string name="survey_edit">采集编辑</string>
+    <string name="photo_survey">照片采集</string>
+    <string name="photo_label">照片标注</string>
+    <string name="photo_survey_load">采集数据加载</string>
+    <string name="photo_survey_export">采集数据导出</string>
+
     <string name="search_feature">查询属性</string>
     <string name="add_label">添加标注</string>
     <string name="add_polyline">绘制线</string>
@@ -27,11 +35,6 @@
 
     <string name="measure_distance">长度测量</string>
     <string name="measure_area">面积测量</string>
-
-    <string name="photo_survey">照片采集</string>
-    <string name="photo_label">照片标注</string>
-    <string name="photo_survey_load">采集数据加载</string>
-    <string name="photo_survey_export">采集数据导出</string>
 
     <string name="mapview_setting">地图设置</string>
     <string name="btn_edit_apply">应用</string>

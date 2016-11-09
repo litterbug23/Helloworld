@@ -10,6 +10,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -131,6 +132,12 @@ public class MainActivity extends AppCompatActivity implements
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
+	private void changeToolbar(){
+		final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar.getMenu().clear();
+		toolbar.inflateMenu(R.menu.menu_edit_tool);
+	}
+
 	/**
 	 * 初始化侧滑栏
 	 */
@@ -203,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements
 					case R.id.mapview_setting:
 						break;
 					case R.id.help_about:
+						showAboutDialog();
 						break;
 				}
 				return true;
@@ -377,10 +385,11 @@ public class MainActivity extends AppCompatActivity implements
 	}
 
 	private void openLayers2Fragment() {
-		Layers2Fragment layers2Fragment = Layers2Fragment.newInstance(this.mLayerManager);
-		getSupportFragmentManager().beginTransaction()
-				.add(android.R.id.content,layers2Fragment).addToBackStack(null)
-				.commit();
+//		Layers2Fragment layers2Fragment = Layers2Fragment.newInstance(this.mLayerManager);
+//		getSupportFragmentManager().beginTransaction()
+//				.add(android.R.id.content,layers2Fragment).addToBackStack(null)
+//				.commit();
+		changeToolbar();
 	}
 
 	@Override
@@ -410,5 +419,13 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public void onFragmentInteraction(Uri uri) {
+	}
+
+	public void showAboutDialog(){
+		new  AlertDialog.Builder( getApplicationContext() )
+				.setTitle("版权信息")
+				.setMessage("江西省国土资源勘测规划院")
+				.setPositiveButton("是", null)
+				.show();
 	}
 }

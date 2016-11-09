@@ -40,13 +40,13 @@ public class LayerItemData extends DataSupport {
 	public static int WEB_LAYER = 4;
 	public static int MAX_LAYER_TYPE = WEB_LAYER;
 
-	public static String FEATURE_LAYER_TYPE = "FeatureLayer";
-	public static String GRAPHIC_LAYER_TYPE = "GraphicLayer";
-	public static String RASTER_LAYER_TYPE = "RasterLayer";
-	public static String KML_LAYER_TYPE = "KmlLayer";
-	public static String WEB_LAYER_TYPE = "WebTileLayer";
+	public static String FEATURE_LAYER_TYPE = "矢量图层"; //"FeatureLayer";
+	public static String GRAPHIC_LAYER_TYPE = "采集图层";//"GraphicLayer";
+	public static String RASTER_LAYER_TYPE = "影像图层";//"RasterLayer";
+	public static String KML_LAYER_TYPE = "KML图层";//"KmlLayer";
+	public static String WEB_LAYER_TYPE = "Web图层";//"WebTileLayer";
 
-	private static String[] layerTypeStrings = {
+	public static String[] layerTypeStrings = {
 			GRAPHIC_LAYER_TYPE,
 			FEATURE_LAYER_TYPE,
 			KML_LAYER_TYPE,

@@ -55,6 +55,9 @@ public class Layers2Fragment extends Fragment {
         ExpandableListView listView = (ExpandableListView)view.findViewById(R.id.layers2_listView);
         LayersAdapter layersAdapter = new LayersAdapter(getContext(),layersManager);
         listView.setAdapter(layersAdapter);
+        for(int i = 0; i < layersAdapter.getGroupCount(); i++){
+            listView.expandGroup(i);
+        }
         return view;
     }
 
@@ -82,7 +85,31 @@ public class Layers2Fragment extends Fragment {
             groupItems=new ArrayList<>();
             List<LayerItemData> items = layersManager.getLayerItems();
             int layerType= -1;
-            GroupLayerItem groupLayerItem=null;
+            GroupLayerItem groupLayerItem;
+            //TODO:
+            groupLayerItem=new GroupLayerItem();
+            groupLayerItem.groupName= LayerItemData.layerTypeStrings[LayerItemData.GRAPHIC_LAYER];
+            LayerItemData photoItem =  new LayerItemData();
+            photoItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
+            photoItem.setGeometryType(LayerItemData.POINT);
+            photoItem.setDataSource("采集照片数据");
+            groupLayerItem.items.add(photoItem);
+            LayerItemData pointItem =  new LayerItemData();
+            pointItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
+            pointItem.setGeometryType(LayerItemData.POINT);
+            pointItem.setDataSource("采集点数据");
+            groupLayerItem.items.add(pointItem);
+            LayerItemData polylineItem =  new LayerItemData();
+            polylineItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
+            polylineItem.setGeometryType(LayerItemData.POLYGON);
+            polylineItem.setDataSource("采集线数据");
+            groupLayerItem.items.add(polylineItem);
+            LayerItemData polygonItem =  new LayerItemData();
+            polygonItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
+            polygonItem.setGeometryType(LayerItemData.POLYGON);
+            polygonItem.setDataSource("采集面数据");
+            groupLayerItem.items.add(polygonItem);
+            groupItems.add(groupLayerItem);
             for( LayerItemData item : items ){
                 if( item.getLayerType() != layerType ){
                     layerType = item.getLayerType();

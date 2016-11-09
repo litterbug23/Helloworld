@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".MainActivity">
+    <item
+        android:id="@+id/photo_survey"
+        android:orderInCategory="51"
+        android:checked="true"
+        android:icon="@drawable/ic_action_editor"
+        android:title="@string/photo_survey"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/search_feature"
+        android:orderInCategory="52"
+        android:checked="true"
+        android:icon="@drawable/ic_action_add"
+        android:title="@string/search_feature"
+        app:showAsAction="always"/>
+</menu>
