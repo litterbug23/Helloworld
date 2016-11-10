@@ -260,7 +260,7 @@ public class MapFragment extends Fragment {
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress);
         mMapView = (MapView) view.findViewById(R.id.map);
         // Set the MapView to allow the user to rotate the map when as part of a pinch gesture.
-        mMapView.setAllowRotationByPinch(true);
+        //mMapView.setAllowRotationByPinch(true);
         // Enabled wrap around map.
         mMapView.enableWrapAround(true);
         // Create the Compass custom view, and add it onto the MapView.

@@ -253,12 +253,12 @@ public class GpsRouteTracker {
 //			Graphic tmp=(Graphic)ois.readObject();
 //			Log.d("Test",tmp.toString());
 
-			SurveyDataManager surveyDataManager=new SurveyDataManager();
-			surveyDataManager.deleteAllSurveyData();
-			SurveyData surveyData = surveyDataManager.toSurveyData(graphic);
-			surveyDataManager.saveSurveyData(surveyData);
-			Graphic tmp = surveyDataManager.fromSurveyData(surveyData);
-			surveyDataManager.loadAllSurveyData();
+//			SurveyDataManager surveyDataManager=new SurveyDataManager();
+//			surveyDataManager.deleteAllSurveyData();
+//			SurveyData surveyData = surveyDataManager.toSurveyData(graphic);
+//			surveyDataManager.saveSurveyData(surveyData);
+//			Graphic tmp = surveyDataManager.fromSurveyData(surveyData);
+//			surveyDataManager.loadAllSurveyData();
 
 		} catch (Exception e) {
 			Log.d("SurveyData",e.getMessage());

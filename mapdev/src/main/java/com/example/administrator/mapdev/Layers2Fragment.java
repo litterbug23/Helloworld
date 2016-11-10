@@ -72,44 +72,42 @@ public class Layers2Fragment extends Fragment {
     }
 
     class LayersAdapter extends BaseExpandableListAdapter  {
-        private Context context;
         private LayersManager layersManager;
         private List<GroupLayerItem> groupItems; //适配器的数据源
         private LayoutInflater m_Inflater;
 
         public LayersAdapter(Context context, LayersManager layersManager) {
-            this.context = context;
             m_Inflater =  LayoutInflater.from(context);
             this.layersManager = layersManager;
             //初始化分组
             groupItems=new ArrayList<>();
-            List<LayerItemData> items = layersManager.getLayerItems();
+            List<LayerItemData> items = this.layersManager.getLayerItems();
             int layerType= -1;
-            GroupLayerItem groupLayerItem;
+            GroupLayerItem groupLayerItem=new GroupLayerItem();
             //TODO:
-            groupLayerItem=new GroupLayerItem();
-            groupLayerItem.groupName= LayerItemData.layerTypeStrings[LayerItemData.GRAPHIC_LAYER];
-            LayerItemData photoItem =  new LayerItemData();
-            photoItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
-            photoItem.setGeometryType(LayerItemData.POINT);
-            photoItem.setDataSource("采集照片数据");
-            groupLayerItem.items.add(photoItem);
-            LayerItemData pointItem =  new LayerItemData();
-            pointItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
-            pointItem.setGeometryType(LayerItemData.POINT);
-            pointItem.setDataSource("采集点数据");
-            groupLayerItem.items.add(pointItem);
-            LayerItemData polylineItem =  new LayerItemData();
-            polylineItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
-            polylineItem.setGeometryType(LayerItemData.POLYGON);
-            polylineItem.setDataSource("采集线数据");
-            groupLayerItem.items.add(polylineItem);
-            LayerItemData polygonItem =  new LayerItemData();
-            polygonItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
-            polygonItem.setGeometryType(LayerItemData.POLYGON);
-            polygonItem.setDataSource("采集面数据");
-            groupLayerItem.items.add(polygonItem);
-            groupItems.add(groupLayerItem);
+//            groupLayerItem=new GroupLayerItem();
+//            groupLayerItem.groupName= LayerItemData.layerTypeStrings[LayerItemData.GRAPHIC_LAYER];
+//            LayerItemData photoItem =  new LayerItemData();
+//            photoItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
+//            photoItem.setGeometryType(LayerItemData.POINT);
+//            photoItem.setDataSource("采集照片数据");
+//            groupLayerItem.items.add(photoItem);
+//            LayerItemData pointItem =  new LayerItemData();
+//            pointItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
+//            pointItem.setGeometryType(LayerItemData.POINT);
+//            pointItem.setDataSource("采集点数据");
+//            groupLayerItem.items.add(pointItem);
+//            LayerItemData polylineItem =  new LayerItemData();
+//            polylineItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
+//            polylineItem.setGeometryType(LayerItemData.POLYGON);
+//            polylineItem.setDataSource("采集线数据");
+//            groupLayerItem.items.add(polylineItem);
+//            LayerItemData polygonItem =  new LayerItemData();
+//            polygonItem.setLayerType(LayerItemData.GRAPHIC_LAYER);
+//            polygonItem.setGeometryType(LayerItemData.POLYGON);
+//            polygonItem.setDataSource("采集面数据");
+//            groupLayerItem.items.add(polygonItem);
+//            groupItems.add(groupLayerItem);
             for( LayerItemData item : items ){
                 if( item.getLayerType() != layerType ){
                     layerType = item.getLayerType();

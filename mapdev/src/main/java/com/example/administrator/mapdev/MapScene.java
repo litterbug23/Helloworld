@@ -13,7 +13,7 @@ import java.util.List;
  * 每次出去作外业数据采集，可能都会重新再型建外业数据的类
  */
 public class MapScene extends DataSupport {
-
+    @Column(unique = true)
     private int id;
     @Column(unique = true)
     private String sceneName;
@@ -22,7 +22,8 @@ public class MapScene extends DataSupport {
     private String wktExt;
     private Date createDate;
     private Date lastOpenDate;
-    private List<LayerItemData> mapLayers = new ArrayList<>();
+    private List<LayerItemData> mapLayers = new ArrayList<>();  //LayerItem 与 MapScene建立表关联
+    private List<SurveyData> surveyDatas= new ArrayList<>();    //SurveyData 与 MapScene建立表关联
 
     public String getSceneName() {
         return sceneName;
@@ -78,6 +79,14 @@ public class MapScene extends DataSupport {
 
     public void setMapLayers(List<LayerItemData> mapLayers) {
         this.mapLayers = mapLayers;
+    }
+
+    public List<SurveyData> getSurveyDatas() {
+        return surveyDatas;
+    }
+
+    public void setSurveyDatas(List<SurveyData> surveyDatas) {
+        this.surveyDatas = surveyDatas;
     }
 
     public int getId() {

@@ -2,8 +2,11 @@ package com.example.administrator.mapdev;
 
 import android.content.res.Configuration;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
+import org.gdal.gdal.gdal;
+import org.gdal.ogr.ogr;
 import org.litepal.LitePalApplication;
 
 import java.io.File;
@@ -14,12 +17,12 @@ import java.io.File;
 public class MapApplication extends LitePalApplication {
 	private GpsLocationService gpsLocationService;
 	private SensorService sensorService;
-	private String basePath = "/mapdev";
-	private String gpsPath="/mapdev/gps";
-	private String dataPath="/mapdev/data";
-	private String outputPath ="/mapdev/output";
-	private String photoPath = "/mapdev/output/photo";
-	private String smallPhotoPath="/mapdev/output/smallPhoto";
+	private String basePath = "/外业核查";
+	private String gpsPath="/外业核查/导出数据/GPS轨迹";
+	private String dataPath="/外业核查/原始数据";
+	private String outputPath ="/外业核查/导出数据";
+	private String photoPath = "/外业核查/导出数据/照片";
+	private String smallPhotoPath="/外业核查/导出数据/照片缩略图";
 	private LayersManager layersManager;
 
 	static public MapApplication instance(){
@@ -28,6 +31,7 @@ public class MapApplication extends LitePalApplication {
 
 	static public void showMessage(String message) {
 		Toast.makeText(MapApplication.getContext(), message, Toast.LENGTH_LONG).show();
+		//Snackbar.make(MapApplication.getContext(), message , Snackbar.LENGTH_LONG).show();
 	}
 
 	public LayersManager getLayersManager() {
@@ -80,6 +84,7 @@ public class MapApplication extends LitePalApplication {
 
 	public MapApplication() {
 		initUserDataPath();
+		initGdalOgr();
 		gpsLocationService = new GpsLocationService();
 		sensorService = new SensorService();
 	}
@@ -120,14 +125,14 @@ public class MapApplication extends LitePalApplication {
 			if (!base.exists())
 				base.mkdir();
 			basePath=path.getAbsolutePath() + basePath;
-			File gps = new File(path.getAbsolutePath() + gpsPath);
-			if (!gps.exists())
-				gps.mkdir();
-			gpsPath=path.getAbsolutePath()+gpsPath;
 			File data = new File(path.getAbsolutePath() + outputPath);
 			if (!data.exists())
 				data.mkdir();
 			outputPath =path.getAbsolutePath()+ outputPath;
+			File gps = new File(path.getAbsolutePath() + gpsPath);
+			if (!gps.exists())
+				gps.mkdir();
+			gpsPath=path.getAbsolutePath()+gpsPath;
 			File photo = new File(path.getAbsolutePath() + photoPath);
 			if (!photo.exists())
 				photo.mkdir();
@@ -137,5 +142,13 @@ public class MapApplication extends LitePalApplication {
 				smallPhoto.mkdir();
 			smallPhotoPath=path.getAbsolutePath()+smallPhotoPath;
 		}
+	}
+
+	private void initGdalOgr(){
+		ogr.RegisterAll();
+		// 为了支持中文路径，请添加下面这句代码
+		gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+		// 为了使属性表字段支持中文，请添加下面这句
+		gdal.SetConfigOption("SHAPE_ENCODING","");
 	}
 }

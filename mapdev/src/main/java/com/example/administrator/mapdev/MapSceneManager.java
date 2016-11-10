@@ -49,11 +49,11 @@ public abstract class MapSceneManager {
      */
     public MapScene loadMapScene(String sceneName){
         if( hasMapScene() ){
-            if( currentScene.getSceneName() == sceneName )
+            if( currentScene.getSceneName().equals(sceneName) )
                 return currentScene;
         }
         //后面的参数使用true，表示要进行关联查询
-        List<MapScene> mapScenes = DataSupport.where("sceneName = ?", sceneName).find(MapScene.class,true);
+        List<MapScene> mapScenes = DataSupport.where("sceneName = ?", sceneName).find(MapScene.class);
         if(mapScenes == null || mapScenes.size()<1 )
             return null;
         MapScene oldScene = this.currentScene;

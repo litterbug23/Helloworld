@@ -11,8 +11,8 @@
     android:popupTheme="@style/AppBarTheme"
     android:theme="@style/AppBarTheme"
     app:logo="@mipmap/ic_launcher"
-    app:title=""
-    app:subtitle=""
+    app:title="@string/app_name"
+    app:subtitle="@string/sub_name"
     />
 <!--
 android:layout_height="?attr/actionBarSize"

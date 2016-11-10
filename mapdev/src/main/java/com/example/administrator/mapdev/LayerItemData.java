@@ -2,6 +2,7 @@ package com.example.administrator.mapdev;
 
 import com.esri.android.map.Layer;
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
 /**
@@ -53,6 +54,7 @@ public class LayerItemData extends DataSupport {
 			RASTER_LAYER_TYPE,
 			WEB_LAYER_TYPE};
 
+	@Column(unique = true)
 	private int id;
 
 	private int layerType; ///图层类型
