@@ -125,9 +125,13 @@ public class MapApplication extends LitePalApplication {
 			if (!base.exists())
 				base.mkdir();
 			basePath=path.getAbsolutePath() + basePath;
-			File data = new File(path.getAbsolutePath() + outputPath);
+			File data = new File(path.getAbsolutePath() + dataPath);
 			if (!data.exists())
 				data.mkdir();
+			dataPath= path.getAbsolutePath()+dataPath;
+			File output = new File(path.getAbsolutePath() + outputPath);
+			if (!output.exists())
+				output.mkdir();
 			outputPath =path.getAbsolutePath()+ outputPath;
 			File gps = new File(path.getAbsolutePath() + gpsPath);
 			if (!gps.exists())

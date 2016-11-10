@@ -9,41 +9,127 @@
     <!--android:title="action_search"-->
     <!--app:actionViewClass="android.support.v7.widget.SearchView"-->
     <!--app:showAsAction="ifRoom"/>-->
-    <group android:id="@+id/photo_tool_group"
-           android:visible="true">
+    <group
+        android:id="@+id/survey_data_tool_group"
+        android:visible="false">
+        <item
+            android:id="@+id/gps_position_survey"
+            android:checked="true"
+            android:icon="@drawable/ic_gps_fixed_24dp"
+            android:orderInCategory="1"
+            android:title="@string/gps_position_survey"
+            app:showAsAction="always"/>
+        <item
+            android:id="@+id/draw_position_survey"
+            android:checked="true"
+            android:icon="@drawable/ic_center_focus_strong_24dp"
+            android:orderInCategory="2"
+            android:title="@string/draw_position_survey"
+            app:showAsAction="always"/>
+        <item
+            android:id="@+id/free_position_survey"
+            android:checked="true"
+            android:icon="@drawable/ic_gesture_24dp"
+            android:orderInCategory="3"
+            android:title="@string/free_position_survey"
+            app:showAsAction="always"/>
+        <item
+            android:id="@+id/undo_position_survey"
+            android:checked="true"
+            android:icon="@drawable/ic_undo_24dp"
+            android:orderInCategory="4"
+            android:title="@string/undo_position_survey"
+            app:showAsAction="always"/>
+        <item
+            android:id="@+id/redo_position_survey"
+            android:checked="true"
+            android:icon="@drawable/ic_redo_24dp"
+            android:orderInCategory="5"
+            android:title="@string/redo_position_survey"
+            app:showAsAction="always"/>
+        <item
+            android:id="@+id/end_position_survey"
+            android:checked="true"
+            android:icon="@drawable/ic_action_save2"
+            android:orderInCategory="6"
+            android:title="@string/end_position_survey"
+            app:showAsAction="always"/>
+    </group>
+
+    <group
+        android:id="@+id/survey_edit_tool_group"
+        android:visible="false">
+        <item
+            android:id="@+id/geometry_editor"
+            android:checked="true"
+            android:icon="@drawable/ic_border_color_24dp"
+            android:orderInCategory="7"
+            android:title="@string/geometry_editor"
+            app:showAsAction="always|withText"/>
+        <item
+            android:id="@+id/attribute_editor"
+            android:checked="true"
+            android:icon="@drawable/ic_assignment_24dp"
+            android:orderInCategory="8"
+            android:title="@string/attribute_editor"
+            app:showAsAction="always|withText"/>
+    </group>
+
+    <group
+        android:id="@+id/photo_tool_group"
+        android:visible="false">
         <item
             android:id="@+id/photo_survey"
             android:checked="true"
             android:icon="@drawable/ic_photo_survey"
-            android:orderInCategory="51"
+            android:orderInCategory="9"
             android:title="@string/photo_survey"
             app:showAsAction="always|withText"/>
         <item
             android:id="@+id/search_feature1"
             android:checked="true"
             android:icon="@drawable/ic_action_search"
-            android:orderInCategory="52"
+            android:orderInCategory="10"
             android:title="@string/search_feature"
             app:showAsAction="always|withText"/>
     </group>
-    <group android:id="@+id/draw_edit_tool_group"
+
+    <group
+        android:id="@+id/gps_track_tool_group"
         android:visible="false">
         <item
-            android:id="@+id/photo_survey2"
+            android:id="@+id/gps_track_start"
             android:checked="true"
-            android:icon="@drawable/ic_action_editor"
-            android:orderInCategory="51"
-            android:title="@string/photo_survey"
-            app:showAsAction="always"/>
+            android:icon="@drawable/ic_action_start"
+            android:orderInCategory="11"
+            android:title="@string/gps_track_start"
+            app:showAsAction="always|withText"/>
         <item
-            android:id="@+id/search_feature2"
+            android:id="@+id/gps_track_stop"
             android:checked="true"
-            android:icon="@drawable/ic_action_add"
-            android:orderInCategory="52"
-            android:title="@string/search_feature"
-            app:showAsAction="always"/>
+            android:icon="@drawable/ic_action_stop"
+            android:orderInCategory="12"
+            android:title="@string/gps_track_stop"
+            app:showAsAction="always|withText"/>
+        <item
+            android:id="@+id/gps_track_discard"
+            android:checked="true"
+            android:icon="@drawable/ic_gps_track_delete"
+            android:orderInCategory="13"
+            android:title="@string/gps_track_discard"
+            app:showAsAction="always|withText"/>
     </group>
-    <group android:id="@+id/default_tool_group">
+
+    <group android:id="@+id/default_tool_group"
+           android:visible="true">
+        <item
+            android:id="@+id/reset_tool"
+            android:checked="true"
+            android:icon="@drawable/ic_reset_tool"
+            android:orderInCategory="50"
+            android:title="恢复地图操作"
+            app:showAsAction="always"/>
+        />
         <item
             android:id="@+id/search_feature"
             android:checked="true"
@@ -82,13 +168,6 @@
             android:orderInCategory="82"
             android:title="@string/measure_area"
             app:showAsAction="ifRoom"/>
-        <item
-            android:id="@+id/reset_tool"
-            android:checked="true"
-            android:icon="@drawable/ic_reset_tool"
-            android:orderInCategory="52"
-            android:title="恢复地图操作"
-            />
     </group>
     <!--<item android:id="@+id/action_settings"-->
     <!--android:title="@string/action_settings"-->

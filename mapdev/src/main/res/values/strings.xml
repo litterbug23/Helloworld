@@ -4,11 +4,15 @@
     <string name="sub_name">移动版</string>
 
     <string name="gps_position">GPS定位</string>
-    <string name="gps_track_start">GPS轨迹记录</string>
-    <string name="gps_track_stop">结束轨迹记录</string>
+
+    <string name="gps_track">GPS轨迹记录</string>
     <string name="gps_track_view">GPS轨迹查看</string>
     <string name="gps_track_export">GPS轨迹导出</string>
     <string name="gps_track_manager">GPS轨迹管理</string>
+
+    <string name="gps_track_start">开始轨迹记录</string>
+    <string name="gps_track_stop">结束轨迹记录</string>
+    <string name="gps_track_discard">取消轨迹记录</string>
 
     <string name="create_map_scene">新建地图</string>
     <string name="open_recent_map">打开最近地图</string>
@@ -18,13 +22,25 @@
     <string name="import_vector">加载矢量</string>
     <string name="layer_manager">图层管理</string>
 
-    <string name="gps_position_survey">GPS点位采集</string>
-    <string name="draw_position_survey">手动采集</string>
+    <string name="survey_data">数据采集</string>
     <string name="survey_edit">采集编辑</string>
+    <string name="survey_data_export">采集数据导出</string>
+
     <string name="photo_survey">照片采集</string>
+    <string name="photo_survey_export">照片导出</string>
+    <string name="photo_survey_load">照片加载</string>
+
+    <string name="gps_position_survey">GPS取点采集</string>
+    <string name="draw_position_survey">手动取点采集</string>
+    <string name="free_position_survey">连续取点采集</string>
+    <string name="undo_position_survey">回退取点</string>
+    <string name="redo_position_survey">重做取点</string>
+    <string name="end_position_survey">取点采集结束</string>
+
+    <string name="geometry_editor">图形编辑</string>
+    <string name="attribute_editor">属性编辑</string>
+
     <string name="photo_label">照片标注</string>
-    <string name="photo_survey_load">采集数据加载</string>
-    <string name="photo_survey_export">采集数据导出</string>
 
     <string name="search_feature">查询属性</string>
     <string name="add_label">添加标注</string>

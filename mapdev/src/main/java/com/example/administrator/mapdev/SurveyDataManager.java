@@ -2,14 +2,20 @@ package com.example.administrator.mapdev;
 
 import android.graphics.Color;
 import android.util.Log;
+import android.util.SparseIntArray;
 
 import com.esri.android.map.MapView;
 import com.esri.core.geometry.Geometry;
+import com.esri.core.geometry.GeometryEngine;
+import com.esri.core.geometry.GeometryUtil;
+import com.esri.core.geometry.Point;
+import com.esri.core.geometry.Polygon;
 import com.esri.core.map.Field;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
 import com.example.administrator.mapdev.tools.FeatureLayerUtils;
+import com.example.administrator.mapdev.tools.GeometryUtils;
 
 import org.gdal.gdal.gdal;
 import org.gdal.ogr.DataSource;
@@ -29,8 +35,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,9 +52,18 @@ import javax.xml.datatype.DatatypeConstants;
  * 1、新建数据后，直接存入数据库中
  * 2、从数据库中加载数据，排除当前已经加载的数据
  */
-public class SurveyDataManager {
+public final class SurveyDataManager {
     private Map<Long, SurveyData> surveyDataMap = new LinkedHashMap<>();
-    private Map<String, Object> surveyFields = new LinkedHashMap<>();
+    private Map<String, Integer> surveyFields = new LinkedHashMap<>();
+    public static SparseIntArray esriToOgrFieldType = new SparseIntArray() {{
+        put(Field.esriFieldTypeInteger, ogr.OFTInteger);
+        put(Field.esriFieldTypeSmallInteger, ogr.OFTInteger);
+        put(Field.esriFieldTypeDouble, ogr.OFTReal);
+        put(Field.esriFieldTypeSingle, ogr.OFTReal);
+        put(Field.esriFieldTypeDate, ogr.OFTDateTime);
+        put(Field.esriFieldTypeString, ogr.OFTString);
+        put(Field.esriFieldTypeBlob, ogr.OFTBinary);
+    }};
 
     public SurveyDataManager() {
         initAttributeFields();
@@ -56,7 +74,7 @@ public class SurveyDataManager {
     /**
      * 初始化字段类型表（暂时使用固定类型的字段)
      */
-    private void initAttributeFields(){
+    private void initAttributeFields() {
         surveyFields.put("XZQDM", Field.esriFieldTypeInteger);
         surveyFields.put("XMC", Field.esriFieldTypeString);
         surveyFields.put("JCBH", Field.esriFieldTypeInteger);
@@ -133,6 +151,8 @@ public class SurveyDataManager {
     static public Graphic fromSurveyData(SurveyData data) {
         if (data == null || data.getGeometry() == null)
             return null;
+        if (data.getGraphic() != null)
+            return data.getGraphic();
         try {
             Symbol symbol = null;
             Map<String, Object> attributes = null;
@@ -193,7 +213,7 @@ public class SurveyDataManager {
     public void updateSurveyData(SurveyData surveyData, Geometry geometry) {
         if (surveyData == null || geometry == null)
             return;
-        if(!surveyData.isSaved())
+        if (!surveyData.isSaved())
             return;
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -211,10 +231,10 @@ public class SurveyDataManager {
         surveyData.update(surveyData.getBaseObjId());
     }
 
-    public void updateSurveyData(SurveyData surveyData, Symbol symbol){
-        if (surveyData == null || symbol == null )
+    public void updateSurveyData(SurveyData surveyData, Symbol symbol) {
+        if (surveyData == null || symbol == null)
             return;
-        if(!surveyData.isSaved())
+        if (!surveyData.isSaved())
             return;
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -234,10 +254,10 @@ public class SurveyDataManager {
         surveyData.update(surveyData.getBaseObjId());
     }
 
-    public void updateSurveyData(SurveyData surveyData, Map<String, Object> attributes){
-        if (surveyData == null || attributes == null )
+    public void updateSurveyData(SurveyData surveyData, Map<String, Object> attributes) {
+        if (surveyData == null || attributes == null)
             return;
-        if(!surveyData.isSaved())
+        if (!surveyData.isSaved())
             return;
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -262,7 +282,7 @@ public class SurveyDataManager {
      *
      * @return
      */
-    public List<SurveyData> loadSurveyDatas(int geoType) {
+    public List<SurveyData> loadSurveyDataSet(int geoType) {
         MapScene mapScene = MapApplication.instance().getLayersManager().getCurrentScene();
         int sceneId = mapScene.getId();
         List<SurveyData> dbSurveyDataList = DataSupport.where("mapScene_id = ? and geoType = ?",
@@ -281,16 +301,88 @@ public class SurveyDataManager {
     }
 
     /**
+     * 将采集数据填充到OGR的格式中
+     *
+     * @param data
+     * @param oFeature
+     */
+    private boolean surveyDataToOgr(SurveyData data, Feature oFeature) {
+        Graphic graphic = fromSurveyData(data);
+        if(graphic == null )
+            return false;
+        //转换属性信息
+        Map<String, Object> attributes = graphic.getAttributes();
+        for (Map.Entry<String, Integer> entry : surveyFields.entrySet()) {
+            int ogrFieldType = esriToOgrFieldType.get(entry.getValue());
+            String fieldName = entry.getKey();
+            if (!attributes.containsKey(fieldName))
+                continue;
+            Object value = attributes.get(fieldName);
+            if (value == null)
+                continue;
+            switch (ogrFieldType) {
+                case ogr.OFTString:
+                    oFeature.SetField(fieldName, value.toString());
+                    break;
+                case ogr.OFTInteger:
+                    try {
+                        int intVal = Integer.parseInt(value.toString());
+                        oFeature.SetField(fieldName, intVal);
+                    } catch (NumberFormatException e) {
+                        System.out.print(e.toString());
+                    }
+                    break;
+                case ogr.OFTReal:
+                    try {
+                        double dbValue = Double.parseDouble(value.toString());
+                        oFeature.SetField(fieldName, dbValue);
+                    } catch (NumberFormatException e) {
+                        System.out.print(e.toString());
+                    }
+                    break;
+                case ogr.OFTDateTime:
+                    Date date = null;
+                    if (value instanceof Date) {
+                        date = (Date) value;
+                    } else {
+                        try {
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            date = formatter.parse(value.toString());
+                        } catch (ParseException e) {
+                            System.out.print(e.toString());
+                        }
+                    }
+                    if (date != null) {
+                        oFeature.SetField(fieldName, date.getYear(), date.getMonth(), date.getDay(),
+                                date.getHours(), date.getMinutes(), date.getSeconds(), 8);
+                    }
+                    break;
+//                    case ogr.OFTBinary:
+//                        oFeature.
+//                        break;
+            }
+        }
+        //转换图形信息  POINT(513),LINE(5122),ENVELOPE(3077),MULTIPOINT(8710),POLYLINE(25607),POLYGON(27656);
+        Geometry geometry = graphic.getGeometry();
+        String wkt = GeometryUtils.GeometryToWKT(geometry);
+        org.gdal.ogr.Geometry geom= org.gdal.ogr.Geometry.CreateFromWkt(wkt);
+        oFeature.SetGeometry(geom);
+        return true;
+    }
+
+    /**
      * 导出采集数据(使用shp格式)
+     *
      * @param geoType
      */
     public void exportSurveyData(int geoType) {
         MapApplication application = MapApplication.instance();
         LayersManager layersManager = application.getLayersManager();
         MapView mapView = layersManager.getMapView();
-        com.esri.core.geometry.SpatialReference  spatialRef = mapView.getSpatialReference();
-        if(spatialRef == null )
-            return ;
+        //获得投影坐标系
+        com.esri.core.geometry.SpatialReference spatialRef = mapView.getSpatialReference();
+        if (spatialRef == null)
+            return;
         //导出数据根目录
         String outputPath = application.getOutputPath();
         MapScene mapScene = layersManager.getCurrentScene();
@@ -298,6 +390,7 @@ public class SurveyDataManager {
         File base = new File(outputPath + "/" + sceneName);
         if (!base.exists())
             base.mkdir();
+        //导出shp文件名称
         String strVectorFile = base.getAbsolutePath() + "/" + SurveyData.GeoTypeStrings[geoType] + ".shp";
         // 为了支持中文路径，请添加下面这句代码
         gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
@@ -322,45 +415,52 @@ public class SurveyDataManager {
         }
         String wkt = spatialRef.getText();
         // 创建图层，创建一个多边形图层，这里没有指定空间参考，如果需要的话，需要在这里进行指定
-        SpatialReference sr =new SpatialReference(wkt); //osr.SRS_WKT_WGS84
-        Layer oLayer =oDS.CreateLayer("TestPolygon", sr, ogr.wkbPolygon, null);
-        if (oLayer == null)
-        {
+        SpatialReference sr = new SpatialReference(wkt); //osr.SRS_WKT_WGS84
+        Layer oLayer = oDS.CreateLayer("TestPolygon", sr, geoType , null);
+        if (oLayer == null) {
             System.out.println("图层创建失败！\n");
             return;
         }
         // 下面创建属性表
-        // 先创建一个叫FieldID的整型属性
-        FieldDefn oFieldID = new FieldDefn("FieldID", ogr.OFTInteger);
-        oLayer.CreateField(oFieldID, 1);
-        // 再创建一个叫FeatureName的字符型属性，字符长度为50
-        FieldDefn oFieldName = new FieldDefn("FieldName", ogr.OFTString);
-        oFieldName.SetWidth(100);
-        oLayer.CreateField(oFieldName, 1);
-        FeatureDefn oDefn =oLayer.GetLayerDefn();
-        // 创建三角形要素
-        Feature oFeatureTriangle = new Feature(oDefn);
-        oFeatureTriangle.SetField(0, 0);
-        oFeatureTriangle.SetField(1, "三角形");
-        org.gdal.ogr.Geometry geomTriangle = org.gdal.ogr.Geometry.CreateFromWkt("POLYGON ((0 0,20 0,10 15,0 0))");
-        oFeatureTriangle.SetGeometry(geomTriangle);
-        oLayer.CreateFeature(oFeatureTriangle);
-        // 创建矩形要素
-        Feature oFeatureRectangle = new Feature(oDefn);
-        oFeatureRectangle.SetField(0, 1);
-        oFeatureRectangle.SetField(1, "矩形");
-        org.gdal.ogr.Geometry geomRectangle = org.gdal.ogr.Geometry.CreateFromWkt("POLYGON ((30 0,60 0,60 30,30 30,30 0))");
-        oFeatureRectangle.SetGeometry(geomRectangle);
-        oLayer.CreateFeature(oFeatureRectangle);
-        // 创建五角形要素
-        Feature oFeaturePentagon = new Feature(oDefn);
-        oFeaturePentagon.SetField(0, 2);
-        oFeaturePentagon.SetField(1, "五角形");
-        org.gdal.ogr.Geometry geomPentagon = org.gdal.ogr.Geometry.CreateFromWkt("POLYGON ((70 0,85 0,90 15,80 30,65 15,70 0))");
-        oFeaturePentagon.SetGeometry(geomPentagon);
-        oLayer.CreateFeature(oFeaturePentagon);
-        System.out.println("\n数据集创建完成！\n");
+        for (Map.Entry<String, Integer> entry : surveyFields.entrySet()) {
+            int ogrFieldType = esriToOgrFieldType.get(entry.getValue());
+            String fieldName = entry.getKey();
+            FieldDefn oField = new FieldDefn(fieldName, ogrFieldType);
+            oLayer.CreateField(oField, 1);
+        }
+        //下面填充图形数据和属性值
+        FeatureDefn oDefn = oLayer.GetLayerDefn();
+        for (Map.Entry<Long, SurveyData> entry : surveyDataMap.entrySet()) {
+            SurveyData data = entry.getValue();
+            if (entry.getValue().getGeoType() == geoType) {
+                Feature oFeature = new Feature(oDefn);
+                if(surveyDataToOgr(data, oFeature) )
+                    oLayer.CreateFeature(oFeature);
+            }
+        }
         oDS.SyncToDisk();
+//        Feature oFeatureTriangle = new Feature(oDefn);
+//        oFeatureTriangle.SetField(0, 0);
+//        oFeatureTriangle.SetField(1, "三角形");
+//        org.gdal.ogr.Geometry geomTriangle = org.gdal.ogr.Geometry.CreateFromWkt("POLYGON ((0 0,20 0,10 15,0 0))");
+//        oFeatureTriangle.SetGeometry(geomTriangle);
+//        oLayer.CreateFeature(oFeatureTriangle);
+//        // 创建矩形要素
+//        Feature oFeatureRectangle = new Feature(oDefn);
+//        oFeatureRectangle.SetField(0, 1);
+//        oFeatureRectangle.SetField(1, "矩形");
+//        org.gdal.ogr.Geometry geomRectangle = org.gdal.ogr.Geometry.CreateFromWkt("POLYGON ((30 0,60 0,60 30,30 30,30 0))");
+//        oFeatureRectangle.SetGeometry(geomRectangle);
+//        oLayer.CreateFeature(oFeatureRectangle);
+//        // 创建五角形要素
+//        Feature oFeaturePentagon = new Feature(oDefn);
+//        oFeaturePentagon.SetField(0, 2);
+//        oFeaturePentagon.SetField(1, "五角形");
+//        org.gdal.ogr.Geometry geomPentagon = org.gdal.ogr.Geometry.CreateFromWkt("POLYGON ((70 0,85 0,90 15,80 30,65 15,70 0))");
+//        oFeaturePentagon.SetGeometry(geomPentagon);
+//        oLayer.CreateFeature(oFeaturePentagon);
+//        System.out.println("\n数据集创建完成！\n");
+//        oDS.SyncToDisk();
     }
 
     public void loadAllSurveyData() {
@@ -375,6 +475,7 @@ public class SurveyDataManager {
     public void deleteSurveyData(SurveyData data) {
         if (data != null)
             data.delete();
+        surveyDataMap.remove(data.getBaseObjId());
     }
 
     /**

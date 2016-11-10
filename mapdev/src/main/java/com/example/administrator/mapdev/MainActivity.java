@@ -31,6 +31,8 @@ import com.example.administrator.mapdev.tools.DrawTool;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements
         FileBrowserFragment.OnFragmentInteractionListener,
@@ -132,12 +134,6 @@ public class MainActivity extends AppCompatActivity implements
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    private void changeToolbar() {
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.getMenu().setGroupVisible(R.id.draw_edit_tool_group, true);
-        //toolbar.inflateMenu(R.menu.menu_edit_tool);
-    }
-
     /**
      * 初始化侧滑栏
      */
@@ -158,67 +154,85 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerToggle.syncState();
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                int menuId = menuItem.getItemId();
-                switch (menuId) {
-                    case R.id.create_map_scene:
-                        openCreateSceneFragment();
-                        break;
-                    case R.id.open_recent_map:
-                        openRecentSceneFragment();
-                        break;
-                    case R.id.import_raster:
-                        if (mLayerManager.hasMapScene())
-                            openFileBrowser(RASTER_DATA_TYPE);
-                        else
-                            MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
-                        break;
-                    case R.id.import_vector:
-                        if (mLayerManager.hasMapScene())
-                            openFileBrowser(SHP_DATA_TYPE);
-                        else
-                            MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
-                        break;
-                    case R.id.layer_manager:
-                        //openLayersFragment();
-                        openLayers2Fragment();
-                        break;
-                    case R.id.photo_survey_import:
-                        if (mMapFragment != null) {
-                            mMapFragment.asyncLoadPhotoSurveyData();
-                        }
-                        break;
-                    case R.id.photo_survey_export:
-                        break;
-                    case R.id.gps_track_start:
-                        mMapFragment.startGpsRouteTrack();
-                        break;
-                    case R.id.gps_track_stop:
-                        mMapFragment.stopGpsRouteTrack();
-                        break;
-                    case R.id.gps_track_export:
-                        openRouteExportFragment();
-                        break;
-                    case R.id.gps_track_view:
-                        openRouteFragment();
-                    case R.id.mapview_setting:
-                        break;
-                    case R.id.help_about:
-                        showAboutDialog();
-                        break;
-                }
-                return true;
-            }
-        });
+        mNavigationView.setNavigationItemSelectedListener(onNavigationItemSelected);
     }
+
+    NavigationView.OnNavigationItemSelectedListener onNavigationItemSelected = new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(MenuItem menuItem) {
+            menuItem.setChecked(true);
+            mDrawerLayout.closeDrawers();
+            int menuId = menuItem.getItemId();
+            switch (menuId) {
+                case R.id.create_map_scene:
+                    openCreateSceneFragment();
+                    break;
+                case R.id.open_recent_map:
+                    openRecentSceneFragment();
+                    break;
+                case R.id.import_raster:
+                    if (mLayerManager.hasMapScene())
+                        openFileBrowser(RASTER_DATA_TYPE);
+                    else
+                        MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
+                    break;
+                case R.id.import_vector:
+                    if (mLayerManager.hasMapScene())
+                        openFileBrowser(SHP_DATA_TYPE);
+                    else
+                        MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
+                    break;
+                case R.id.layer_manager:
+                    //openLayersFragment();
+                    openLayers2Fragment();
+                    break;
+                case R.id.survey_data:
+                    //采集数据
+                    setCurrentToolGroup(R.id.survey_data_tool_group);
+                    break;
+                case R.id.survey_edit:
+                    //采集数据编辑
+                    setCurrentToolGroup(R.id.survey_edit_tool_group);
+                    break;
+                case R.id.survey_data_export:
+                    //采集数据导出
+                    break;
+                case R.id.photo_survey:
+                    setCurrentToolGroup(R.id.photo_tool_group);
+                    break;
+                case R.id.photo_survey_import:
+                    if (mMapFragment != null) {
+                        mMapFragment.asyncLoadPhotoSurveyData();
+                    }
+                    break;
+                case R.id.gps_track:
+                    setCurrentToolGroup(R.id.gps_track_tool_group);
+                    break;
+                case R.id.gps_track_start:
+                    mMapFragment.startGpsRouteTrack();
+                    break;
+                case R.id.gps_track_stop:
+                    mMapFragment.stopGpsRouteTrack();
+                    break;
+                case R.id.gps_track_export:
+                    openRouteExportFragment();
+                    break;
+                case R.id.gps_track_view:
+                    openRouteFragment();
+                case R.id.mapview_setting:
+                    break;
+                case R.id.help_about:
+                    showAboutDialog();
+                    break;
+            }
+            return true;
+        }
+    };
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        //屏幕旋转处理事件
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             //initToolbar();
             //竖屏
@@ -336,16 +350,70 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private String getDefaultStartDirectory() {
-        File path;
-        // No or invalid directory supplied in intent
-        if (Environment.getExternalStorageDirectory().isDirectory()
-                && Environment.getExternalStorageDirectory().canRead()) {
-            path = Environment.getExternalStorageDirectory();
-        } else {
-            path = new File("/");
-        }
-        mCurrentPath = path.toString();
+//        File path;
+//        if (Environment.getExternalStorageDirectory().isDirectory()
+//                && Environment.getExternalStorageDirectory().canRead()) {
+//            path = Environment.getExternalStorageDirectory();
+//        } else {
+//            path = new File("/");
+//        }
+//        mCurrentPath = path.toString();
+        mCurrentPath = mApplication.getDataPath();
         return mCurrentPath;
+    }
+
+    static final Set<Integer> toolGroupIds = new HashSet() {
+        {
+            add(R.id.survey_data_tool_group);
+            add(R.id.survey_edit_tool_group);
+            add(R.id.photo_tool_group);
+            add(R.id.gps_track_tool_group);
+        }
+    };
+    int currentToolGroupId = -1;
+
+    public boolean isCurrentToolGroupVisible() {
+        return currentToolGroupId != -1 ;
+    }
+
+    public interface OnCurrentToolGroupChangedListener
+    {
+        void onChanged(int oldToolGroupId,int newToolGroupId);
+    }
+
+    OnCurrentToolGroupChangedListener onCurrentToolGroupChanged=null;
+
+    public void setOnCurrentToolGroupChanged(OnCurrentToolGroupChangedListener onCurrentToolGroupChanged) {
+        this.onCurrentToolGroupChanged = onCurrentToolGroupChanged;
+    }
+
+    /**
+     * 切换工具条
+     * @param toolGroupId
+     */
+    public void setCurrentToolGroup(int toolGroupId) {
+        if (toolGroupIds.contains(toolGroupId)) {
+            int oldToolGroupId=currentToolGroupId;
+            currentToolGroupId = toolGroupId;
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            for (int groupId : toolGroupIds) {
+                toolbar.getMenu().setGroupVisible(groupId, false);
+            }
+            toolbar.getMenu().setGroupVisible(currentToolGroupId, true);
+            if(onCurrentToolGroupChanged != null ){
+                onCurrentToolGroupChanged.onChanged(oldToolGroupId,currentToolGroupId);
+            }
+        } else {
+            int oldToolGroupId=currentToolGroupId;
+            currentToolGroupId = -1;
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            for (int groupId : toolGroupIds) {
+                toolbar.getMenu().setGroupVisible(groupId, false);
+            }
+            if(onCurrentToolGroupChanged != null ){
+                onCurrentToolGroupChanged.onChanged(oldToolGroupId,currentToolGroupId);
+            }
+        }
     }
 
     private void openLayersFragment() {

@@ -21,8 +21,8 @@
         <item name="actionOverflowMenuStyle">@style/AppBaseToolbarOverflowMenuStyle</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="colorControlHighlight">@color/accent_translucent</item>
-        <item name="selectableItemBackground">@drawable/selectable_item_background</item>
-        <item name="android:selectableItemBackground">@drawable/selectable_item_background</item>
+        <item name="selectableItemBackground">@drawable/toolbar_button_selector</item>
+        <item name="android:selectableItemBackground">@drawable/toolbar_button_selector</item>
     </style>
 
     <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
@@ -31,7 +31,7 @@
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">#FFCC00</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:background">#5fa3d0</item>
+        <item name="android:background">@color/primary</item>
     </style>
 
     <style name="AppBaseToolBarMenuDropDownStyle" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">

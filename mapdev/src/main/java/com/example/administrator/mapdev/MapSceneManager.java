@@ -3,6 +3,7 @@ package com.example.administrator.mapdev;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -36,6 +37,8 @@ public abstract class MapSceneManager {
         if(this.currentScene != currentScene ){
             MapScene oldScene = this.currentScene;
             this.currentScene = currentScene;
+            this.currentScene.setLastOpenDate(new Date());
+            this.currentScene.update(this.currentScene.getId());
             if(listener != null )
                 listener.onCurrentMapSceneChanged(oldScene,this.currentScene);
             onCurrentMapSceneChanged(oldScene,this.currentScene);
@@ -58,6 +61,8 @@ public abstract class MapSceneManager {
             return null;
         MapScene oldScene = this.currentScene;
         this.currentScene = mapScenes.get(0);
+        this.currentScene.setLastOpenDate(new Date());
+        this.currentScene.update(this.currentScene.getId());
         if(listener != null )
             listener.onCurrentMapSceneChanged(oldScene,this.currentScene);
         onCurrentMapSceneChanged(oldScene,this.currentScene);

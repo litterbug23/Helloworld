@@ -4,23 +4,17 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.DisplayMetrics;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.esri.android.map.FeatureLayer;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
-import com.esri.android.map.LocationDisplayManager;
 import com.esri.android.map.MapView;
 import com.esri.android.map.RasterLayer;
 import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.android.map.ogc.kml.KmlLayer;
 import com.esri.core.geodatabase.Geodatabase;
 import com.esri.core.geodatabase.GeodatabaseFeatureTable;
-import com.esri.core.geodatabase.ShapefileFeature;
 import com.esri.core.geodatabase.ShapefileFeatureTable;
 import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.Geometry;
@@ -37,7 +31,6 @@ import com.esri.core.symbol.Symbol;
 import com.esri.core.symbol.TextSymbol;
 
 import org.litepal.LitePalApplication;
-import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
 import java.io.File;
@@ -153,9 +146,9 @@ public class LayersManager extends MapSceneManager {
             getMapView().addLayer(surveryPolygonLayer);
             getMapView().addLayer(surveryPolylineLayer);
             getMapView().addLayer(surveryPointLayer);
-            surveryPolygonLayer.loadSurveyDatas();
-            surveryPolylineLayer.loadSurveyDatas();
-            surveryPointLayer.loadSurveyDatas();
+            surveryPolygonLayer.loadSurveyDataSet();
+            surveryPolylineLayer.loadSurveyDataSet();
+            surveryPointLayer.loadSurveyDataSet();
         }
         {
             LayerItemData itemData = new LayerItemData();

@@ -171,9 +171,9 @@ public class SurveyDataLayer extends GraphicsLayer {
     /**
      * 加载所有调查数据
      */
-    public void loadSurveyDatas() {
+    public void loadSurveyDataSet() {
         //只返回数据集合中没有的数据
-        List<SurveyData> surveyDatas = surveyDataManager.loadSurveyDatas(geoType.value());
+        List<SurveyData> surveyDatas = surveyDataManager.loadSurveyDataSet(geoType.value());
         if (surveyDatas == null)
             return;
         for (SurveyData data : surveyDatas) {
