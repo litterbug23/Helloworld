@@ -8,10 +8,12 @@ import com.esri.android.map.MapView;
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.GeometryUtil;
+import com.esri.core.geometry.Line;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.map.Field;
 import com.esri.core.map.Graphic;
+import com.esri.core.symbol.SimpleFillSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
 import com.example.administrator.mapdev.tools.FeatureLayerUtils;
@@ -68,7 +70,6 @@ public final class SurveyDataManager {
     public SurveyDataManager() {
         initAttributeFields();
         testSave();
-        exportSurveyData(1);
     }
 
     /**
@@ -301,6 +302,15 @@ public final class SurveyDataManager {
     }
 
     /**
+     * 导出所有数据到指定目录
+     */
+    public void exportAllSurveyData(){
+        exportSurveyData(SurveyDataLayer.GeoType.POINT.value());
+        exportSurveyData(SurveyDataLayer.GeoType.POLYLINE.value());
+        exportSurveyData(SurveyDataLayer.GeoType.POLYGON.value());
+    }
+
+    /**
      * 将采集数据填充到OGR的格式中
      *
      * @param data
@@ -366,6 +376,8 @@ public final class SurveyDataManager {
         Geometry geometry = graphic.getGeometry();
         String wkt = GeometryUtils.GeometryToWKT(geometry);
         org.gdal.ogr.Geometry geom= org.gdal.ogr.Geometry.CreateFromWkt(wkt);
+        if(geom == null )
+            return false;
         oFeature.SetGeometry(geom);
         return true;
     }
@@ -473,9 +485,10 @@ public final class SurveyDataManager {
     }
 
     public void deleteSurveyData(SurveyData data) {
-        if (data != null)
+        if (data != null) {
             data.delete();
-        surveyDataMap.remove(data.getBaseObjId());
+            surveyDataMap.remove(data.getBaseObjId());
+        }
     }
 
     /**
@@ -496,6 +509,29 @@ public final class SurveyDataManager {
         SurveyData surveyData = toSurveyData(graphic);
         saveSurveyData(surveyData);
         Graphic tmp = fromSurveyData(surveyData);
+
+        Polygon polygon = new Polygon();
+        Line line = new Line();
+        line.setStart(new Point(112.321, 23.232));
+        line.setEnd(new Point(114.321, 24.232));
+        polygon.addSegment(line, false);
+        line = new Line();
+        line.setStart(new Point(114.321, 24.232));
+        line.setEnd(new Point(115.321, 25.232));
+        polygon.addSegment(line, false);
+        line = new Line();
+        line.setStart(new Point(115.321, 25.232));
+        line.setEnd(new Point(115.321, 24.67));
+        polygon.addSegment(line, false);
+        line = new Line();
+        line.setStart(new Point(115.321, 23.232));
+        line.setEnd(new Point(112.321, 23.232));
+        polygon.addSegment(line, false);
+        SimpleFillSymbol fillSymbol = new SimpleFillSymbol(Color.BLACK);
+        graphic = new Graphic(polygon, fillSymbol);
+        surveyData = toSurveyData(graphic);
+        saveSurveyData(surveyData);
+
         loadAllSurveyData();
     }
 }

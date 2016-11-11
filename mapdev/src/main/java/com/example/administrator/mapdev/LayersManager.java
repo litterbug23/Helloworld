@@ -51,7 +51,6 @@ public class LayersManager extends MapSceneManager {
     static final public int FILE_GDB_DATA_SOURCE = 2;
     static final public int FILE_KML_DATA__SOURCE = 3;
     static final public int TOP_LAYER_NUM = 2;
-    static final public String USER_FEATURE_DATA_PATH = "/mapdev/output/";
     static public SpatialReference wgs84 = SpatialReference.create(SpatialReference.WKID_WGS84);
     private MapView mapView;
     private Context context;

@@ -238,9 +238,8 @@ public class GpsRouteTracker {
 		Graphic graphic = new Graphic(polyline, lineSymbol);
 		int id = graphicsLayer.addGraphic(graphic);
 		routeTrackerStates.put(routeName, id);
-		try {
+//		try {
 //			com.esri.core.internal.util.d d=new d();
-
 //			String json = Graphic.toJson(graphic);
 //			String jsonSLS = lineSymbol.toJson();
 //			ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -260,9 +259,9 @@ public class GpsRouteTracker {
 //			Graphic tmp = surveyDataManager.fromSurveyData(surveyData);
 //			surveyDataManager.loadAllSurveyData();
 
-		} catch (Exception e) {
-			Log.d("SurveyData",e.getMessage());
-		}
+//		} catch (Exception e) {
+//			Log.d("SurveyData",e.getMessage());
+//		}
 	}
 
 	/**

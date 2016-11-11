@@ -20,6 +20,7 @@ public class MapScene extends DataSupport {
     private String userName;
     private String description;
     private String wktExt=wktXiAn80;
+    private String baseRasterPath;      //影像底图路径
     private Date createDate;
     private Date lastOpenDate;
     private List<LayerItemData> mapLayers = new ArrayList<>();  //LayerItem 与 MapScene建立表关联
@@ -27,6 +28,14 @@ public class MapScene extends DataSupport {
     static public String wktXiAn80 = "PROJCS[\"Xian_1980_3_Degree_GK_Zone_39\",GEOGCS[\"GCS_Xian_1980\",DATUM[\"D_Xian_1980\",SPHEROID[\"Xian_1980\",6378140.0,298.257]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Gauss_Kruger\"],PARAMETER[\"False_Easting\",39500000.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",117.0],PARAMETER[\"Scale_Factor\",1.0],PARAMETER[\"Latitude_Of_Origin\",0.0],UNIT[\"Meter\",1.0]]";
     static public String wktWGS84 = "GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9108\"]],AUTHORITY[\"EPSG\",\"4326\"]]";
     static public String wktGCS2000 = "GEOGCS[\"GCS_China_Geodetic_Coordinate_System_2000\",DATUM[\"D_China_2000\",SPHEROID[\"CGCS2000\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]]";
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getSceneName() {
         return sceneName;
@@ -76,6 +85,14 @@ public class MapScene extends DataSupport {
         this.lastOpenDate = lastOpenDate;
     }
 
+    public void  setBaseRasterPath(String baseRasterPath){
+        this.baseRasterPath = baseRasterPath;
+    }
+
+    public String getBaseRasterPath() {
+        return baseRasterPath;
+    }
+
     public List<LayerItemData> getMapLayers() {
         return mapLayers;
     }
@@ -90,14 +107,6 @@ public class MapScene extends DataSupport {
 
     public void setSurveyDatas(List<SurveyData> surveyDatas) {
         this.surveyDatas = surveyDatas;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     /**

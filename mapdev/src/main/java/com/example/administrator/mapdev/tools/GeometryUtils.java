@@ -2,6 +2,7 @@ package com.example.administrator.mapdev.tools;
 
 import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.Geometry;
+import com.esri.core.geometry.Line;
 import com.esri.core.geometry.MultiPath;
 import com.esri.core.geometry.MultiPoint;
 import com.esri.core.geometry.Point;
@@ -27,32 +28,57 @@ public class GeometryUtils {
         Geometry.Type type = geometry.getType();
         if (type == Geometry.Type.POINT) {
             Point pt = (Point) geometry;
-            wktString = "POINT(" + pt.getX() + " " + pt.getY() + ")";
-        } else if (type == Geometry.Type.POLYGON || type == Geometry.Type.POLYLINE) {
+            wktString = "POINT (" + pt.getX() + " " + pt.getY() + ")";
+        }else if( type== Geometry.Type.LINE){
+            Line line = (Line) geometry;
+            wktString = "LINESTRING (" + line.getStartX() + " " + line.getStartY() +
+                    "," +line.getEndX() + " " + line.getEndY() + ")";
+        }else if( type == Geometry.Type.POLYLINE ){
             MultiPath multiPath = (MultiPath) geometry;
             int pathSize = multiPath.getPathCount();
-            if (type == Geometry.Type.POLYLINE) {
-                if (pathSize == 1)
-                    wktString = "LINESTRING";
-                else
-                    wktString = "MULTILINESTRING(";
-            } else {
-                if (pathSize == 1)
-                    wktString = "POLYGON(";
-                else
-                    wktString = "MULTIPOLYGON(";
-            }
+            if (pathSize == 1)
+                wktString = "LINESTRING ";
+            else
+                wktString = "MULTILINESTRING (";
             for (int j = 0; j < pathSize; j++) {
-                String temp = "(";
+                wktString += "(";
                 int size = multiPath.getPathSize(j);
                 for (int i = 0; i < size; i++) {
                     Point pt = multiPath.getPoint(i);
-                    temp += pt.getX() + " " + pt.getY() + ",";
+                    wktString += pt.getX() + " " + pt.getY();
+                    if(i < (size-1) )
+                        wktString += ",";
                 }
-                temp = temp.substring(0, temp.length() - 1) + ")";
-                wktString += temp + ",";
+                if( j< (pathSize-1) )
+                    wktString += ",";
+                else
+                    wktString +=")";
             }
-            wktString = wktString.substring(0, wktString.length() - 1) + ")";
+            if(pathSize>1)
+                wktString  += ")";
+        } else if (type == Geometry.Type.POLYGON  ) {
+            MultiPath multiPath = (MultiPath) geometry;
+            int pathSize = multiPath.getPathCount();
+            wktString = "POLYGON (";
+//            if (pathSize == 1)
+//               wktString = "POLYGON(";
+//            else
+//                wktString = "MULTIPOLYGON(";
+            for (int j = 0; j < pathSize; j++) {
+                wktString += "(";
+                int size = multiPath.getPathSize(j);
+                for (int i = 0; i < size; i++) {
+                    Point pt = multiPath.getPoint(i);
+                    wktString += pt.getX() + " " + pt.getY();
+                    if(i < (size-1) )
+                        wktString += ",";
+                }
+                if( j< (pathSize-1) )
+                    wktString += ",";
+                else
+                    wktString +=")";
+            }
+            wktString  += ")";
         } else if (type == Geometry.Type.ENVELOPE) {
             Envelope env = (Envelope) geometry;
             wktString = "POLYGON ((" +
@@ -64,7 +90,7 @@ public class GeometryUtils {
         } else if (type == Geometry.Type.MULTIPOINT) {
             MultiPoint multiPoint = (MultiPoint) geometry;
             // MULTIPOINT(3.5 5.6, 4.8 10.5)
-            wktString = "MULTIPOINT(";
+            wktString = "MULTIPOINT (";
             int size = multiPoint.getPointCount();
             for (int i = 0; i < size - 1; i++) {
                 wktString += multiPoint.getPoint(i).getX();
@@ -77,6 +103,7 @@ public class GeometryUtils {
             wktString += multiPoint.getPoint(size - 1).getY();
             wktString += ")";
         } else {
+            //暂时不能处理类型
             wktString = null;
         }
         return wktString;

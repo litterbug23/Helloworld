@@ -1,18 +1,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@color/back_color"
-    android:textColor="#000000"
-    tools:context="com.example.administrator.mapdev.SceneFragment"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="@color/back_color"
+              android:orientation="vertical"
+              android:textColor="#000000"
+              tools:context="com.example.administrator.mapdev.SceneFragment"
     >
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/scene_toolbar"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/scene_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -22,56 +22,86 @@
         />
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="地图名称"
-        android:id="@+id/textView" />
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <EditText
+        android:id="@+id/mapName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/mapName" />
+        android:layout_height="wrap_content"/>
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="地图创建者"
-        android:id="@+id/textView2" />
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <EditText
+        android:id="@+id/mapUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/mapUser"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"/>
 
     <TextView
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="地图描述"
-        android:id="@+id/textView3" />
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <EditText
+        android:id="@+id/mapDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="影像底图"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/mapDescription" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/baseRasterPath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="true"/>
+        <ImageButton
+            android:layout_width="@android:dimen/app_icon_size"
+            android:layout_height="@android:dimen/app_icon_size"
+            android:src="@drawable/filedialog_folder"
+            android:id="@+id/openRasterPath"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="确定"
             android:id="@+id/ok"
-            android:layout_gravity="center_horizontal" />
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="取消"
+            android:layout_gravity="center_horizontal"
+            android:text="确定"/>
+
+        <Button
             android:id="@+id/cancel"
-            android:layout_gravity="center_horizontal" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="取消"/>
     </LinearLayout>
 </LinearLayout>
