@@ -17,7 +17,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.security.acl.Group;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -66,9 +69,31 @@ public class Layers2Fragment extends Fragment {
     }
 
     //对图层进行分组
-    class GroupLayerItem {
+    class GroupLayerItem implements Comparator{
         public String groupName;
         public List<LayerItemData> items = new ArrayList<>();
+        public int groupLayerType;
+        @Override
+        public int compare(Object lhs, Object rhs) {
+            GroupLayerItem item1=(GroupLayerItem)lhs;
+            GroupLayerItem item2=(GroupLayerItem)rhs;
+            if( item1.groupLayerType < item2.groupLayerType )
+                return 1;
+            return 0;
+        }
+    }
+
+    public List<LayerItemData> sortLayerItems(List<LayerItemData> items) {
+        Collections.sort(items, new Comparator<LayerItemData>() {
+            @Override
+            public int compare(LayerItemData lhs, LayerItemData rhs) {
+                if( lhs.getOrderId() < rhs.getOrderId() )
+                    return 1;
+                else
+                    return 0;
+            }
+        });
+        return items;
     }
 
     class LayersAdapter extends BaseExpandableListAdapter  {

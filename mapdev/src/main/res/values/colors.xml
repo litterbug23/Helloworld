@@ -2,11 +2,11 @@
 <resources>
     <color name="colorPrimary">#2194f1</color>
     <color name="colorPrimaryDark">#1976d0</color>
-    <color name="colorAccent">#9f7ea0</color>
+    <color name="colorAccent">#86d04f</color>
     <color name="primary">#2194f1</color>
     <color name="primary_dark">#1976d0</color>
     <color name="text_color_primary">#0b0b0b</color>
-    <color name="accent">#9f7ea0</color>
+    <color name="accent">#86d04f</color>
     <color name="accent_translucent">#80FFEB3B</color>
     <color name="accent_bright">#FFF493</color>
     <color name="transparent">#9000</color>

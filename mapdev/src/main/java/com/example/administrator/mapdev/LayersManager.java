@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.esri.android.map.FeatureLayer;
 import com.esri.android.map.GraphicsLayer;
+import com.esri.android.map.GroupLayer;
 import com.esri.android.map.Layer;
 import com.esri.android.map.MapView;
 import com.esri.android.map.RasterLayer;
@@ -65,11 +66,14 @@ public class LayersManager extends MapSceneManager {
     //private FeatureLayer userPolygonLayer;  //存储用户绘制的面信息
     private GraphicsLayer drawerLayer;              //活动图层（所有临时绘制都在活动图层）
     private GraphicsLayer userDrawerLayer;          //用户绘制图层需要序列化保存
-    private GraphicsLayer photoDrawerLayer;         //存储实地采集照片的信息(点图层）
+    private PhotoSurveyLayer photoSurveyLayer;         //存储实地采集照片的信息(点图层）
     private SurveyDataManager surveyDataManager;
-    private SurveyDataLayer surveryPointLayer;      //采集点数据
-    private SurveyDataLayer surveryPolylineLayer;   //采集线数据
-    private SurveyDataLayer surveryPolygonLayer;    //采集面数据
+    private SurveyDataLayer surveyPointLayer;      //采集点数据
+    private SurveyDataLayer surveyPolylineLayer;   //采集线数据
+    private SurveyDataLayer surveyPolygonLayer;    //采集面数据
+    private GroupLayer rasterGroupLayer;        //栅格图层
+    private GroupLayer vectorGroupLayer;        //矢量图层
+    private GroupLayer dynamicGroupLayer;       //动态图层(用户采集数据，动态编辑数据)
 
     public List<LayerItemData> getLayerItems() {
         return layerItems;
@@ -79,28 +83,48 @@ public class LayersManager extends MapSceneManager {
         return mapView;
     }
 
+    /**
+     * 采集数据管理类（负责采集数据的存取及导出）
+     * @return
+     */
+    public SurveyDataManager getSurveyDataManager() {
+        return surveyDataManager;
+    }
+
+    /**
+     * 活动图层，是置顶图层
+     * @return
+     */
     public GraphicsLayer getDrawerLayer() {
         return drawerLayer;
     }
 
+    /**
+     * 临时图层，目前主要用来存储GPS信息
+     * @return
+     */
     public GraphicsLayer getUserDrawerLayer() {
         return userDrawerLayer;
     }
 
-    public GraphicsLayer getPhotoDrawerLayer() {
-        return photoDrawerLayer;
+    /**
+     * 获得照片图层
+     * @return
+     */
+    public PhotoSurveyLayer getPhotoSurveyLayer() {
+        return photoSurveyLayer;
     }
 
-    public SurveyDataLayer getSurveryPointLayer() {
-        return surveryPointLayer;
+    public SurveyDataLayer getSurveyPointLayer() {
+        return surveyPointLayer;
     }
 
-    public SurveyDataLayer getSurveryPolylineLayer() {
-        return surveryPolylineLayer;
+    public SurveyDataLayer getSurveyPolylineLayer() {
+        return surveyPolylineLayer;
     }
 
-    public SurveyDataLayer getSurveryPolygonLayer() {
-        return surveryPolygonLayer;
+    public SurveyDataLayer getSurveyPolygonLayer() {
+        return surveyPolygonLayer;
     }
 
     public double getScreenWidthMeter() {
@@ -137,50 +161,50 @@ public class LayersManager extends MapSceneManager {
 
     @Override
     void onCurrentMapSceneChanged(MapScene oldScene, MapScene currentScene) {
-        reOpenMapLayers();
+        reopenMapLayers();
     }
 
     /**
      * 加载用户图层数据
      */
-    private void loadSurveyDataLayers() {
+    private void openSurveyDataLayers() {
         surveyDataManager = new SurveyDataManager();
         {
-            surveryPointLayer = new SurveyDataLayer();
-            surveryPointLayer.setGeoType(SurveyDataLayer.GeoType.POINT);
-            surveryPointLayer.setSurveyDataManager(surveyDataManager);
+            surveyPointLayer = new SurveyDataLayer();
+            surveyPointLayer.setGeoType(SurveyDataLayer.GeoType.POINT);
+            surveyPointLayer.setSurveyDataManager(surveyDataManager);
         }
         {
-            surveryPolylineLayer = new SurveyDataLayer();
-            surveryPolylineLayer.setGeoType(SurveyDataLayer.GeoType.POLYLINE);
-            surveryPolylineLayer.setSurveyDataManager(surveyDataManager);
+            surveyPolylineLayer = new SurveyDataLayer();
+            surveyPolylineLayer.setGeoType(SurveyDataLayer.GeoType.POLYLINE);
+            surveyPolylineLayer.setSurveyDataManager(surveyDataManager);
         }
         {
-            surveryPolygonLayer = new SurveyDataLayer();
-            surveryPolygonLayer.setGeoType(SurveyDataLayer.GeoType.POLYGON);
-            surveryPolygonLayer.setSurveyDataManager(surveyDataManager);
+            surveyPolygonLayer = new SurveyDataLayer();
+            surveyPolygonLayer.setGeoType(SurveyDataLayer.GeoType.POLYGON);
+            surveyPolygonLayer.setSurveyDataManager(surveyDataManager);
         }
         {
-            getMapView().addLayer(surveryPolygonLayer);
-            getMapView().addLayer(surveryPolylineLayer);
-            getMapView().addLayer(surveryPointLayer);
-            surveryPolygonLayer.loadSurveyDataSet();
-            surveryPolylineLayer.loadSurveyDataSet();
-            surveryPointLayer.loadSurveyDataSet();
+            dynamicGroupLayer.addLayer(surveyPolygonLayer);
+            dynamicGroupLayer.addLayer(surveyPolylineLayer);
+            dynamicGroupLayer.addLayer(surveyPointLayer);
+            surveyPolygonLayer.loadSurveyDataSet();
+            surveyPolylineLayer.loadSurveyDataSet();
+            surveyPointLayer.loadSurveyDataSet();
         }
         {
             LayerItemData itemData = new LayerItemData();
             itemData.setLayerType(LayerItemData.GRAPHIC_LAYER);
             itemData.setGeometryType(LayerItemData.POLYGON);
             itemData.setDataSource("采集面数据");
-            itemData.setLayer(surveryPointLayer);
+            itemData.setLayer(surveyPointLayer);
             layerItems.add(itemData);
         }
         {
             LayerItemData itemData = new LayerItemData();
             itemData.setLayerType(LayerItemData.GRAPHIC_LAYER);
             itemData.setGeometryType(LayerItemData.POLYLINE);
-            itemData.setLayer(surveryPolylineLayer);
+            itemData.setLayer(surveyPolylineLayer);
             itemData.setDataSource("采集线数据");
             layerItems.add(itemData);
         }
@@ -188,7 +212,7 @@ public class LayersManager extends MapSceneManager {
             LayerItemData itemData = new LayerItemData();
             itemData.setLayerType(LayerItemData.GRAPHIC_LAYER);
             itemData.setGeometryType(LayerItemData.POINT);
-            itemData.setLayer(surveryPointLayer);
+            itemData.setLayer(surveyPointLayer);
             itemData.setDataSource("采集点数据");
             layerItems.add(itemData);
         }
@@ -226,10 +250,16 @@ public class LayersManager extends MapSceneManager {
     /**
      * 重新加载当前地图图层
      */
-    private void reOpenMapLayers() {
+    private void reopenMapLayers() {
         mapView.removeAll();
+        rasterGroupLayer =new GroupLayer();
+        mapView.addLayer(rasterGroupLayer);
+        vectorGroupLayer = new GroupLayer();
+        mapView.addLayer(vectorGroupLayer);
+        dynamicGroupLayer = new GroupLayer();
+        mapView.addLayer(dynamicGroupLayer);
         openMapLayers();
-        loadSurveyDataLayers();
+        openSurveyDataLayers();
     }
 
     public int getDataSourceTypeByPath(String path) {
@@ -485,12 +515,13 @@ public class LayersManager extends MapSceneManager {
                 }
             });
             //加载必须在用户图层之后
-            if (userDrawerLayer != null) {
-                int index = getLayerIndex(userDrawerLayer);
-                mapView.addLayer(rasterLayer, index);
-            } else {
-                mapView.addLayer(rasterLayer);
-            }
+//            if (userDrawerLayer != null) {
+//                int index = getLayerIndex(userDrawerLayer);
+//                mapView.addLayer(rasterLayer, index);
+//            } else {
+//                mapView.addLayer(rasterLayer);
+//            }
+            rasterGroupLayer.addLayer(rasterLayer);
             return rasterLayer;
         }
         return null;
@@ -583,12 +614,13 @@ public class LayersManager extends MapSceneManager {
                 }
             });
             //加载必须在用户图层之后
-            if (userDrawerLayer != null) {
-                int index = getLayerIndex(userDrawerLayer);
-                mapView.addLayer(featureLayer, index);
-            } else {
-                mapView.addLayer(featureLayer);
-            }
+//            if (userDrawerLayer != null) {
+//                int index = getLayerIndex(userDrawerLayer);
+//                mapView.addLayer(featureLayer, index);
+//            } else {
+//                mapView.addLayer(featureLayer);
+//            }
+            vectorGroupLayer.addLayer(featureLayer);
             return featureLayer;
         } catch (FileNotFoundException e) {
             Toast.makeText(LitePalApplication.getContext(), "vector file doesn't exist", Toast.LENGTH_SHORT).show();

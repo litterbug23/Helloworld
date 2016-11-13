@@ -10,7 +10,7 @@
     <com.example.administrator.mapdev.FileSelectView
         android:id="@+id/fileListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="350dp"
         android:minHeight="300dp"
         android:listSelector="@drawable/selectable_item_background"
         />

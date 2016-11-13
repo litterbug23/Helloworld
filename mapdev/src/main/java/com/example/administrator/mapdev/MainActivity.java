@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case R.id.survey_data_export:
                     //采集数据导出
+                    exportSurveyData();
                     break;
                 case R.id.photo_survey:
                     setCurrentToolGroup(R.id.photo_tool_group);
@@ -423,6 +424,14 @@ public class MainActivity extends AppCompatActivity implements
                 .commit();
     }
 
+    private void openLayers2Fragment() {
+        Layers2Fragment layers2Fragment = Layers2Fragment.newInstance(this.mLayerManager);
+        getSupportFragmentManager().beginTransaction()
+                .add(android.R.id.content, layers2Fragment).addToBackStack(null)
+                .commit();
+        //changeToolbar();
+    }
+
     private void openRouteFragment() {
         RouteFragment routeFragment = RouteFragment.newInstance(mMapFragment.getGpsRouteTracker());
         getSupportFragmentManager().beginTransaction()
@@ -451,12 +460,9 @@ public class MainActivity extends AppCompatActivity implements
                 .commit();
     }
 
-    private void openLayers2Fragment() {
-        Layers2Fragment layers2Fragment = Layers2Fragment.newInstance(this.mLayerManager);
-        getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content, layers2Fragment).addToBackStack(null)
-                .commit();
-        //changeToolbar();
+    private void exportSurveyData() {
+        SurveyDataExport surveyDataExport = new SurveyDataExport(this);
+        surveyDataExport.exportSurveyData();
     }
 
     @Override

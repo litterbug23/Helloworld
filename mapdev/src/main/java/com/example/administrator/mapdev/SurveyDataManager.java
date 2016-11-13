@@ -279,13 +279,18 @@ public final class SurveyDataManager {
         surveyData.update(surveyData.getBaseObjId());
     }
 
+    private MapScene getCurrentScene(){
+        MapScene mapScene = MapApplication.instance().getLayersManager().getCurrentScene();
+        return mapScene;
+    }
+
     /**
      * 加载当前场景相关的地图对象
      *
      * @return
      */
     public List<SurveyData> loadSurveyDataSet(int geoType) {
-        MapScene mapScene = MapApplication.instance().getLayersManager().getCurrentScene();
+        MapScene mapScene = getCurrentScene();
         int sceneId = mapScene.getId();
         List<SurveyData> dbSurveyDataList = DataSupport.where("mapScene_id = ? and geoType = ?",
                 String.valueOf(sceneId), String.valueOf(geoType)).find(SurveyData.class);

@@ -112,13 +112,13 @@ public class MapScene extends DataSupport {
 
     /**
      * 按照orderID进行排序的列表
-     *
+     *当地图加载时，LayerManager会调用此函数一次
      * @return
      */
     public List<LayerItemData> getOrderMapLayers() {
         //saveBaseRasterLayer();
         return DataSupport.where("MapScene_id = ?",
-                String.valueOf(getId())).order("layerType asc,orderId asc").find(LayerItemData.class);
+                String.valueOf(getId())).order("layerType desc,orderId asc").find(LayerItemData.class);
     }
 
     public boolean isBaseRasterInMapLayers(String dataSoruce) {

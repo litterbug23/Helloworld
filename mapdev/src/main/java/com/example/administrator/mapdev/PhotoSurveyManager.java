@@ -106,6 +106,12 @@ public class PhotoSurveyManager {
 	}
 
 	public void takePhotoAction(String imagePath, String comment) {
+		MapScene mapScene = getCurrentScene();
+		if(mapScene == null )
+		{
+			MapApplication.showMessage("当前没有打开地图，不能进行照片采集");
+			return ;
+		}
 		//创建位置服务和方向服务
 		Location location = getLocation();
 		if (location == null) {
@@ -122,11 +128,17 @@ public class PhotoSurveyManager {
 		photoSurvey.setPhotoImage(imagePath);
 		Date now = new Date();
 		photoSurvey.setDate(now.getTime());
+		photoSurvey.setMapScene(mapScene);
 		//保存数据到数据库
 		photoSurvey.save();
 		photoSurveyMap.put(photoSurvey.getId(), photoSurvey);
 		//在地图显示拍摄照片的缩略图
 		showPhotoMark(photoSurvey);
+	}
+
+	private MapScene getCurrentScene(){
+		MapScene mapScene = MapApplication.instance().getLayersManager().getCurrentScene();
+		return mapScene;
 	}
 
 	/**

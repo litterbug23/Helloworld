@@ -8,6 +8,26 @@ import java.util.Date;
  * Created by Administrator on 2016/3/21.
  */
 public class PhotoSurvey extends DataSupport {
+
+	private String photoImage;
+	private long date;
+	private double longitude;
+	private double latitude;
+	private double altitude;
+	private double azimuth;
+	private String staff;
+	private String comment;
+	private MapScene mapScene;	//照片采集也与地图关联，采集后的照片将按照地图进行组织
+
+	public MapScene getMapScene() {
+		return mapScene;
+	}
+
+	public void setMapScene(MapScene mapScene) {
+		this.mapScene = mapScene;
+	}
+
+
 	/**
 	 * 采集日期
 	 *
@@ -104,13 +124,4 @@ public class PhotoSurvey extends DataSupport {
 	public void setPhotoImage(String photoImage) {
 		this.photoImage = photoImage;
 	}
-
-	private String photoImage;
-	private long date;
-	private double longitude;
-	private double latitude;
-	private double altitude;
-	private double azimuth;
-	private String staff;
-	private String comment;
 }

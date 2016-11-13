@@ -3,6 +3,7 @@ package com.example.administrator.mapdev;
 import android.content.res.Configuration;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import org.gdal.gdal.gdal;
@@ -33,6 +34,14 @@ public class MapApplication extends LitePalApplication {
 		Toast.makeText(MapApplication.getContext(), message, Toast.LENGTH_LONG).show();
 		//Snackbar.make(MapApplication.getContext(), message , Snackbar.LENGTH_LONG).show();
 	}
+
+//	static public void showAlertMessage(String title,String message) {
+//		AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AppCompatAlertDialogStyle);
+//		builder.setTitle(title);
+//		builder.setMessage(message);
+//		builder.setPositiveButton("确定", null);
+//		builder.show();
+//	}
 
 	public LayersManager getLayersManager() {
 		return layersManager;
