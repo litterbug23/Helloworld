@@ -61,6 +61,7 @@ public class LayerItemData extends DataSupport {
 
 	private int geometryType; //几何数据类型
 
+	@Column(nullable = false)
 	private String dataSource; //数据类型
 
 	private int orderId; 	//图层在地图中的叠加次序
@@ -136,7 +137,7 @@ public class LayerItemData extends DataSupport {
 	}
 
 	public boolean getVisible() {
-		return visible;
+		return isVisible();
 	}
 
 	public void setVisible(boolean visible) {

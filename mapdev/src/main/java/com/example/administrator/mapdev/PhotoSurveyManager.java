@@ -49,7 +49,8 @@ import java.util.Map;
 
 /**
  * Created by Administrator on 2016/3/22.
- * 绘制照片取证信息
+ * 创建管理维护照片信息
+ * 照片绘制将由PhotoSurveyLayer负责
  */
 public class PhotoSurveyManager {
 	private GraphicsLayer userDrawerLayer;

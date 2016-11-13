@@ -17,4 +17,23 @@
         <!--android:icon="@drawable/ic_action_add"-->
         <!--android:title="@string/search_feature"-->
         <!--app:showAsAction="always"/>-->
+    <item
+        android:id="@+id/add_label"
+        android:checked="true"
+        android:icon="@drawable/ic_add_label"
+        android:orderInCategory="60"
+        android:title="@string/add_label"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/add_polyline"
+        android:icon="@drawable/ic_add_polyline"
+        android:orderInCategory="70"
+        android:title="@string/add_polyline"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/add_polygon"
+        android:icon="@drawable/ic_add_polygon"
+        android:orderInCategory="80"
+        android:title="@string/add_polygon"
+        app:showAsAction="ifRoom"/>
 </menu>

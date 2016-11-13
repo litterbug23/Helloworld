@@ -7,6 +7,8 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:windowBackground">@color/back_color</item>
+        <item name="android:textColorPrimary">@color/text_color_primary</item>
         <item name="colorAccent">@color/accent</item>
         <item name="colorControlHighlight">@color/accent_translucent</item>
         <item name="selectableItemBackground">@drawable/selectable_item_background</item>
@@ -15,23 +17,12 @@
     </style>
 
     <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Light">
-        <item name="background">@color/primary</item>
-        <item name="popupTheme">@style/AppBarTheme</item>
         <item name="actionDropDownStyle">@style/AppBaseToolBarMenuDropDownStyle</item>
         <item name="actionOverflowMenuStyle">@style/AppBaseToolbarOverflowMenuStyle</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="colorControlHighlight">@color/accent_translucent</item>
         <item name="selectableItemBackground">@drawable/toolbar_button_selector</item>
         <item name="android:selectableItemBackground">@drawable/toolbar_button_selector</item>
-    </style>
-
-    <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
-    </style>
-
-    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">#FFCC00</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:background">@color/primary</item>
     </style>
 
     <style name="AppBaseToolBarMenuDropDownStyle" parent="Widget.AppCompat.Spinner.DropDown.ActionBar">
@@ -55,19 +46,31 @@
         <item name="android:selectableItemBackground">@drawable/selectable_item_background</item>
     </style>
 
+    <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+    </style>
+
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">#FFCC00</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:background">@color/primary</item>
+    </style>
+
     <!-- toolbar菜单样式 -->
-    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="actionMenuTextColor">@android:color/white</item>
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="titleTextAppearance">@style/ToolbarTitle</item>
+        <item name="actionMenuTextColor">@color/text_color_primary</item>
         <item name="actionMenuTextAppearance">@style/ToolbarMenuTextSize</item>
         <item name="selectableItemBackground">@drawable/toolbar_button_bg</item>
     </style>
+
     <!-- toolbar弹出菜单样式 -->
-    <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat">
-        <item name="android:colorBackground">#212121</item>
+    <style name="ToolbarPopupTheme" parent="ThemeOverlay.AppCompat">
+        <item name="android:colorBackground">@color/back_color</item>
     </style>
     <!-- toolbar标题样式 -->
-    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">14sp</item>
+    <style name="ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/text_color_primary</item>
     </style>
     <!-- toolbar菜单文字尺寸 -->
     <style name="ToolbarMenuTextSize" parent="@style/TextAppearance.AppCompat.Menu">

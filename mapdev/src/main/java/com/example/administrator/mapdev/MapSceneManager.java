@@ -50,7 +50,7 @@ public abstract class MapSceneManager {
      * @param sceneName 场景名称
      * @return
      */
-    public MapScene loadMapScene(String sceneName){
+    public MapScene openMapScene(String sceneName){
         if( hasMapScene() ){
             if( currentScene.getSceneName().equals(sceneName) )
                 return currentScene;
@@ -73,7 +73,7 @@ public abstract class MapSceneManager {
      * 加载所有图层的名称，并且按照最后的打开时间进行排序
      * @return
      */
-    public List<String> loadMapSceneNames(){
+    public List<String> getMapSceneNames(){
         List<MapScene> mapScenes = DataSupport.select("sceneName").order("lastOpenDate desc").find(MapScene.class);
         List<String> mapSceneNames = new ArrayList<>();
         for (MapScene mapscene: mapScenes ) {

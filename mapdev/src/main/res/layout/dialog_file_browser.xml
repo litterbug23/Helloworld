@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/dialog_file_browser"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:theme="@style/AppTheme">
+
+    <com.example.administrator.mapdev.FileSelectView
+        android:id="@+id/fileListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="300dp"
+        android:listSelector="@drawable/selectable_item_background"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/no"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="取消"
+            android:textColor="#7D7D7D"
+            android:textSize="16sp"/>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#E4E4E4"/>
+        <Button
+            android:id="@+id/yes"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="确定"
+            android:textColor="#38ADFF"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+</LinearLayout>

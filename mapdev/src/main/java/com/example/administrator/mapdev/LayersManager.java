@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.esri.android.map.FeatureLayer;
@@ -42,6 +43,7 @@ import java.util.List;
  * Created by Administrator on 2016/3/15.
  * 图层管理类
  * 图层分为 GraphicLayer, FeatureLayer , RasterLayer 几个大类
+ * 各类图层之间的配置完全由Image
  */
 public class LayersManager extends MapSceneManager {
     static final public double METER_PER_INCH = 0.0254;
@@ -57,12 +59,12 @@ public class LayersManager extends MapSceneManager {
     private double screenWidthMeter;
     private List<LayerItemData> layerItems = new ArrayList<>();
     private SQLiteDatabase db = Connector.getDatabase();
-    private GraphicsLayer drawerLayer;    //活动图层（所有临时绘制都在活动图层）
-    private GraphicsLayer userDrawerLayer;  //用户绘制图层需要序列化保存
     private OnStatusChangedListener onStatusChangedListener = null;
     //private FeatureLayer surveyLayer;   //存储实地采集照片的信息(点图层）
     //private FeatureLayer userPolylineLayer; //存储用户绘制的点信息
     //private FeatureLayer userPolygonLayer;  //存储用户绘制的面信息
+    private GraphicsLayer drawerLayer;              //活动图层（所有临时绘制都在活动图层）
+    private GraphicsLayer userDrawerLayer;          //用户绘制图层需要序列化保存
     private GraphicsLayer photoDrawerLayer;         //存储实地采集照片的信息(点图层）
     private SurveyDataManager surveyDataManager;
     private SurveyDataLayer surveryPointLayer;      //采集点数据
@@ -83,6 +85,22 @@ public class LayersManager extends MapSceneManager {
 
     public GraphicsLayer getUserDrawerLayer() {
         return userDrawerLayer;
+    }
+
+    public GraphicsLayer getPhotoDrawerLayer() {
+        return photoDrawerLayer;
+    }
+
+    public SurveyDataLayer getSurveryPointLayer() {
+        return surveryPointLayer;
+    }
+
+    public SurveyDataLayer getSurveryPolylineLayer() {
+        return surveryPolylineLayer;
+    }
+
+    public SurveyDataLayer getSurveryPolygonLayer() {
+        return surveryPolygonLayer;
     }
 
     public double getScreenWidthMeter() {
@@ -107,18 +125,19 @@ public class LayersManager extends MapSceneManager {
         context = mapView.getContext();
         mapView.setOnStatusChangedListener(StatusChangeListener);
         String dataCache = db.getPath();
+        Log.d("LayerManager", dataCache);
         //Toast.makeText(context,dataCache,Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public MapScene loadMapScene(String sceneName) {
-        MapScene mapScene = super.loadMapScene(sceneName);
+    public MapScene openMapScene(String sceneName) {
+        MapScene mapScene = super.openMapScene(sceneName);
         return mapScene;
     }
 
     @Override
     void onCurrentMapSceneChanged(MapScene oldScene, MapScene currentScene) {
-        reloadMapLayers();
+        reOpenMapLayers();
     }
 
     /**
@@ -178,7 +197,7 @@ public class LayersManager extends MapSceneManager {
     /**
      * 从数据库中加载所有图层到当前地图中
      */
-    private void loadMapLayers() {
+    private void openMapLayers() {
         //按照图层的优先级次序重新排列图层并加载地图中
         layerItems = getCurrentScene().getOrderMapLayers();
         //layerItems = DataSupport.order("orderId asc").find(LayerItemData.class);
@@ -207,9 +226,9 @@ public class LayersManager extends MapSceneManager {
     /**
      * 重新加载当前地图图层
      */
-    private void reloadMapLayers() {
+    private void reOpenMapLayers() {
         mapView.removeAll();
-        loadMapLayers();
+        openMapLayers();
         loadSurveyDataLayers();
     }
 
@@ -275,11 +294,6 @@ public class LayersManager extends MapSceneManager {
         //GraphicLayer用来绘制临时数据（比如测量等）
         drawerLayer = new GraphicsLayer(mapSpatialRef, mapView.getMaxExtent());
         mapView.addLayer(drawerLayer);
-    }
-
-    private void loadUserDrawerLayer() {
-        //从缓存数据库中调用用户绘制的数据库文件
-
     }
 
     private int getLayerIndex(Layer layer) {
@@ -482,12 +496,22 @@ public class LayersManager extends MapSceneManager {
         return null;
     }
 
+    /**
+     * 添加新的影像图层到场景地图中
+     *
+     * @param path
+     */
     public void loadRasterLayer(String path) {
         Layer layer = openRasterLayer(path);
         if (layer != null)
             saveLayerItemData(layer, path);
     }
 
+    /**
+     * 添加KML图层 （目前暂时不处理KML的情况)
+     *
+     * @param path
+     */
     private void loadKMLLayer(String path) {
         KmlLayer kmlLayer = new KmlLayer(path);
         mapView.addLayer(kmlLayer);
@@ -511,6 +535,12 @@ public class LayersManager extends MapSceneManager {
         }
     }
 
+    /**
+     * 打开矢量图层
+     *
+     * @param path
+     * @return
+     */
     private Layer openVectorLayer(String path) {
         try {
             ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(path);
@@ -566,6 +596,12 @@ public class LayersManager extends MapSceneManager {
         return null;
     }
 
+    /**
+     * 加载新的矢量图层
+     *
+     * @param path
+     * @return
+     */
     public void loadVectorLayer(String path) {
         Layer layer = openVectorLayer(path);
         if (layer != null)

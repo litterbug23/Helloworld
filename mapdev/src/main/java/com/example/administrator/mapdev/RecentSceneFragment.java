@@ -1,7 +1,6 @@
 package com.example.administrator.mapdev;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -11,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-
-import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,7 +80,7 @@ public class RecentSceneFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Map<String,Object> item =mData.get(position);
                 String sceneName = (String) item.get("title") ;
-                mapSceneManager.loadMapScene(sceneName);
+                mapSceneManager.openMapScene(sceneName);
                 onButtonPressed();
             }
         });

@@ -8,11 +8,12 @@
     android:layout_margin="0dp"
     android:padding="0dp"
     android:background="?attr/colorPrimary"
-    android:popupTheme="@style/AppBarTheme"
-    android:theme="@style/AppBarTheme"
+    app:theme="@style/ToolbarTheme"
+    app:popupTheme="@style/ToolbarPopupTheme"
     app:logo="@mipmap/ic_launcher"
     app:title="@string/app_name"
     app:subtitle="@string/sub_name"
+    app:titleMargins="0dp"
     />
 <!--
 android:layout_height="?attr/actionBarSize"

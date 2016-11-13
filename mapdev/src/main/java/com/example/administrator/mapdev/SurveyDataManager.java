@@ -55,6 +55,7 @@ import javax.xml.datatype.DatatypeConstants;
  * 2、从数据库中加载数据，排除当前已经加载的数据
  */
 public final class SurveyDataManager {
+
     private Map<Long, SurveyData> surveyDataMap = new LinkedHashMap<>();
     private Map<String, Integer> surveyFields = new LinkedHashMap<>();
     public static SparseIntArray esriToOgrFieldType = new SparseIntArray() {{
@@ -299,6 +300,13 @@ public final class SurveyDataManager {
             }
         }
         return newDataList;
+    }
+
+    /**
+     * 清空所有已经加载缓存的临时数据
+     */
+    public void clearSurveyDataSet() {
+        surveyDataMap.clear();
     }
 
     /**
