@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements
     private String mCurrentPath;
     //缺省存储路径（MapDev)
     private String mDefaultStoragePath;
-
+    private SurveyDataCaptureTool surveyDataCaptureTool;
     static final private int RASTER_DATA_TYPE = 0;
     static final private int SHP_DATA_TYPE = 1;
     static final private int GDB_DATA_TYPE = 2;
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mApplication = (MapApplication) getApplication();
+        mApplication.setMainActivity(this);
         mMapView = (MapView) findViewById(R.id.map);
         mMapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         mLayerManager = mMapFragment.getLayersManager();
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements
         getDefaultStartDirectory();
         initToolbar();
         initDrawerLayout();
+        surveyDataCaptureTool =new SurveyDataCaptureTool();
     }
 
     @Override
@@ -97,7 +99,22 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
-            case R.id.photo_survey:
+            case R.id.gps_position_survey:
+                surveyDataCaptureTool.doCaptureGPSLocation();
+                break;
+            case R.id.draw_position_survey:
+                surveyDataCaptureTool.doCaptureByMapTouch();
+                break;
+            case R.id.undo_position_survey:
+                surveyDataCaptureTool.undo();
+                break;
+            case R.id.redo_position_survey:
+                surveyDataCaptureTool.redo();
+                break;
+            case R.id.end_position_survey:
+                surveyDataCaptureTool.doComplete();
+                break;
+            case R.id.photo_survey_gps:
                 openCamera();
                 break;
             case R.id.search_feature:
@@ -188,11 +205,18 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case R.id.survey_data:
                     //采集数据
-                    setCurrentToolGroup(R.id.survey_data_tool_group);
+                    if (mLayerManager.hasMapScene()) {
+                        setCurrentToolGroup(R.id.survey_data_tool_group);
+                        surveyDataCaptureTool.initSurveyDataCaptureTool();
+                    } else
+                        MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
                     break;
                 case R.id.survey_edit:
-                    //采集数据编辑
-                    setCurrentToolGroup(R.id.survey_edit_tool_group);
+                    if (mLayerManager.hasMapScene()) {
+                        //采集数据编辑
+                        setCurrentToolGroup(R.id.survey_edit_tool_group);
+                    } else
+                        MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
                     break;
                 case R.id.survey_data_export:
                     //采集数据导出
@@ -497,7 +521,7 @@ public class MainActivity extends AppCompatActivity implements
     public void showAboutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle("版权信息");
-        builder.setMessage("江西省国土资源勘测规划院版权所有");
+        builder.setMessage("江西省国土资源勘测规划院版权所有\n 版本1.0.24");
         builder.setPositiveButton("确定", null);
         builder.show();
     }

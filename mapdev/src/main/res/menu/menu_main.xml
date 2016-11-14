@@ -40,6 +40,10 @@
             android:icon="@drawable/ic_action_editor"
             android:title="@string/survey_edit"/>
         <item
+            android:id="@+id/survey_draw"
+            android:icon="@drawable/ic_add_polyline"
+            />
+        <item
             android:id="@+id/survey_data_export"
             android:icon="@drawable/ic_action_save"
             android:title="@string/survey_data_export"/>
@@ -82,7 +86,7 @@
         <item
             android:id="@+id/mapview_setting"
             android:icon="@drawable/ic_mapview_setting"
-            android:title="@string/mapview_setting"/>
+            android:title="@string/map_view_setting"/>
         <item
             android:id="@+id/help_about"
             android:icon="@drawable/ic_help_about"

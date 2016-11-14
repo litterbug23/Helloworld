@@ -1,5 +1,6 @@
 package com.example.administrator.mapdev;
 
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,7 @@ public class MapApplication extends LitePalApplication {
 	private String photoPath = "/外业核查/导出数据/照片";
 	private String smallPhotoPath="/外业核查/导出数据/照片缩略图";
 	private LayersManager layersManager;
+	private Activity mainActivity;
 
 	static public MapApplication instance(){
 		return (MapApplication)getContext();
@@ -49,6 +51,14 @@ public class MapApplication extends LitePalApplication {
 
 	public void setLayersManager(LayersManager layersManager) {
 		this.layersManager = layersManager;
+	}
+
+	public Activity getMainActivity() {
+		return mainActivity;
+	}
+
+	public void setMainActivity(Activity mainActivity) {
+		this.mainActivity = mainActivity;
 	}
 
 	public String getBasePath() {

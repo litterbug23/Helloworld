@@ -38,6 +38,8 @@ import org.litepal.tablemanager.Connector;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -85,6 +87,7 @@ public class LayersManager extends MapSceneManager {
 
     /**
      * 采集数据管理类（负责采集数据的存取及导出）
+     *
      * @return
      */
     public SurveyDataManager getSurveyDataManager() {
@@ -93,6 +96,7 @@ public class LayersManager extends MapSceneManager {
 
     /**
      * 活动图层，是置顶图层
+     *
      * @return
      */
     public GraphicsLayer getDrawerLayer() {
@@ -101,6 +105,7 @@ public class LayersManager extends MapSceneManager {
 
     /**
      * 临时图层，目前主要用来存储GPS信息
+     *
      * @return
      */
     public GraphicsLayer getUserDrawerLayer() {
@@ -109,6 +114,7 @@ public class LayersManager extends MapSceneManager {
 
     /**
      * 获得照片图层
+     *
      * @return
      */
     public PhotoSurveyLayer getPhotoSurveyLayer() {
@@ -198,6 +204,7 @@ public class LayersManager extends MapSceneManager {
             itemData.setGeometryType(LayerItemData.POLYGON);
             itemData.setDataSource("采集面数据");
             itemData.setLayer(surveyPointLayer);
+            itemData.setOrderId(0);
             layerItems.add(itemData);
         }
         {
@@ -206,6 +213,7 @@ public class LayersManager extends MapSceneManager {
             itemData.setGeometryType(LayerItemData.POLYLINE);
             itemData.setLayer(surveyPolylineLayer);
             itemData.setDataSource("采集线数据");
+            itemData.setOrderId(1);
             layerItems.add(itemData);
         }
         {
@@ -214,6 +222,7 @@ public class LayersManager extends MapSceneManager {
             itemData.setGeometryType(LayerItemData.POINT);
             itemData.setLayer(surveyPointLayer);
             itemData.setDataSource("采集点数据");
+            itemData.setOrderId(2);
             layerItems.add(itemData);
         }
     }
@@ -252,7 +261,7 @@ public class LayersManager extends MapSceneManager {
      */
     private void reopenMapLayers() {
         mapView.removeAll();
-        rasterGroupLayer =new GroupLayer();
+        rasterGroupLayer = new GroupLayer();
         mapView.addLayer(rasterGroupLayer);
         vectorGroupLayer = new GroupLayer();
         mapView.addLayer(vectorGroupLayer);
@@ -427,7 +436,7 @@ public class LayersManager extends MapSceneManager {
     private void saveLayerItemData(Layer layer, String dataSource) {
         if (layer instanceof FeatureLayer) {
             LayerItemData layerItem = new LayerItemData();
-            layerItem.setOrderId(getLayerIndex(layer));
+            layerItem.setOrderId(getVectorLayerInex(layer));
             layerItem.setDataSource(dataSource);
             layerItem.setLayerType(LayerItemData.FEATURE_LAYER);
             layerItem.setLayer(layer);
@@ -442,6 +451,7 @@ public class LayersManager extends MapSceneManager {
                 case MULTIPOINT:
                     layerItem.setGeometryType(LayerItemData.POINT);
                     break;
+                case ENVELOPE:
                 case POLYGON:
                     layerItem.setGeometryType(LayerItemData.POLYGON);
                     break;
@@ -460,7 +470,7 @@ public class LayersManager extends MapSceneManager {
         } else if (layer instanceof RasterLayer) {
             LayerItemData layerItem = new LayerItemData();
             layerItem.setLayer(layer);
-            layerItem.setOrderId(getLayerIndex(layer));
+            layerItem.setOrderId(getRasterLayerIndex(layer));
             layerItem.setDataSource(dataSource);
             layerItem.setLayerType(LayerItemData.RASTER_LAYER);
             layerItem.setGeometryType(LayerItemData.RASTER);
@@ -487,6 +497,86 @@ public class LayersManager extends MapSceneManager {
                 MapApplication.showMessage("保存图层数据失败");
             }
         }
+    }
+
+    /**
+     * 删除地图（主要是图层管理器调用）
+     *
+     * @param item
+     */
+    public boolean deleteLayer(LayerItemData item) {
+        if (item == null)
+            return false;
+        Layer layer = item.getLayer();
+        if (layer != null) {
+            if (layer instanceof FeatureLayer) {
+                vectorGroupLayer.removeLayers(layer.getName());
+                layer.recycle();
+            } else if (layer instanceof RasterLayer) {
+                if (item.getDataSource().equalsIgnoreCase(getCurrentScene().getBaseRasterPath())) {
+                    MapApplication.showMessage("影像底图不能删除");
+                    return false;
+                } else
+                    rasterGroupLayer.removeLayers(layer.getName());
+                layer.recycle();
+            } else if (layer instanceof GraphicsLayer) {
+                MapApplication.showMessage("采集图层不能删除");
+                return false;
+            }
+        }
+        layerItems.remove(item);
+        item.delete();
+        return true;
+    }
+
+    private int getLayerIndex(GroupLayer parent, Layer layer) {
+        Layer[] layers = parent.getLayers();
+        for (int i = 0; i < layers.length; i++) {
+            if (layer == layers[i]) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public boolean exchangeTwoLayerItems(LayerItemData one, LayerItemData two) {
+        if (one.getLayerType() != two.getLayerType())
+            return false;
+        if (one.getLayer() == null || two.getLayer() == null)
+            return false;
+        GroupLayer groupLayer = (GroupLayer) (one.getLayer().getParent());
+        Layer oneLayer = one.getLayer();
+        Layer twoLayer = two.getLayer();
+        int oneIndex = getLayerIndex(groupLayer, oneLayer);
+        int twoIndex = getLayerIndex(groupLayer, twoLayer);
+        Layer[] layers = groupLayer.getLayers();
+        for(int i=0 ; i< layers.length ; i++){
+            groupLayer.removeLayer(0);
+        }
+        List<Layer> layerList = Arrays.asList(layers);
+        Collections.swap(layerList, oneIndex, twoIndex);
+        Layer[] newLayers =new Layer[layers.length];
+        layerList.toArray(newLayers);
+        groupLayer.addLayers(newLayers);
+//        groupLayer.removeLayer(oneIndex);
+//        if (oneIndex < twoIndex) {
+//            groupLayer.removeLayer(twoIndex - 1);
+//            groupLayer.addLayer(twoLayer,oneIndex);
+//            groupLayer.addLayer(oneLayer,twoIndex);
+//        } else {
+//            groupLayer.removeLayer(twoIndex);
+//            groupLayer.addLayer(oneLayer,twoIndex);
+//            groupLayer.addLayer(twoLayer,oneIndex);
+//        }
+        int orderId = one.getOrderId();
+        one.setOrderId(two.getOrderId());
+        two.setOrderId(orderId);
+
+        if( one.getId() != 0 )
+            one.update(one.getId());
+        if(two.getId() != 0 )
+            two.update(two.getId());
+        return true;
     }
 
     private Layer openRasterLayer(String path) {
@@ -623,9 +713,35 @@ public class LayersManager extends MapSceneManager {
             vectorGroupLayer.addLayer(featureLayer);
             return featureLayer;
         } catch (FileNotFoundException e) {
-            Toast.makeText(LitePalApplication.getContext(), "vector file doesn't exist", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LitePalApplication.getContext(), "矢量文件不存在", Toast.LENGTH_SHORT).show();
         }
         return null;
+    }
+
+    /**
+     * 获得矢量图层的索引值
+     *
+     * @param vectorLayer
+     * @return
+     */
+    private int getVectorLayerInex(Layer vectorLayer) {
+        Layer[] layers = vectorGroupLayer.getLayers();
+        for (int i = 0; i < layers.length; i++) {
+            if (vectorLayer == layers[i]) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private int getRasterLayerIndex(Layer rasterlayer) {
+        Layer[] layers = rasterGroupLayer.getLayers();
+        for (int i = 0; i < layers.length; i++) {
+            if (rasterlayer == layers[i]) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     /**

@@ -70,7 +70,15 @@ public final class SurveyDataManager {
 
     public SurveyDataManager() {
         initAttributeFields();
-        testSave();
+        //testSave();
+    }
+
+    /**
+     * 字段模板
+     * @return
+     */
+    public Map<String, Integer> getSurveyFields() {
+        return surveyFields;
     }
 
     /**

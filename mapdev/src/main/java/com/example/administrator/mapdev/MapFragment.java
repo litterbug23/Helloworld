@@ -491,7 +491,9 @@ public class MapFragment extends Fragment {
     }
 
     public void resetTool(){
-        mToolsManager.reset();
+        if (mMapView.isLoaded()) {
+            mToolsManager.reset();
+        }
     }
 
     @Override

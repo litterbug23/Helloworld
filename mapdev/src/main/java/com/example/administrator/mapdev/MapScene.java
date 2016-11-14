@@ -118,7 +118,7 @@ public class MapScene extends DataSupport {
     public List<LayerItemData> getOrderMapLayers() {
         //saveBaseRasterLayer();
         return DataSupport.where("MapScene_id = ?",
-                String.valueOf(getId())).order("layerType desc,orderId asc").find(LayerItemData.class);
+                String.valueOf(getId())).order("layerType asc,orderId desc").find(LayerItemData.class);
     }
 
     public boolean isBaseRasterInMapLayers(String dataSoruce) {

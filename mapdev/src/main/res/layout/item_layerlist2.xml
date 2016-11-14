@@ -54,16 +54,18 @@
         android:layout_alignWithParentIfMissing="false"
         android:layout_alignParentEnd="false"
         android:id="@+id/order_line_layout"
-        android:paddingLeft="8dp">
+        android:paddingLeft="8dp"
+        android:layout_margin="0dp"
+        >
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton"
+            android:id="@+id/item_layers2_up"
             android:src="@android:drawable/arrow_up_float"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton2"
+            android:id="@+id/item_layers2_down"
             android:src="@android:drawable/arrow_down_float"/>
     </LinearLayout>
 

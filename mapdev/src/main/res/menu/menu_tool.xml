@@ -27,12 +27,12 @@
             android:title="@string/draw_position_survey"
             app:showAsAction="always"/>
         <!--<item-->
-            <!--android:id="@+id/free_position_survey"-->
-            <!--android:checked="true"-->
-            <!--android:icon="@drawable/ic_gesture_24dp"-->
-            <!--android:orderInCategory="3"-->
-            <!--android:title="@string/free_position_survey"-->
-            <!--app:showAsAction="always"/>-->
+        <!--android:id="@+id/free_position_survey"-->
+        <!--android:checked="true"-->
+        <!--android:icon="@drawable/ic_gesture_24dp"-->
+        <!--android:orderInCategory="3"-->
+        <!--android:title="@string/free_position_survey"-->
+        <!--app:showAsAction="always"/>-->
         <item
             android:id="@+id/undo_position_survey"
             android:checked="true"
@@ -74,26 +74,53 @@
             android:title="@string/attribute_editor"
             app:showAsAction="always|withText"/>
     </group>
-
     <group
         android:id="@+id/photo_tool_group"
         android:visible="false">
         <item
-            android:id="@+id/photo_survey"
+            android:id="@+id/photo_survey_gps"
             android:checked="true"
-            android:icon="@drawable/ic_photo_survey"
+            android:icon="@drawable/ic_photo_camera_24dp"
             android:orderInCategory="9"
-            android:title="@string/photo_survey"
+            android:title="@string/photo_survey_gps"
             app:showAsAction="always|withText"/>
         <item
-            android:id="@+id/search_feature1"
+            android:id="@+id/photo_survey_position"
             android:checked="true"
-            android:icon="@drawable/ic_action_search"
+            android:icon="@drawable/ic_assistant_photo_24dp"
             android:orderInCategory="10"
-            android:title="@string/search_feature"
+            android:title="@string/photo_survey_position"
             app:showAsAction="always|withText"/>
     </group>
-
+    <group
+        android:id="@+id/draw_tool_group"
+        android:visible="false">
+        <item
+            android:id="@+id/add_label"
+            android:checked="true"
+            android:icon="@drawable/ic_add_label"
+            android:orderInCategory="30"
+            android:title="@string/add_label"
+            app:showAsAction="ifRoom"/>
+        <item
+            android:id="@+id/add_polyline"
+            android:icon="@drawable/ic_add_polyline"
+            android:orderInCategory="31"
+            android:title="@string/add_polyline"
+            app:showAsAction="ifRoom"/>
+        <item
+            android:id="@+id/add_polygon"
+            android:icon="@drawable/ic_add_polygon"
+            android:orderInCategory="32"
+            android:title="@string/add_polygon"
+            app:showAsAction="ifRoom"/>
+        <item
+            android:id="@+id/free_hand_polyline"
+            android:icon="@drawable/ic_gesture_24dp"
+            android:orderInCategory="32"
+            android:title="@string/add_polygon"
+            app:showAsAction="ifRoom"/>
+    </group>
     <group
         android:id="@+id/gps_track_tool_group"
         android:visible="false">
@@ -101,26 +128,27 @@
             android:id="@+id/gps_track_start"
             android:checked="true"
             android:icon="@drawable/ic_action_start"
-            android:orderInCategory="11"
+            android:orderInCategory="40"
             android:title="@string/gps_track_start"
             app:showAsAction="always|withText"/>
         <item
             android:id="@+id/gps_track_stop"
             android:checked="true"
             android:icon="@drawable/ic_action_stop"
-            android:orderInCategory="12"
+            android:orderInCategory="41"
             android:title="@string/gps_track_stop"
             app:showAsAction="always|withText"/>
         <item
             android:id="@+id/gps_track_discard"
             android:checked="true"
             android:icon="@drawable/ic_gps_track_delete"
-            android:orderInCategory="13"
+            android:orderInCategory="42"
             android:title="@string/gps_track_discard"
             app:showAsAction="always|withText"/>
     </group>
-    <group android:id="@+id/default_tool_group"
-           android:visible="true"
+    <group
+        android:id="@+id/default_tool_group"
+        android:visible="true"
         >
         <item
             android:id="@+id/search_feature"
@@ -152,9 +180,9 @@
     </group>
     <item
         android:id="@+id/mapview_setting"
-        android:icon="@drawable/ic_action_area"
+        android:icon="@drawable/ic_mapview_setting"
         android:orderInCategory="54"
-        android:title="@string/mapview_setting"
+        android:title="@string/map_view_setting"
         app:showAsAction="never"/>
     <!--<item android:id="@+id/action_settings"-->
     <!--android:title="@string/action_settings"-->

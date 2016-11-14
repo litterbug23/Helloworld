@@ -80,8 +80,8 @@ public class RecentSceneFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Map<String,Object> item =mData.get(position);
                 String sceneName = (String) item.get("title") ;
-                mapSceneManager.openMapScene(sceneName);
                 onButtonPressed();
+                mapSceneManager.openMapScene(sceneName);
             }
         });
     }

@@ -24,9 +24,12 @@
 
     <string name="survey_data">数据采集</string>
     <string name="survey_edit">采集编辑</string>
+    <string name="survey_draw">地图标绘</string>
     <string name="survey_data_export">采集数据导出</string>
 
     <string name="photo_survey">照片采集</string>
+    <string name="photo_survey_gps">GPS自动取点</string>
+    <string name="photo_survey_position">地图点击取点</string>
     <string name="photo_survey_export">照片导出</string>
     <string name="photo_survey_load">照片加载</string>
 
@@ -52,7 +55,7 @@
     <string name="measure_distance">长度测量</string>
     <string name="measure_area">面积测量</string>
 
-    <string name="mapview_setting">地图设置</string>
+    <string name="map_view_setting">地图设置</string>
     <string name="btn_edit_apply">应用</string>
     <string name="btn_edit_discard">取消</string>
 
@@ -60,7 +63,7 @@
     <string name="drawer_close">Drawer Close</string>
     <string name="title_activity_settings">Settings</string>
 
-    <string name="filebrowser_text">当前文件夹：</string>
+    <string name="file_browser_text">当前文件夹：</string>
 
     <!--地图提示信息 -->
     <string name="layer_spatialref_null">图层没有空间参考系</string>
