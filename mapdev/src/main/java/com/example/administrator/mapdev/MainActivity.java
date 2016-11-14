@@ -3,7 +3,6 @@ package com.example.administrator.mapdev;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements
         getDefaultStartDirectory();
         initToolbar();
         initDrawerLayout();
-        surveyDataCaptureTool =new SurveyDataCaptureTool();
+        surveyDataCaptureTool = new SurveyDataCaptureTool();
     }
 
     @Override
@@ -119,6 +118,12 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.search_feature:
                 mMapFragment.searchFeature();
+                break;
+            case R.id.gps_track_start:
+                mMapFragment.startGpsRouteTrack();
+                break;
+            case R.id.gps_track_stop:
+                mMapFragment.stopGpsRouteTrack();
                 break;
             case R.id.add_label:
                 mMapFragment.drawFeature(DrawTool.POINT);
@@ -209,21 +214,32 @@ public class MainActivity extends AppCompatActivity implements
                         setCurrentToolGroup(R.id.survey_data_tool_group);
                         surveyDataCaptureTool.initSurveyDataCaptureTool();
                     } else
-                        MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
+                        MapApplication.showMessage("必须创建地图或打开地图才能进行采集数据");
                     break;
                 case R.id.survey_edit:
                     if (mLayerManager.hasMapScene()) {
                         //采集数据编辑
                         setCurrentToolGroup(R.id.survey_edit_tool_group);
                     } else
-                        MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
+                        MapApplication.showMessage("必须创建地图或打开地图才能采集数据编辑");
+                    break;
+                case R.id.survey_draw:
+                    if (mLayerManager.hasMapScene()) {
+                        //地图标绘
+                        setCurrentToolGroup(R.id.survey_draw_tool_group);
+                    } else
+                        MapApplication.showMessage("必须创建地图或打开地图才能地图标绘");
                     break;
                 case R.id.survey_data_export:
                     //采集数据导出
                     exportSurveyData();
                     break;
                 case R.id.photo_survey:
-                    setCurrentToolGroup(R.id.photo_tool_group);
+                    //采集现场照片
+                    if (mLayerManager.hasMapScene()) {
+                        setCurrentToolGroup(R.id.photo_tool_group);
+                    } else
+                        MapApplication.showMessage("必须创建地图或打开地图才能采集现场照片");
                     break;
                 case R.id.photo_survey_import:
                     if (mMapFragment != null) {
@@ -231,20 +247,18 @@ public class MainActivity extends AppCompatActivity implements
                     }
                     break;
                 case R.id.gps_track:
-                    setCurrentToolGroup(R.id.gps_track_tool_group);
-                    break;
-                case R.id.gps_track_start:
-                    mMapFragment.startGpsRouteTrack();
-                    break;
-                case R.id.gps_track_stop:
-                    mMapFragment.stopGpsRouteTrack();
+                    //gps轨迹跟踪绘制
+                    if (mLayerManager.hasMapScene()) {
+                        setCurrentToolGroup(R.id.gps_track_tool_group);
+                    } else
+                        MapApplication.showMessage("必须创建地图或打开地图才能GPS轨迹跟踪绘制");
                     break;
                 case R.id.gps_track_export:
                     openRouteExportFragment();
                     break;
                 case R.id.gps_track_view:
                     openRouteFragment();
-                case R.id.mapview_setting:
+                case R.id.map_view_setting:
                     break;
                 case R.id.help_about:
                     showAboutDialog();
@@ -393,20 +407,20 @@ public class MainActivity extends AppCompatActivity implements
             add(R.id.survey_edit_tool_group);
             add(R.id.photo_tool_group);
             add(R.id.gps_track_tool_group);
+            add(R.id.survey_draw_tool_group);
         }
     };
     int currentToolGroupId = -1;
 
     public boolean isCurrentToolGroupVisible() {
-        return currentToolGroupId != -1 ;
+        return currentToolGroupId != -1;
     }
 
-    public interface OnCurrentToolGroupChangedListener
-    {
-        void onChanged(int oldToolGroupId,int newToolGroupId);
+    public interface OnCurrentToolGroupChangedListener {
+        void onChanged(int oldToolGroupId, int newToolGroupId);
     }
 
-    OnCurrentToolGroupChangedListener onCurrentToolGroupChanged=null;
+    OnCurrentToolGroupChangedListener onCurrentToolGroupChanged = null;
 
     public void setOnCurrentToolGroupChanged(OnCurrentToolGroupChangedListener onCurrentToolGroupChanged) {
         this.onCurrentToolGroupChanged = onCurrentToolGroupChanged;
@@ -414,29 +428,30 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * 切换工具条
+     *
      * @param toolGroupId
      */
     public void setCurrentToolGroup(int toolGroupId) {
         if (toolGroupIds.contains(toolGroupId)) {
-            int oldToolGroupId=currentToolGroupId;
+            int oldToolGroupId = currentToolGroupId;
             currentToolGroupId = toolGroupId;
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             for (int groupId : toolGroupIds) {
                 toolbar.getMenu().setGroupVisible(groupId, false);
             }
             toolbar.getMenu().setGroupVisible(currentToolGroupId, true);
-            if(onCurrentToolGroupChanged != null ){
-                onCurrentToolGroupChanged.onChanged(oldToolGroupId,currentToolGroupId);
+            if (onCurrentToolGroupChanged != null) {
+                onCurrentToolGroupChanged.onChanged(oldToolGroupId, currentToolGroupId);
             }
         } else {
-            int oldToolGroupId=currentToolGroupId;
+            int oldToolGroupId = currentToolGroupId;
             currentToolGroupId = -1;
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             for (int groupId : toolGroupIds) {
                 toolbar.getMenu().setGroupVisible(groupId, false);
             }
-            if(onCurrentToolGroupChanged != null ){
-                onCurrentToolGroupChanged.onChanged(oldToolGroupId,currentToolGroupId);
+            if (onCurrentToolGroupChanged != null) {
+                onCurrentToolGroupChanged.onChanged(oldToolGroupId, currentToolGroupId);
             }
         }
     }
@@ -521,7 +536,7 @@ public class MainActivity extends AppCompatActivity implements
     public void showAboutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle("版权信息");
-        builder.setMessage("江西省国土资源勘测规划院版权所有\n 版本1.0.24");
+        builder.setMessage("江西省国土资源勘测规划院版权所有\n北京立智创新科技有限公司技术支持\n    外业核查移动版版本1.0.24");
         builder.setPositiveButton("确定", null);
         builder.show();
     }

@@ -36,13 +36,14 @@
             android:icon="@drawable/ic_action_add"
             android:title="@string/survey_data"/>
         <item
+            android:id="@+id/survey_draw"
+            android:icon="@drawable/ic_add_polyline"
+            android:title="@string/survey_draw"
+            />
+        <item
             android:id="@+id/survey_edit"
             android:icon="@drawable/ic_action_editor"
             android:title="@string/survey_edit"/>
-        <item
-            android:id="@+id/survey_draw"
-            android:icon="@drawable/ic_add_polyline"
-            />
         <item
             android:id="@+id/survey_data_export"
             android:icon="@drawable/ic_action_save"
@@ -84,7 +85,7 @@
         android:checkableBehavior="single"
         android:id="@+id/setting_group">
         <item
-            android:id="@+id/mapview_setting"
+            android:id="@+id/map_view_setting"
             android:icon="@drawable/ic_mapview_setting"
             android:title="@string/map_view_setting"/>
         <item

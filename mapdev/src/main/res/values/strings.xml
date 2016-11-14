@@ -42,6 +42,7 @@
 
     <string name="geometry_editor">图形编辑</string>
     <string name="attribute_editor">属性编辑</string>
+    <string name="geometry_delete">删除图斑</string>
 
     <string name="photo_label">照片标注</string>
 
@@ -49,6 +50,7 @@
     <string name="add_label">添加标注</string>
     <string name="add_polyline">绘制线</string>
     <string name="add_polygon">绘制面</string>
+    <string name="free_hand">连续绘制</string>
     <string name="label_export">用户标注导出</string>
     <string name="action_settings">更多</string>
 
@@ -56,6 +58,8 @@
     <string name="measure_area">面积测量</string>
 
     <string name="map_view_setting">地图设置</string>
+    <string name="reset_tool">重置工具</string>
+    <string name="map_exit">退出</string>
     <string name="btn_edit_apply">应用</string>
     <string name="btn_edit_discard">取消</string>
 
