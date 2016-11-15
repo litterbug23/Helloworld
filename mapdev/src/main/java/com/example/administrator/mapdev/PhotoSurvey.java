@@ -114,7 +114,7 @@ public class PhotoSurvey extends DataSupport {
 
 	/**
 	 * 采集照片的名称
-	 *
+	 * 默认采集照片不再包含照片路劲
 	 * @return
 	 */
 	public String getPhotoImage() {

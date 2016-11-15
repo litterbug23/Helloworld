@@ -126,6 +126,7 @@ public class PhotoSurveyManager {
 		photoSurvey.setAzimuth(azimuth);
 		photoSurvey.setComment(comment);
 		photoSurvey.setPhotoImage(imagePath);
+		photoSurvey.setStaff(mapScene.getUserName());
 		Date now = new Date();
 		photoSurvey.setDate(now.getTime());
 		photoSurvey.setMapScene(mapScene);

@@ -206,7 +206,10 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case R.id.layer_manager:
                     //openLayersFragment();
-                    openLayers2Fragment();
+                    if (mLayerManager.hasMapScene())
+                        openLayers2Fragment();
+                    else
+                        MapApplication.showMessage("必须打开地图或创建地图才能使用图层管理");
                     break;
                 case R.id.survey_data:
                     //采集数据
@@ -248,16 +251,24 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case R.id.gps_track:
                     //gps轨迹跟踪绘制
-                    if (mLayerManager.hasMapScene()) {
+                    if (mLayerManager.hasMapScene())
                         setCurrentToolGroup(R.id.gps_track_tool_group);
-                    } else
+                    else
                         MapApplication.showMessage("必须创建地图或打开地图才能GPS轨迹跟踪绘制");
                     break;
                 case R.id.gps_track_export:
-                    openRouteExportFragment();
+                    //gps轨迹跟踪绘制
+                    if (mLayerManager.hasMapScene())
+                        openRouteExportFragment();
+                    else
+                        MapApplication.showMessage("必须创建地图或打开地图才能使用GPS导出功能");
                     break;
                 case R.id.gps_track_view:
-                    openRouteFragment();
+                    if (mLayerManager.hasMapScene())
+                        openRouteFragment();
+                    else
+                        MapApplication.showMessage("必须创建地图或打开地图才能使用GPS路径查看功能");
+                    break;
                 case R.id.map_view_setting:
                     break;
                 case R.id.help_about:
@@ -366,17 +377,17 @@ public class MainActivity extends AppCompatActivity implements
         return super.onKeyDown(keyCode, event);
     }
 
-    @Deprecated
-    private void setMapViewOptionsByBaseLayer() {
-        //地图第一次被初始化被调用此函数
-        if (!mMapView.isLoaded())
-            return;
-        SpatialReference mapSpatialRef = mMapView.getSpatialReference();
-        //GraphicLayer用来绘制临时数据（比如测量等）
-        GraphicsLayer graphLayer = new GraphicsLayer(mapSpatialRef, mMapView.getMaxExtent());
-        mMapView.addLayer(graphLayer);
-        mMapView.getLocationDisplayManager();
-    }
+//    @Deprecated
+//    private void setMapViewOptionsByBaseLayer() {
+//        //地图第一次被初始化被调用此函数
+//        if (!mMapView.isLoaded())
+//            return;
+//        SpatialReference mapSpatialRef = mMapView.getSpatialReference();
+//        //GraphicLayer用来绘制临时数据（比如测量等）
+//        GraphicsLayer graphLayer = new GraphicsLayer(mapSpatialRef, mMapView.getMaxExtent());
+//        mMapView.addLayer(graphLayer);
+//        mMapView.getLocationDisplayManager();
+//    }
 
     private void openFileBrowser(int dataType) {
         String suffix = ".tiff;.tif;.img;";
@@ -472,14 +483,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void openRouteFragment() {
-        RouteFragment routeFragment = RouteFragment.newInstance(mMapFragment.getGpsRouteTracker());
+        GpsRouteViewFragment routeFragment = GpsRouteViewFragment.newInstance(mMapFragment.getGpsRouteTracker());
         getSupportFragmentManager().beginTransaction()
                 .add(android.R.id.content, routeFragment).addToBackStack(null)
                 .commit();
     }
 
     private void openRouteExportFragment() {
-        RouteExportFragment routeExportFragment = RouteExportFragment.newInstance(mMapFragment.getGpsRouteTracker());
+        GpsRouteExportFragment routeExportFragment = GpsRouteExportFragment.newInstance(mMapFragment.getGpsRouteTracker());
         getSupportFragmentManager().beginTransaction()
                 .add(android.R.id.content, routeExportFragment).addToBackStack(null)
                 .commit();
@@ -500,8 +511,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void exportSurveyData() {
-        SurveyDataExport surveyDataExport = new SurveyDataExport(this);
-        surveyDataExport.exportSurveyData();
+        //导出采集数据
+        if (mLayerManager.hasMapScene()) {
+            SurveyDataExport surveyDataExport = new SurveyDataExport(this);
+            surveyDataExport.exportSurveyData();
+        }else
+            MapApplication.showMessage("必须创建地图或打开地图才能进行采集数据导出");
     }
 
     @Override
@@ -535,8 +550,9 @@ public class MainActivity extends AppCompatActivity implements
 
     public void showAboutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
-        builder.setTitle("版权信息");
-        builder.setMessage("江西省国土资源勘测规划院版权所有\n北京立智创新科技有限公司技术支持\n    外业核查移动版版本1.0.24");
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setTitle("版权信息 1.1.26");
+        builder.setMessage("江西省国土资源勘测规划院版权所有\n北京立智创新科技有限公司技术支持\n");
         builder.setPositiveButton("确定", null);
         builder.show();
     }

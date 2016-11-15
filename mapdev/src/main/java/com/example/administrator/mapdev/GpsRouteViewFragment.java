@@ -24,17 +24,17 @@ import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
 /**
  * Created by Administrator on 2016/4/18.
  */
-public class RouteFragment extends Fragment {
+public class GpsRouteViewFragment extends Fragment {
 	private SwipeMenuListView mSwipeListView;
 	private DataAdapter mAdapter;
 	private GpsRouteTracker mGpsRouteTracker = null;
 
-	public RouteFragment() {
+	public GpsRouteViewFragment() {
 
 	}
 
-	public static RouteFragment newInstance(GpsRouteTracker routeTracker) {
-		RouteFragment fragment = new RouteFragment();
+	public static GpsRouteViewFragment newInstance(GpsRouteTracker routeTracker) {
+		GpsRouteViewFragment fragment = new GpsRouteViewFragment();
 		fragment.mGpsRouteTracker = routeTracker;
 		return fragment;
 	}

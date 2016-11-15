@@ -6,8 +6,6 @@ import android.util.SparseIntArray;
 
 import com.esri.android.map.MapView;
 import com.esri.core.geometry.Geometry;
-import com.esri.core.geometry.GeometryEngine;
-import com.esri.core.geometry.GeometryUtil;
 import com.esri.core.geometry.Line;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
@@ -16,7 +14,6 @@ import com.esri.core.map.Graphic;
 import com.esri.core.symbol.SimpleFillSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
-import com.example.administrator.mapdev.tools.FeatureLayerUtils;
 import com.example.administrator.mapdev.tools.GeometryUtils;
 
 import org.gdal.gdal.gdal;
@@ -27,7 +24,6 @@ import org.gdal.ogr.FieldDefn;
 import org.gdal.ogr.Layer;
 import org.gdal.ogr.ogr;
 import org.gdal.osr.SpatialReference;
-import org.gdal.osr.osr;
 import org.litepal.crud.DataSupport;
 
 import java.io.BufferedInputStream;
@@ -41,12 +37,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.datatype.DatatypeConstants;
 
 /**
  * Created by Administrator on 2016/4/22.
@@ -58,7 +51,7 @@ public final class SurveyDataManager {
 
     private Map<Long, SurveyData> surveyDataMap = new LinkedHashMap<>();
     private Map<String, Integer> surveyFields = new LinkedHashMap<>();
-    public static SparseIntArray esriToOgrFieldType = new SparseIntArray() {{
+    public static SparseIntArray esriFieldToOgrFieldType = new SparseIntArray() {{
         put(Field.esriFieldTypeInteger, ogr.OFTInteger);
         put(Field.esriFieldTypeSmallInteger, ogr.OFTInteger);
         put(Field.esriFieldTypeDouble, ogr.OFTReal);
@@ -344,7 +337,7 @@ public final class SurveyDataManager {
         //转换属性信息
         Map<String, Object> attributes = graphic.getAttributes();
         for (Map.Entry<String, Integer> entry : surveyFields.entrySet()) {
-            int ogrFieldType = esriToOgrFieldType.get(entry.getValue());
+            int ogrFieldType = esriFieldToOgrFieldType.get(entry.getValue());
             String fieldName = entry.getKey();
             if (!attributes.containsKey(fieldName))
                 continue;
@@ -456,7 +449,7 @@ public final class SurveyDataManager {
         }
         // 下面创建属性表
         for (Map.Entry<String, Integer> entry : surveyFields.entrySet()) {
-            int ogrFieldType = esriToOgrFieldType.get(entry.getValue());
+            int ogrFieldType = esriFieldToOgrFieldType.get(entry.getValue());
             String fieldName = entry.getKey();
             FieldDefn oField = new FieldDefn(fieldName, ogrFieldType);
             oLayer.CreateField(oField, 1);

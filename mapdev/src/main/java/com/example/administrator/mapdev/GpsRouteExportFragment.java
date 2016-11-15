@@ -1,8 +1,6 @@
 package com.example.administrator.mapdev;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,20 +14,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.baoyz.swipemenulistview.SwipeMenuListView;
-
 /**
  * Created by Administrator on 2016/4/19.
  */
-public class RouteExportFragment extends Fragment {
+public class GpsRouteExportFragment extends Fragment {
 	private GpsRouteTracker mGpsRouteTracker = null;
 	private ListView mListView = null;
 
-	public RouteExportFragment() {
+	public GpsRouteExportFragment() {
 	}
 
-	public static RouteExportFragment newInstance(GpsRouteTracker routeTracker) {
-		RouteExportFragment fragment = new RouteExportFragment();
+	public static GpsRouteExportFragment newInstance(GpsRouteTracker routeTracker) {
+		GpsRouteExportFragment fragment = new GpsRouteExportFragment();
 		fragment.mGpsRouteTracker = routeTracker;
 		return fragment;
 	}

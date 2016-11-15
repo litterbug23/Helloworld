@@ -92,6 +92,7 @@ public class MapFragment extends Fragment {
             if (o.equals(mMapView) && status == STATUS.INITIALIZED) {
                 //初始化位置管理器
                 LocationDisplayManager locationDisplayManager = mMapView.getLocationDisplayManager();
+                locationDisplayManager.start();
                 locationDisplayManager.setAllowNetworkLocation(true);
                 locationDisplayManager.setShowLocation(true);
                 locationDisplayManager.setAccuracyCircleOn(true);
@@ -115,12 +116,6 @@ public class MapFragment extends Fragment {
                         if (graphicIDs != null && graphicIDs.length > 0) {
                             LayoutInflater inflater = LayoutInflater.from(getContext());
                             View view = inflater.inflate(R.layout.calloutdisplay, null);
-                            view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-                                @Override
-                                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-
-                                }
-                            });
                             Button exit = (Button) view.findViewById(R.id.exit_button);
                             exit.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -170,7 +165,6 @@ public class MapFragment extends Fragment {
                                 callout.show(location, view);
                             }
                         }
-
                         Log.v("mapdev", "OnSingleTapLinstener is running !");
                     }
                 });

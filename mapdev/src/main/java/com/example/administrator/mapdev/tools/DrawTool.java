@@ -47,15 +47,14 @@ public class DrawTool extends BaseTool {
 
     public DrawTool(LayersManager layersManager) {
         super(layersManager);
-        this.tempLayer = layersManager.getUserDrawerLayer();
+        this.tempLayer = layersManager.getDrawerLayer();
         mapOnTouchListener = new DrawTouchListener(this.mapView.getContext(),
                 this.mapView);
 
-        this.markerSymbol = new SimpleMarkerSymbol(Color.BLACK, 16,
-                SimpleMarkerSymbol.STYLE.CIRCLE);
-        this.lineSymbol = new SimpleLineSymbol(Color.BLACK, 2);
-        this.fillSymbol = new SimpleFillSymbol(Color.BLACK);
-        this.fillSymbol.setAlpha(90);
+        this.markerSymbol =new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.DIAMOND);
+        this.lineSymbol = new SimpleLineSymbol(Color.YELLOW, 3);
+        this.fillSymbol = new SimpleFillSymbol(Color.argb(150, 253, 205, 68));
+        this.fillSymbol.setOutline(new SimpleLineSymbol(Color.argb(255, 73, 137, 243), 2));
     }
 
     @Override

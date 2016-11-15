@@ -18,35 +18,35 @@
             android:icon="@drawable/ic_gps_fixed_24dp"
             android:orderInCategory="1"
             android:title="@string/gps_position_survey"
-            app:showAsAction="always"/>
+            app:showAsAction="always|withText"/>
         <item
             android:id="@+id/draw_position_survey"
             android:checked="true"
-            android:icon="@drawable/ic_center_focus_strong_24dp"
+            android:icon="@drawable/ic_action_touch"
             android:orderInCategory="2"
             android:title="@string/draw_position_survey"
-            app:showAsAction="always"/>
+            app:showAsAction="always|withText"/>
         <item
             android:id="@+id/undo_position_survey"
             android:checked="true"
             android:icon="@drawable/ic_undo_24dp"
             android:orderInCategory="3"
             android:title="@string/undo_position_survey"
-            app:showAsAction="always"/>
+            app:showAsAction="always|withText"/>
         <item
             android:id="@+id/redo_position_survey"
             android:checked="true"
             android:icon="@drawable/ic_redo_24dp"
             android:orderInCategory="4"
             android:title="@string/redo_position_survey"
-            app:showAsAction="always"/>
+            app:showAsAction="always|withText"/>
         <item
             android:id="@+id/end_position_survey"
             android:checked="true"
             android:icon="@drawable/ic_action_save2"
             android:orderInCategory="5"
             android:title="@string/end_position_survey"
-            app:showAsAction="always"/>
+            app:showAsAction="always|withText"/>
     </group>
 
     <group
@@ -71,7 +71,7 @@
             android:checked="true"
             android:icon="@drawable/ic_clear_24dp"
             android:orderInCategory="12"
-            android:title="@string/attribute_editor"
+            android:title="@string/geometry_delete"
             app:showAsAction="always|withText"/>
     </group>
     <group
@@ -101,25 +101,25 @@
             android:icon="@drawable/ic_add_label"
             android:orderInCategory="30"
             android:title="@string/add_label"
-            app:showAsAction="always"/>
+            app:showAsAction="always|withText"/>
         <item
             android:id="@+id/add_polyline"
             android:icon="@drawable/ic_add_polyline"
             android:orderInCategory="31"
             android:title="@string/add_polyline"
-            app:showAsAction="always"/>
+            app:showAsAction="always|withText"/>
         <item
             android:id="@+id/add_polygon"
             android:icon="@drawable/ic_add_polygon"
             android:orderInCategory="32"
             android:title="@string/add_polygon"
-            app:showAsAction="always"/>
+            app:showAsAction="always|withText"/>
         <item
             android:id="@+id/free_hand"
             android:icon="@drawable/ic_gesture_24dp"
             android:orderInCategory="32"
             android:title="@string/free_hand"
-            app:showAsAction="always"/>
+            app:showAsAction="always|withText"/>
     </group>
     <group
         android:id="@+id/gps_track_tool_group"
@@ -156,32 +156,32 @@
             android:icon="@drawable/ic_action_search"
             android:orderInCategory="50"
             android:title="@string/search_feature"
-            app:showAsAction="ifRoom"/>
+            app:showAsAction="ifRoom|withText"/>
         <item
             android:id="@+id/measure_distance"
             android:icon="@drawable/ic_action_distance"
             android:orderInCategory="51"
             android:title="@string/measure_distance"
-            app:showAsAction="ifRoom"/>
+            app:showAsAction="ifRoom|withText"/>
         <item
             android:id="@+id/measure_area"
             android:icon="@drawable/ic_action_area"
             android:orderInCategory="52"
             android:title="@string/measure_area"
-            app:showAsAction="ifRoom"/>
+            app:showAsAction="ifRoom|withText"/>
         <item
             android:id="@+id/reset_tool"
             android:checked="true"
             android:icon="@drawable/ic_reset_tool"
             android:orderInCategory="53"
             android:title="@string/reset_tool"
-            app:showAsAction="ifRoom"/>
+            app:showAsAction="ifRoom|withText"/>
         <item
             android:id="@+id/map_view_setting"
             android:icon="@drawable/ic_settings_24dp"
             android:orderInCategory="54"
             android:title="@string/map_view_setting"
-            app:showAsAction="ifRoom"/>
+            app:showAsAction="ifRoom|withText"/>
         />
     </group>
     <item
