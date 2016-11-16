@@ -33,12 +33,14 @@
         android:src="@android:drawable/ic_menu_delete"
         android:adjustViewBounds="false"
         android:layout_centerVertical="true"
+        android:background="@null"
         android:layout_toLeftOf="@+id/item_layer2_set"/>
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/item_layer2_set"
+        android:background="@null"
         android:src="@android:drawable/ic_menu_manage"
         android:layout_toLeftOf="@+id/order_line_layout"
         android:layout_centerVertical="true"/>
@@ -61,11 +63,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/item_layers2_up"
+            android:background="@null"
             android:src="@android:drawable/arrow_up_float"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/item_layers2_down"
+            android:background="@null"
             android:src="@android:drawable/arrow_down_float"/>
     </LinearLayout>
 

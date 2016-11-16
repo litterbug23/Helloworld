@@ -140,7 +140,6 @@ public class MapFragment extends Fragment {
                                     localLocView.setText(String.format("%.1f %.1f", location.getX(), location.getY()));
                                     TextView azimuthView = (TextView) view.findViewById(R.id.photo_azimuth_content);
                                     azimuthView.setText(SensorService.getAzimuthString(azimuth));
-                                    Date dateObj = new Date(date);
                                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日hh:mm:ss");
                                     TextView dateView = (TextView) view.findViewById(R.id.photo_date_content);
                                     dateView.setText(dateFormat.format(date));
