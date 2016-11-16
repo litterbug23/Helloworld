@@ -28,19 +28,22 @@
     <string name="survey_data_export">采集数据导出</string>
 
     <string name="photo_survey">照片采集</string>
-    <string name="photo_survey_gps">GPS自动取点</string>
-    <string name="photo_survey_position">地图点击取点</string>
+    <string name="photo_survey_gps">自动取点</string>
+    <string name="photo_survey_position">地图取点</string>
     <string name="photo_survey_export">照片导出</string>
     <string name="photo_survey_load">照片加载</string>
 
-    <string name="gps_position_survey">GPS取点采集</string>
-    <string name="draw_position_survey">手动取点采集</string>
-    <string name="free_position_survey">连续取点采集</string>
+    <string name="gps_position_survey">GPS取点</string>
+    <string name="draw_position_survey">手动取点</string>
+    <string name="free_position_survey">连续取点</string>
     <string name="undo_position_survey">回退取点</string>
     <string name="redo_position_survey">重做取点</string>
-    <string name="end_position_survey">取点采集结束</string>
+    <string name="end_position_survey">采集结束</string>
 
-    <string name="geometry_editor">图形编辑</string>
+    <string name="undo">回退</string>
+    <string name="redo">重做</string>
+
+    <string name="geometry_editor">图斑编辑</string>
     <string name="attribute_editor">属性编辑</string>
     <string name="geometry_delete">删除图斑</string>
 

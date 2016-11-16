@@ -14,7 +14,7 @@
     android:layout_alignParentLeft="true"
     android:text="属性名称">
   </TextView>
-  <EditText
+  <Button
     android:id="@+id/field_date_btn"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -23,5 +23,5 @@
     android:textSize="16sp"
     android:inputType="date"
     android:layout_alignParentRight="true">
-  </EditText>
+  </Button>
 </RelativeLayout>

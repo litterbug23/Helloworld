@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.MapView;
 import com.esri.android.runtime.ArcGISRuntime;
+import com.esri.android.toolkit.analysis.MeasuringTool;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.runtime.LicenseResult;
 import com.example.administrator.mapdev.tools.DrawTool;
@@ -270,6 +271,8 @@ public class MainActivity extends AppCompatActivity implements
                         MapApplication.showMessage("必须创建地图或打开地图才能使用GPS路径查看功能");
                     break;
                 case R.id.map_view_setting:
+                    MeasuringTool measuringTool = new MeasuringTool(mMapView);
+                    startActionMode(measuringTool);
                     break;
                 case R.id.help_about:
                     showAboutDialog();
