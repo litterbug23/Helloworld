@@ -159,13 +159,13 @@ public final class SurveyDataManager {
         try {
             Symbol symbol = null;
             Map<String, Object> attributes = null;
-            Geometry geometry = null;
+            Geometry geometry ;
             {
-                java.io.ByteArrayInputStream bais = new java.io.ByteArrayInputStream(data.getGeometry());
-                java.io.ObjectInputStream ois = new java.io.ObjectInputStream(new BufferedInputStream(bais));      //something wrong here
+                java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(data.getGeometry());
+                java.io.ObjectInputStream ois = new java.io.ObjectInputStream(new BufferedInputStream(bis));      //something wrong here
                 geometry = (Geometry) ois.readObject();
                 ois.close();
-                bais.close();
+                bis.close();
             }
             if (data.getSymbolStyle() != null) {
                 java.io.ByteArrayInputStream symbol_oais = new java.io.ByteArrayInputStream(data.getSymbolStyle());

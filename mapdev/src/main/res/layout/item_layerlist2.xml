@@ -43,7 +43,8 @@
         android:background="@null"
         android:src="@android:drawable/ic_menu_manage"
         android:layout_toLeftOf="@+id/order_line_layout"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        />
 
     <LinearLayout
         android:orientation="vertical"
@@ -64,13 +65,22 @@
             android:layout_height="wrap_content"
             android:id="@+id/item_layers2_up"
             android:background="@null"
-            android:src="@android:drawable/arrow_up_float"/>
+            android:paddingRight="12dp"
+            android:src="@android:drawable/arrow_up_float"
+            android:paddingTop="0dp"
+            android:paddingLeft="4dp"
+            android:paddingBottom="2dp"/>
         <ImageButton
+            android:id="@+id/item_layers2_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/item_layers2_down"
             android:background="@null"
-            android:src="@android:drawable/arrow_down_float"/>
+            android:paddingRight="12dp"
+            android:src="@android:drawable/arrow_down_float"
+            android:paddingLeft="4dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="0dp"
+            />
     </LinearLayout>
 
 </RelativeLayout>

@@ -21,13 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.MapView;
 import com.esri.android.runtime.ArcGISRuntime;
 import com.esri.android.toolkit.analysis.MeasuringTool;
-import com.esri.core.geometry.SpatialReference;
 import com.esri.core.runtime.LicenseResult;
 import com.example.administrator.mapdev.tools.DrawTool;
+import com.example.administrator.mapdev.tools.MeasuringAction;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements
     private String mCurrentPath;
     //缺省存储路径（MapDev)
     private String mDefaultStoragePath;
-    private SurveyDataCaptureTool surveyDataCaptureTool;
+    private SurveyDataCaptureAction surveyDataCaptureTool;
     static final private int RASTER_DATA_TYPE = 0;
     static final private int SHP_DATA_TYPE = 1;
     static final private int GDB_DATA_TYPE = 2;
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements
         getDefaultStartDirectory();
         initToolbar();
         initDrawerLayout();
-        surveyDataCaptureTool = new SurveyDataCaptureTool();
+        surveyDataCaptureTool = new SurveyDataCaptureAction();
     }
 
     @Override
@@ -150,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void initToolbar() {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.menu_tool);
+        //toolbar.inflateMenu(R.menu.menu_tool);
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
@@ -272,7 +271,11 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case R.id.map_view_setting:
                     MeasuringTool measuringTool = new MeasuringTool(mMapView);
-                    startActionMode(measuringTool);
+                    //startActionMode(measuringTool);
+                    // MeasuringAction measuringAction = new MeasuringAction(mMapView);
+                    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                    toolbar.startActionMode(measuringTool);
+                    //startSupportActionMode(measuringAction);
                     break;
                 case R.id.help_about:
                     showAboutDialog();

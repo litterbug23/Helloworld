@@ -117,11 +117,21 @@ public class MapScene extends DataSupport {
      */
     public List<LayerItemData> getOrderMapLayers() {
         //saveBaseRasterLayer();
-        return DataSupport.where("MapScene_id = ?",
-                String.valueOf(getId())).order("layerType asc,orderId desc").find(LayerItemData.class);
+        //图层类型按照倒序排序，orderID按照升序排序，确保底层图层优先被加载
+        List<LayerItemData> layerItems = DataSupport.where("MapScene_id = ?",
+                String.valueOf(getId())).order("layerType desc,orderId asc").find(LayerItemData.class);
+        for(LayerItemData item : layerItems ){
+            item.setMapScene(this);
+        }
+        return layerItems;
     }
 
-    public boolean isBaseRasterInMapLayers(String dataSoruce) {
+    /**
+     * 场景中是否已经加入过此数据源
+     * @param dataSoruce
+     * @return
+     */
+    public boolean hasDataSource(String dataSoruce) {
         int result = DataSupport.where("MapScene_id = ? and dataSource = ?",
                 String.valueOf(getId()), dataSoruce).count(LayerItemData.class);
         if (result > 0)
@@ -130,7 +140,7 @@ public class MapScene extends DataSupport {
     }
 
     public boolean saveBaseRasterLayer() {
-        if ( !isBaseRasterInMapLayers(baseRasterPath) ) {
+        if ( !hasDataSource(baseRasterPath) ) {
             LayerItemData layerItemData=new LayerItemData();
             layerItemData.setGeometryType(LayerItemData.RASTER);
             layerItemData.setDataSource(baseRasterPath);

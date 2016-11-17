@@ -252,7 +252,7 @@ public class MeasureTool extends BaseTool {
 
     private String getAreaString(double dValue) {
         long area = Math.abs(Math.round(dValue));
-        String sArea = "";
+        String sArea;
         // 顺时针绘制多边形，面积为正，逆时针绘制，则面积为负
         if (area >= 1000000) {
             double dArea = area / 1000000.0;

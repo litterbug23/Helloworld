@@ -434,6 +434,11 @@ public class LayersManager extends MapSceneManager {
      * @param dataSource
      */
     private void saveLayerItemData(Layer layer, String dataSource) {
+        MapScene mapScene=getCurrentScene();
+        if(mapScene==null)
+            return ;
+        if( mapScene.hasDataSource(dataSource) )
+            return ;
         if (layer instanceof FeatureLayer) {
             LayerItemData layerItem = new LayerItemData();
             layerItem.setOrderId(getVectorLayerInex(layer));

@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.location.Location;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.LocationDisplayManager;
@@ -28,13 +30,12 @@ import java.util.List;
  * Created by Administrator on 2016/11/14.
  * 采集数据工具
  */
-public class SurveyDataCaptureTool {
+public class SurveyDataCaptureAction {
     //GPS取点,手动取点,编辑撤销，结束保存
     private SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.DIAMOND);
     private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(Color.YELLOW, 3);
     private SimpleFillSymbol fillSymbol = new SimpleFillSymbol(Color.argb(150, 253, 205, 68));
     private LocationDisplayManager locationDisplayManager;
-    private SurveyDataManager surveyDataManager;
     private LayersManager layersManager;
     private List<Point> undoHistories = new ArrayList<>();  //撤销
     private List<Point> redoHistories = new ArrayList<>();  //重做
@@ -43,14 +44,13 @@ public class SurveyDataCaptureTool {
     private MultiPoint multiPoint = null;
     private Graphic pointsGraphic = null;
     private GraphicsLayer graphicsLayer;
-    private int pointsGID;
-    private int polylineGID;
+    private int pointsGID=0;
+    private int polylineGID=0;
 
 
-    public SurveyDataCaptureTool() {
+    public SurveyDataCaptureAction() {
         fillSymbol.setOutline(new SimpleLineSymbol(Color.argb(255, 73, 137, 243), 2));
         layersManager = MapApplication.instance().getLayersManager();
-        surveyDataManager = layersManager.getSurveyDataManager();
         locationDisplayManager = layersManager.getMapView().getLocationDisplayManager();
     }
 
@@ -62,7 +62,11 @@ public class SurveyDataCaptureTool {
         polylineGraphic = new Graphic(polyline, lineSymbol);
         pointsGraphic = new Graphic(multiPoint, markerSymbol);
         graphicsLayer = layersManager.getDrawerLayer();
+        if(polylineGID!=0)
+            graphicsLayer.removeGraphic(polylineGID);
         polylineGID = graphicsLayer.addGraphic(polylineGraphic);
+        if(pointsGID!=0)
+            graphicsLayer.removeGraphic(pointsGID);
         pointsGID = graphicsLayer.addGraphic(pointsGraphic);
     }
 
@@ -115,7 +119,7 @@ public class SurveyDataCaptureTool {
         redoHistories.add(point);
         int size = multiPoint.getPointCount();
         multiPoint.removePoint(size - 1);
-        if (undoHistories.size() > 1) {
+        if (undoHistories.size() >= 1) {
             int index = polyline.getPointCount();
             polyline.removePoint(index - 1);
         }
