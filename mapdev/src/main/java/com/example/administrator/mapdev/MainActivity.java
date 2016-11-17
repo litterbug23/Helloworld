@@ -26,6 +26,7 @@ import com.esri.android.runtime.ArcGISRuntime;
 import com.esri.android.toolkit.analysis.MeasuringTool;
 import com.esri.core.runtime.LicenseResult;
 import com.example.administrator.mapdev.tools.DrawTool;
+import com.example.administrator.mapdev.tools.EditorAction;
 import com.example.administrator.mapdev.tools.MeasuringAction;
 
 import java.io.File;
@@ -270,12 +271,14 @@ public class MainActivity extends AppCompatActivity implements
                         MapApplication.showMessage("必须创建地图或打开地图才能使用GPS路径查看功能");
                     break;
                 case R.id.map_view_setting:
-                    MeasuringTool measuringTool = new MeasuringTool(mMapView);
+                    //MeasuringTool measuringTool = new MeasuringTool(mMapView);
                     //startActionMode(measuringTool);
                     // MeasuringAction measuringAction = new MeasuringAction(mMapView);
-                    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                    toolbar.startActionMode(measuringTool);
+                    //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                   // toolbar.startActionMode(measuringTool);
                     //startSupportActionMode(measuringAction);
+                    EditorAction action = new EditorAction();
+                    startSupportActionMode(action);
                     break;
                 case R.id.help_about:
                     showAboutDialog();

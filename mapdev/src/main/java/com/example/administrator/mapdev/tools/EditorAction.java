@@ -2,7 +2,10 @@ package com.example.administrator.mapdev.tools;
 
 import android.support.v7.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.example.administrator.mapdev.R;
 
 /**
  * 编辑菜单处理
@@ -11,7 +14,9 @@ import android.view.MenuItem;
 public class EditorAction implements ActionMode.Callback {
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        return false;
+        MenuInflater menuInflater = mode.getMenuInflater();
+        menuInflater.inflate(R.menu.menu_edit_tool,menu);
+        return true;
     }
 
     @Override
@@ -21,6 +26,7 @@ public class EditorAction implements ActionMode.Callback {
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
         return false;
     }
 
