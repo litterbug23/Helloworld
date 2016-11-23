@@ -1,4 +1,4 @@
-package com.example.administrator.mapdev.tools;
+package com.example.administrator.mapdev.Action;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -42,9 +42,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
+ * 测量工具类
  * Created by caizhihuan on 2016/11/17.
  */
-public class MeasuringAction implements ActionMode.Callback , OnSingleTapListener {
+public class MeasuringAction implements ActionMode.Callback, OnSingleTapListener {
     private static final long serialVersionUID = 1L;
     private static final int MENU_DELETE = 0;
     private static final int MENU_PREF = 1;
@@ -92,7 +93,7 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
     }
 
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case 0:
                 this.deleteAll();
                 break;
@@ -114,15 +115,15 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         this.mMode = mode;
         this.init();
-        MenuItem item = menu.add(0, 2, 1, "undo");
-        item.setIcon(R.drawable.ic_action_back);
+        MenuItem item = menu.add(0, 2, 1, R.string.undo);
+        item.setIcon(R.drawable.ic_undo_24dp);
         item.setVisible(false);
-        item = menu.add(0, 0, 2, "clear");
-        item.setIcon(R.drawable.ic_action_editor);
+        item = menu.add(0, 0, 2, R.string.clear);
+        item.setIcon(R.drawable.ic_clear_24dp);
         item.setVisible(false);
-        item = menu.add(0, 1, 3, "preferences");
+        item = menu.add(0, 1, 3, R.string.measure_type);
         item.setIcon(R.drawable.ic_action_distance);
-        MenuItemCompat.setActionProvider(item,new MeasuringAction.Preferences(this.mContext));
+        MenuItemCompat.setActionProvider(item, new MeasuringAction.Preferences(this.mContext));
         //item.setActionProvider();
         return true;
     }
@@ -136,7 +137,7 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
     }
 
     private void hideCallout() {
-        if(this.mCallout != null && this.mCallout.isShowing()) {
+        if (this.mCallout != null && this.mCallout.isShowing()) {
             this.mCallout.hide();
         }
 
@@ -169,24 +170,24 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
     }
 
     private void draw() {
-        if(this.mPoints.size() != 0) {
+        if (this.mPoints.size() != 0) {
             int index = 0;
             this.mResult = 0.0D;
             this.mLine = new Polyline();
             this.mPolygon = new Polygon();
 
             Point screenPoint;
-            for(Iterator labelPointForPolygon = this.mPoints.iterator(); labelPointForPolygon.hasNext(); ++index) {
-                screenPoint = (Point)labelPointForPolygon.next();
+            for (Iterator labelPointForPolygon = this.mPoints.iterator(); labelPointForPolygon.hasNext(); ++index) {
+                screenPoint = (Point) labelPointForPolygon.next();
                 this.mLayer.addGraphic(new Graphic(screenPoint, this.mMarkerSymbol, 100));
-                if(index == 0) {
+                if (index == 0) {
                     this.mLine.startPath(screenPoint);
-                    if(this.mMeasureMode == MeasuringAction.MeasureType.AREA) {
+                    if (this.mMeasureMode == MeasuringAction.MeasureType.AREA) {
                         this.mPolygon.startPath(screenPoint);
                     }
                 } else {
                     this.mLine.lineTo(screenPoint);
-                    if(this.mMeasureMode == MeasuringAction.MeasureType.AREA) {
+                    if (this.mMeasureMode == MeasuringAction.MeasureType.AREA) {
                         this.mPolygon.lineTo(screenPoint);
                     }
                 }
@@ -195,19 +196,19 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
             }
 
             Point var4;
-            if(this.mMeasureMode == MeasuringAction.MeasureType.LINEAR) {
+            if (this.mMeasureMode == MeasuringAction.MeasureType.LINEAR) {
                 this.mResult += GeometryEngine.geodesicLength(this.mLine, this.mMap.getSpatialReference(), (LinearUnit) this.getLinearUnit(this.mCurrentLinearUnit));
-                var4 = this.mMap.toScreenPoint((Point)this.mPoints.get(index - 1));
-                this.showResult((float)var4.getX(), (float)var4.getY());
-            } else if(this.mMeasureMode == MeasuringAction.MeasureType.AREA) {
-                this.mLine.lineTo((Point)this.mPoints.get(0));
+                var4 = this.mMap.toScreenPoint((Point) this.mPoints.get(index - 1));
+                this.showResult((float) var4.getX(), (float) var4.getY());
+            } else if (this.mMeasureMode == MeasuringAction.MeasureType.AREA) {
+                this.mLine.lineTo((Point) this.mPoints.get(0));
                 this.mLayer.addGraphic(new Graphic(this.mLine, this.mLineSymbol));
-                this.mPolygon.lineTo((Point)this.mPoints.get(0));
+                this.mPolygon.lineTo((Point) this.mPoints.get(0));
                 this.mLayer.addGraphic(new Graphic(this.mPolygon, this.mFillSymbol));
-                this.mResult = GeometryEngine.geodesicArea(this.mPolygon, this.mMap.getSpatialReference(), (AreaUnit)this.getAreaUnit(this.mCurrentAreaUnit));
+                this.mResult = GeometryEngine.geodesicArea(this.mPolygon, this.mMap.getSpatialReference(), (AreaUnit) this.getAreaUnit(this.mCurrentAreaUnit));
                 var4 = GeometryEngine.getLabelPointForPolygon(this.mPolygon, this.mMap.getSpatialReference());
                 screenPoint = this.mMap.toScreenPoint(var4);
-                this.showResult((float)screenPoint.getX(), (float)screenPoint.getY());
+                this.showResult((float) screenPoint.getX(), (float) screenPoint.getY());
             }
 
         }
@@ -219,25 +220,25 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
     }
 
     private void showResult(float x, float y) {
-        if(this.mResult > 0.0D) {
-            if(this.mCallout == null) {
+        if (this.mResult > 0.0D) {
+            if (this.mCallout == null) {
                 this.mText = new TextView(this.mContext);
                 this.mCallout = new CalloutPopupWindow(this.mText);
             }
 
             this.mText.setText(this.getResultString());
             this.mCallout.showCallout(this.mMap, this.mMap.toMapPoint(x, y), 0, 0);
-        } else if(this.mCallout != null && this.mCallout.isShowing()) {
+        } else if (this.mCallout != null && this.mCallout.isShowing()) {
             this.mCallout.hide();
         }
 
     }
 
     private void showResult() {
-        if(this.mResult > 0.0D) {
+        if (this.mResult > 0.0D) {
             this.mText.setText(this.getResultString());
             this.mCallout.showCallout(this.mMap);
-        } else if(this.mCallout.isShowing()) {
+        } else if (this.mCallout.isShowing()) {
             this.mCallout.hide();
         }
 
@@ -248,11 +249,11 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
     }
 
     Unit getLinearUnit(int position) {
-        return this.mLinearUnits == null?this.mDefaultLinearUnits[position]:this.mLinearUnits[position];
+        return this.mLinearUnits == null ? this.mDefaultLinearUnits[position] : this.mLinearUnits[position];
     }
 
     int getAreaUnitSize() {
-        return this.mAreaUnits == null?this.mDefaultAreaUnits.length:this.mAreaUnits.length;
+        return this.mAreaUnits == null ? this.mDefaultAreaUnits.length : this.mAreaUnits.length;
     }
 
     public void setAreaUnits(Unit[] areaUnits) {
@@ -260,23 +261,23 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
     }
 
     Unit getAreaUnit(int position) {
-        return this.mAreaUnits == null?this.mDefaultAreaUnits[position]:this.mAreaUnits[position];
+        return this.mAreaUnits == null ? this.mDefaultAreaUnits[position] : this.mAreaUnits[position];
     }
 
     int getLinearUnitSize() {
-        return this.mLinearUnits == null?this.mDefaultLinearUnits.length:this.mLinearUnits.length;
+        return this.mLinearUnits == null ? this.mDefaultLinearUnits.length : this.mLinearUnits.length;
     }
 
     int getUnitSize() {
-        return this.mMeasureMode == MeasuringAction.MeasureType.LINEAR?this.getLinearUnitSize():this.getAreaUnitSize();
+        return this.mMeasureMode == MeasuringAction.MeasureType.LINEAR ? this.getLinearUnitSize() : this.getAreaUnitSize();
     }
 
     Unit getUnit(int position) {
-        return this.mMeasureMode == MeasuringAction.MeasureType.LINEAR?this.getLinearUnit(position):this.getAreaUnit(position);
+        return this.mMeasureMode == MeasuringAction.MeasureType.LINEAR ? this.getLinearUnit(position) : this.getAreaUnit(position);
     }
 
     Unit getCurrentUnit() {
-        return this.getUnit(this.mMeasureMode == MeasuringAction.MeasureType.LINEAR?this.mCurrentLinearUnit:this.mCurrentAreaUnit);
+        return this.getUnit(this.mMeasureMode == MeasuringAction.MeasureType.LINEAR ? this.mCurrentLinearUnit : this.mCurrentAreaUnit);
     }
 
     public void setLineSymbol(LineSymbol symbol) {
@@ -292,11 +293,11 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
     }
 
     MultiPath getGeometry() {
-        return (MultiPath)(this.mMeasureMode == MeasuringAction.MeasureType.LINEAR?this.mLine:this.mPolygon);
+        return (MultiPath) (this.mMeasureMode == MeasuringAction.MeasureType.LINEAR ? this.mLine : this.mPolygon);
     }
 
     private String getResultString() {
-        return this.mResult > 0.0D?String.format("%.2f", new Object[]{Double.valueOf(this.mResult)}) + " " + this.getCurrentUnit().getAbbreviation():"";
+        return this.mResult > 0.0D ? String.format("%.2f", new Object[]{Double.valueOf(this.mResult)}) + " " + this.getCurrentUnit().getAbbreviation() : "";
     }
 
     class Preferences extends ShareActionProvider {
@@ -318,28 +319,28 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
                 public View getDropDownView(int position, View convertView, ViewGroup parent) {
                     LinearLayout layout;
                     TextView text;
-                    if(position == 0) {
+                    if (position == 0) {
                         layout = new LinearLayout(MeasuringAction.this.mContext);
                         layout.setOrientation(LinearLayout.HORIZONTAL);
                         text = new TextView(MeasuringAction.this.mContext);
-                        text.setText("Select Geometry Type");
+                        text.setText(R.string.measure_type);
                         text.setTextColor(MeasuringAction.this.mContext.getResources().getColor(R.color.accent));
                         text.setTextSize(16.0F);
                         layout.addView(text);
                         RadioButton var9 = new RadioButton(MeasuringAction.this.mContext);
-                        var9.setText("Distance");
+                        var9.setText(R.string.measure_distance);
                         RadioButton var10 = new RadioButton(MeasuringAction.this.mContext);
-                        var10.setText("Area");
+                        var10.setText(R.string.measure_area);
                         RadioGroup var11 = new RadioGroup(MeasuringAction.this.mContext);
                         var11.addView(var9);
                         var11.addView(var10);
-                        var11.check(MeasuringAction.this.mMeasureMode == MeasuringAction.MeasureType.LINEAR?var9.getId():var10.getId());
+                        var11.check(MeasuringAction.this.mMeasureMode == MeasuringAction.MeasureType.LINEAR ? var9.getId() : var10.getId());
                         layout.addView(var11);
                         layout.setPadding(10, 10, 10, 10);
                         var11.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                             public void onCheckedChanged(RadioGroup rGroup, int checkedId) {
-                                for(int i = 0; i < rGroup.getChildCount(); ++i) {
-                                    if(rGroup.getChildAt(i).getId() == checkedId) {
+                                for (int i = 0; i < rGroup.getChildCount(); ++i) {
+                                    if (rGroup.getChildAt(i).getId() == checkedId) {
                                         MeasuringAction.this.mMeasureMode = MeasuringAction.MeasureType.getType(i);
                                         notifyDataSetChanged();
                                         MeasuringAction.this.clearAndDraw();
@@ -353,34 +354,34 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
                         layout = new LinearLayout(MeasuringAction.this.mContext);
                         layout.setOrientation(LinearLayout.HORIZONTAL);
                         text = new TextView(MeasuringAction.this.mContext);
-                        text.setText("Select Unit");
+                        text.setText(R.string.measure_unit);
                         text.setTextColor(MeasuringAction.this.mContext.getResources().getColor(R.color.accent));
                         text.setTextSize(16.0F);
                         layout.addView(text);
                         RadioGroup group = new RadioGroup(MeasuringAction.this.mContext);
 
-                        for(int i = 0; i < MeasuringAction.this.getUnitSize(); ++i) {
+                        for (int i = 0; i < MeasuringAction.this.getUnitSize(); ++i) {
                             RadioButton r = new RadioButton(MeasuringAction.this.mContext);
                             r.setText(MeasuringAction.this.getUnit(i).getDisplayName());
                             group.addView(r);
-                            if(i == (MeasuringAction.this.mMeasureMode == MeasuringAction.MeasureType.LINEAR?MeasuringAction.this.mCurrentLinearUnit:MeasuringAction.this.mCurrentAreaUnit)) {
+                            if (i == (MeasuringAction.this.mMeasureMode == MeasuringAction.MeasureType.LINEAR ? MeasuringAction.this.mCurrentLinearUnit : MeasuringAction.this.mCurrentAreaUnit)) {
                                 group.check(r.getId());
                             }
                         }
 
                         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                             public void onCheckedChanged(RadioGroup rGroup, int checkedId) {
-                                for(int i = 0; i < rGroup.getChildCount(); ++i) {
-                                    if(rGroup.getChildAt(i).getId() == checkedId) {
-                                        if(MeasuringAction.this.mMeasureMode == MeasuringAction.MeasureType.LINEAR) {
-                                            if(MeasuringAction.this.mResult > 0.0D) {
+                                for (int i = 0; i < rGroup.getChildCount(); ++i) {
+                                    if (rGroup.getChildAt(i).getId() == checkedId) {
+                                        if (MeasuringAction.this.mMeasureMode == MeasuringAction.MeasureType.LINEAR) {
+                                            if (MeasuringAction.this.mResult > 0.0D) {
                                                 MeasuringAction.this.mResult = Unit.convertUnits(MeasuringAction.this.mResult, MeasuringAction.this.getLinearUnit(MeasuringAction.this.mCurrentLinearUnit), MeasuringAction.this.getLinearUnit(i));
                                                 MeasuringAction.this.mCurrentLinearUnit = i;
                                                 MeasuringAction.this.showResult();
                                             } else {
                                                 MeasuringAction.this.mCurrentLinearUnit = i;
                                             }
-                                        } else if(MeasuringAction.this.mResult > 0.0D) {
+                                        } else if (MeasuringAction.this.mResult > 0.0D) {
                                             MeasuringAction.this.mResult = Unit.convertUnits(MeasuringAction.this.mResult, MeasuringAction.this.getAreaUnit(MeasuringAction.this.mCurrentAreaUnit), MeasuringAction.this.getAreaUnit(i));
                                             MeasuringAction.this.mCurrentAreaUnit = i;
                                             MeasuringAction.this.showResult();
@@ -399,7 +400,7 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
                 }
 
                 public long getItemId(int position) {
-                    return (long)position;
+                    return (long) position;
                 }
 
                 public Object getItem(int position) {
@@ -414,15 +415,15 @@ public class MeasuringAction implements ActionMode.Callback , OnSingleTapListene
         }
     }
 
-    public static enum MeasureType {
+    public enum MeasureType {
         LINEAR,
         AREA;
 
-        private MeasureType() {
+        MeasureType() {
         }
 
         public static MeasuringAction.MeasureType getType(int i) {
-            switch(i) {
+            switch (i) {
                 case 0:
                     return LINEAR;
                 case 1:

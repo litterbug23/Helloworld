@@ -15,6 +15,13 @@
         <item name="selectableItemBackground">@drawable/selectable_item_background</item>
         <item name="android:selectableItemBackground">@drawable/selectable_item_background</item>
         <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
+        <!-- Action Mode style -->
+        <item name="actionModeStyle">@style/AppActionMode</item>
+    </style>
+
+    <style name="AppActionMode" parent="Widget.AppCompat.ActionMode">
+        <item name="background">@color/primary</item>
+        <item name="backgroundSplit">@color/primary</item>
     </style>
 
     <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Light">
@@ -62,6 +69,9 @@
         <item name="actionMenuTextColor">@color/text_color_primary</item>
         <item name="actionMenuTextAppearance">@style/ToolbarMenuTextSize</item>
         <item name="selectableItemBackground">@drawable/toolbar_button_bg</item>
+        <item name="android:actionModeBackground">@color/primary</item>
+        <!-- 删除ActionMode的Divider-->
+        <item name="android:actionModeCloseButtonStyle">@null</item>
     </style>
 
     <!-- toolbar弹出菜单样式 -->

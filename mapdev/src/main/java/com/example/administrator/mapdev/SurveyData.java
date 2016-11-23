@@ -18,6 +18,7 @@ public class SurveyData extends DataSupport {
     public static String POLYLINE_TYPE = "采集线数据";//"GraphicLayer";
     public static String POLYGON_TYPE = "采集面数据";//"RasterLayer";
     public static String[] GeoTypeStrings = {UNKNOW_TYPE, POINT_TYPE, POLYLINE_TYPE, POLYGON_TYPE};
+
     @Column(unique = true)
     private int id;
     private int drawOrder=0;

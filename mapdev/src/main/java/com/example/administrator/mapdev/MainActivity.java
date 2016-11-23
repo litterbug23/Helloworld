@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -22,12 +21,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.esri.android.map.MapView;
-import com.esri.android.runtime.ArcGISRuntime;
-import com.esri.android.toolkit.analysis.MeasuringTool;
-import com.esri.core.runtime.LicenseResult;
+import com.example.administrator.mapdev.Action.SurveyDataCaptureAction;
 import com.example.administrator.mapdev.tools.DrawTool;
-import com.example.administrator.mapdev.tools.EditorAction;
-import com.example.administrator.mapdev.tools.MeasuringAction;
+import com.example.administrator.mapdev.Action.GeometryEditorAction;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -49,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements
     private String mCurrentPath;
     //缺省存储路径（MapDev)
     private String mDefaultStoragePath;
-    private SurveyDataCaptureAction surveyDataCaptureTool;
     static final private int RASTER_DATA_TYPE = 0;
     static final private int SHP_DATA_TYPE = 1;
     static final private int GDB_DATA_TYPE = 2;
@@ -69,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements
         getDefaultStartDirectory();
         initToolbar();
         initDrawerLayout();
-        surveyDataCaptureTool = new SurveyDataCaptureAction();
     }
 
     @Override
@@ -99,21 +93,6 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
-            case R.id.gps_position_survey:
-                surveyDataCaptureTool.doCaptureGPSLocation();
-                break;
-            case R.id.draw_position_survey:
-                surveyDataCaptureTool.doCaptureByMapTouch();
-                break;
-            case R.id.undo_position_survey:
-                surveyDataCaptureTool.undo();
-                break;
-            case R.id.redo_position_survey:
-                surveyDataCaptureTool.redo();
-                break;
-            case R.id.end_position_survey:
-                surveyDataCaptureTool.doComplete();
-                break;
             case R.id.photo_survey_gps:
                 openCamera();
                 break;
@@ -215,8 +194,8 @@ public class MainActivity extends AppCompatActivity implements
                 case R.id.survey_data:
                     //采集数据
                     if (mLayerManager.hasMapScene()) {
-                        setCurrentToolGroup(R.id.survey_data_tool_group);
-                        surveyDataCaptureTool.initSurveyDataCaptureTool();
+                        SurveyDataCaptureAction surveyDataCaptureAction=new SurveyDataCaptureAction();
+                        startSupportActionMode(surveyDataCaptureAction);
                     } else
                         MapApplication.showMessage("必须创建地图或打开地图才能进行采集数据");
                     break;
@@ -277,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements
                     //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                    // toolbar.startActionMode(measuringTool);
                     //startSupportActionMode(measuringAction);
-                    EditorAction action = new EditorAction();
+                    GeometryEditorAction action = new GeometryEditorAction();
                     startSupportActionMode(action);
                     break;
                 case R.id.help_about:
@@ -301,45 +280,6 @@ public class MainActivity extends AppCompatActivity implements
             //1 inch = 0.0254 m
             mScreenWidthMeter = METER_PER_INCH * newConfig.screenWidthDp / (double) newConfig.densityDpi;
         }
-    }
-
-    @Deprecated
-    private void initMapView() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        //1dpi= (n)pixel/inch
-        //1dp = dpi/(160pixel/inch) = 1density/160
-        //density = 160;240;  ( n Pixel/inch)
-        //densityDpi = 1dp
-        // px = density * dp
-        //获得屏幕宽度
-        mScreenWidthMeter = METER_PER_INCH * metrics.widthPixels / (double) metrics.densityDpi;
-        //删除所有图层
-        mMapView.removeAll();
-        mMapView.setMaxScale(1.0);  //图上一米实际一米（最已经是最大的放大系数）
-        //地球周长40076km
-        double minScale = 40076000.0 / mScreenWidthMeter;
-        LicenseResult licenseResult = ArcGISRuntime.setClientId("4YQLgHoXtvwXiBTu");
-        //ArcGISRuntime.License.setLicense()
-        mMapView.setMinScale(minScale);
-//		SpatialReference spatialRef = SpatialReference.create(SpatialReference.WKID_WGS84_WEB_MERCATOR);
-//		SpatialReference wgs84 = SpatialReference.create(SpatialReference.WKID_WGS84);
-//		Envelope worldExtent = new Envelope(-180, -90, 180, 90);
-//		Envelope fullExtent = (Envelope) GeometryEngine.project(worldExtent, wgs84, spatialRef);
-//		GraphicsLayer graphLayer = new GraphicsLayer(spatialRef, fullExtent);
-//		mMapView.addLayer(graphLayer);
-        mLayerManager = new LayersManager(mMapView);
-        mLayerManager.setScreenWidthMeter(mScreenWidthMeter);
-        //mLayerManager.loadMapLayers();
-        //MapView的缺省地图范围和坐标参考系是根据BaseLayer来决定
-//		mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
-//			@Override
-//			public void onStatusChanged(Object o, STATUS status) {
-//				//setMapViewOptionsByBaseLayer();
-//				if (o instanceof MapView )
-//					mLayerManager.loadMapLayers();
-//			}
-//		});
     }
 
     static private int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 10;
@@ -385,18 +325,6 @@ public class MainActivity extends AppCompatActivity implements
         }
         return super.onKeyDown(keyCode, event);
     }
-
-//    @Deprecated
-//    private void setMapViewOptionsByBaseLayer() {
-//        //地图第一次被初始化被调用此函数
-//        if (!mMapView.isLoaded())
-//            return;
-//        SpatialReference mapSpatialRef = mMapView.getSpatialReference();
-//        //GraphicLayer用来绘制临时数据（比如测量等）
-//        GraphicsLayer graphLayer = new GraphicsLayer(mapSpatialRef, mMapView.getMaxExtent());
-//        mMapView.addLayer(graphLayer);
-//        mMapView.getLocationDisplayManager();
-//    }
 
     private void openFileBrowser(int dataType) {
         String suffix = ".tiff;.tif;.img;";

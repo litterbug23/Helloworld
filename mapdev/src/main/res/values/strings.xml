@@ -40,9 +40,6 @@
     <string name="redo_position_survey">重做取点</string>
     <string name="end_position_survey">采集结束</string>
 
-    <string name="undo">回退</string>
-    <string name="redo">重做</string>
-
     <string name="geometry_editor">图斑编辑</string>
     <string name="attribute_editor">属性编辑</string>
     <string name="geometry_delete">删除图斑</string>
@@ -57,9 +54,14 @@
     <string name="label_export">用户标注导出</string>
     <string name="action_settings">更多</string>
 
+    <string name="measure_type">测量类型</string>
     <string name="measure_distance">长度测量</string>
     <string name="measure_area">面积测量</string>
+    <string name="measure_unit">测量单位</string>
 
+    <string name="undo">回退</string>
+    <string name="redo">重做</string>
+    <string name="clear">清理</string>
     <string name="map_view_setting">地图设置</string>
     <string name="reset_tool">重置工具</string>
     <string name="map_exit">退出</string>

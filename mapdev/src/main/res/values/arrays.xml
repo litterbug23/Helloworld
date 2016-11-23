@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="draw_polyline_type">
+        <item>折线</item>
+        <item>自由绘制</item>
+    </string-array>
+</resources>

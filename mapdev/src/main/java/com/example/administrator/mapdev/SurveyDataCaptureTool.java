@@ -30,7 +30,7 @@ import java.util.List;
  * Created by Administrator on 2016/11/14.
  * 采集数据工具
  */
-public class SurveyDataCaptureAction {
+public class SurveyDataCaptureTool {
     //GPS取点,手动取点,编辑撤销，结束保存
     private SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.DIAMOND);
     private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(Color.YELLOW, 3);
@@ -48,7 +48,7 @@ public class SurveyDataCaptureAction {
     private int polylineGID=0;
 
 
-    public SurveyDataCaptureAction() {
+    public SurveyDataCaptureTool() {
         fillSymbol.setOutline(new SimpleLineSymbol(Color.argb(255, 73, 137, 243), 2));
         layersManager = MapApplication.instance().getLayersManager();
         locationDisplayManager = layersManager.getMapView().getLocationDisplayManager();
@@ -68,6 +68,10 @@ public class SurveyDataCaptureAction {
         if(pointsGID!=0)
             graphicsLayer.removeGraphic(pointsGID);
         pointsGID = graphicsLayer.addGraphic(pointsGraphic);
+    }
+
+    public void uninitSurveyDataCaptureTool(){
+        clear();
     }
 
     private Location getLocation() {
