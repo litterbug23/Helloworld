@@ -30,6 +30,7 @@
     <string name="photo_survey">照片采集</string>
     <string name="photo_survey_gps">自动取点</string>
     <string name="photo_survey_position">地图取点</string>
+    <string name="photo_survey_delete">删除照片</string>
     <string name="photo_survey_export">照片导出</string>
     <string name="photo_survey_load">照片加载</string>
 

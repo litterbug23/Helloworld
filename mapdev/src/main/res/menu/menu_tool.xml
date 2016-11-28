@@ -48,7 +48,6 @@
             android:title="@string/end_position_survey"
             app:showAsAction="always|withText"/>
     </group>
-
     <group
         android:id="@+id/survey_edit_tool_group"
         android:visible="false">

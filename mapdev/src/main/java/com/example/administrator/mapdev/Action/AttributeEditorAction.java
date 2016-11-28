@@ -24,8 +24,7 @@ public class AttributeEditorAction implements ActionMode.Callback {
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        FeatureTable featureTable;
-        Geodatabase
+
         return false;
     }
 
