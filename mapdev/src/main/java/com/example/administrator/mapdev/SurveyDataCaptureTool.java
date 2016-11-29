@@ -70,7 +70,7 @@ public class SurveyDataCaptureTool {
         pointsGID = graphicsLayer.addGraphic(pointsGraphic);
     }
 
-    public void uninitSurveyDataCaptureTool(){
+    public void unInitSurveyDataCaptureTool(){
         clear();
     }
 

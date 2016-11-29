@@ -69,9 +69,9 @@
     <string name="btn_edit_apply">应用</string>
     <string name="btn_edit_discard">取消</string>
 
-    <string name="drawer_open">Drawer Open</string>
-    <string name="drawer_close">Drawer Close</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="drawer_open">工具面板打开</string>
+    <string name="drawer_close">工具面板关闭</string>
+    <string name="title_activity_settings">设置</string>
 
     <string name="file_browser_text">当前文件夹：</string>
 

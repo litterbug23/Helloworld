@@ -8,15 +8,14 @@ import android.view.MenuItem;
 import com.example.administrator.mapdev.R;
 
 /**
- * 照片采集类
- * Created by Administrator on 2016/11/19.
+ * GPS路径管理类
+ * Created by caizhihuan on 2016/11/29.
  */
-public class PhotoCaptureAction implements ActionMode.Callback {
-
+public class GpsRouteAction implements ActionMode.Callback {
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         MenuInflater menuInflater = mode.getMenuInflater();
-        menuInflater.inflate(R.menu.menu_photo_tool,menu);
+        menuInflater.inflate(R.menu.menu_gps_tool,menu);
         return true;
     }
 
@@ -27,12 +26,12 @@ public class PhotoCaptureAction implements ActionMode.Callback {
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.photo_survey_gps:   //照片位置使用GPS获得位置
+        switch (item.getItemId()){
+            case R.id.gps_track_start:  //开始轨迹记录
                 break;
-            case R.id.photo_survey_position: //照片位置在地图上取位置
+            case R.id.gps_track_stop:   //结束轨迹记录
                 break;
-            case R.id.photo_survey_delete:  //删除采集照片
+            case R.id.gps_track_discard:  //取消轨迹记录
                 break;
         }
         return false;

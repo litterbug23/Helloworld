@@ -57,6 +57,6 @@ public class SurveyDataCaptureAction implements ActionMode.Callback {
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        surveyDataCaptureTool.uninitSurveyDataCaptureTool();
+        surveyDataCaptureTool.unInitSurveyDataCaptureTool();
     }
 }
