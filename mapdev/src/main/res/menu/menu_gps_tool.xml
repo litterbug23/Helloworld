@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".MainActivity">
+    <!--<group-->
+    <!--android:id="@+id/gps_track_tool_group"-->
+    <!--android:visible="false">-->
+    <item
+        android:id="@+id/gps_track_start"
+        android:checked="true"
+        android:icon="@drawable/ic_action_start"
+        android:orderInCategory="40"
+        android:title="@string/gps_track_start"
+        app:showAsAction="always|withText"/>
+    <item
+        android:id="@+id/gps_track_stop"
+        android:checked="true"
+        android:icon="@drawable/ic_action_stop"
+        android:orderInCategory="41"
+        android:title="@string/gps_track_stop"
+        app:showAsAction="always|withText"/>
+    <item
+        android:id="@+id/gps_track_discard"
+        android:checked="true"
+        android:icon="@drawable/ic_gps_track_delete"
+        android:orderInCategory="42"
+        android:title="@string/gps_track_discard"
+        app:showAsAction="always|withText"/>
+    <!--</group>-->
+</menu>

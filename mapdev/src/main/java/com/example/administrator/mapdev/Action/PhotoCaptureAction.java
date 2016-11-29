@@ -2,7 +2,10 @@ package com.example.administrator.mapdev.Action;
 
 import android.support.v7.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.example.administrator.mapdev.R;
 
 /**
  * 照片采集类
@@ -11,7 +14,9 @@ import android.view.MenuItem;
 public class PhotoCaptureAction implements ActionMode.Callback {
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        return false;
+        MenuInflater menuInflater = mode.getMenuInflater();
+        menuInflater.inflate(R.menu.menu_photo_tool,menu);
+        return true;
     }
 
     @Override
