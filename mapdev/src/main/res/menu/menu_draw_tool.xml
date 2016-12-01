@@ -3,20 +3,6 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".MainActivity">
-    <!--<item-->
-        <!--android:id="@+id/photo_survey"-->
-        <!--android:orderInCategory="51"-->
-        <!--android:checked="true"-->
-        <!--android:icon="@drawable/ic_action_editor"-->
-        <!--android:title="@string/photo_survey"-->
-        <!--app:showAsAction="always"/>-->
-    <!--<item-->
-        <!--android:id="@+id/search_feature"-->
-        <!--android:orderInCategory="52"-->
-        <!--android:checked="true"-->
-        <!--android:icon="@drawable/ic_action_add"-->
-        <!--android:title="@string/search_feature"-->
-        <!--app:showAsAction="always"/>-->
     <item
         android:id="@+id/add_label"
         android:checked="true"
@@ -39,7 +25,7 @@
     <item
         android:id="@+id/free_hand"
         android:icon="@drawable/ic_gesture_24dp"
-        android:orderInCategory="32"
+        android:orderInCategory="33"
         android:title="@string/free_hand"
         app:showAsAction="always|withText"/>
 </menu>

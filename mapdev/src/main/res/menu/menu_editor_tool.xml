@@ -18,19 +18,19 @@
         android:title="@string/attribute_editor"
         app:showAsAction="always|withText"/>
     <item
-        android:id="@+id/undo_position_survey"
+        android:id="@+id/undo_editor"
         android:checked="true"
         android:icon="@drawable/ic_undo_24dp"
-        android:orderInCategory="3"
+        android:orderInCategory="12"
         android:title="@string/undo"
         app:showAsAction="always|withText"
         android:showAsAction="always|withText"
         tools:ignore="AppCompatResource"/>
     <item
-        android:id="@+id/redo_position_survey"
+        android:id="@+id/redo_editor"
         android:checked="true"
         android:icon="@drawable/ic_redo_24dp"
-        android:orderInCategory="4"
+        android:orderInCategory="13"
         android:title="@string/redo"
         app:showAsAction="always|withText"
         android:showAsAction="always|withText"
@@ -39,7 +39,7 @@
         android:id="@+id/geometry_delete"
         android:checked="true"
         android:icon="@drawable/ic_clear_24dp"
-        android:orderInCategory="12"
+        android:orderInCategory="14"
         android:title="@string/geometry_delete"
         app:showAsAction="always|withText"/>
 </menu>

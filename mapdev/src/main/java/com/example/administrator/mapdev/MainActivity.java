@@ -21,6 +21,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.esri.android.map.MapView;
+import com.example.administrator.mapdev.Action.AttributeEditorAction;
+import com.example.administrator.mapdev.Action.DrawingAction;
+import com.example.administrator.mapdev.Action.GpsRouteAction;
+import com.example.administrator.mapdev.Action.PhotoCaptureAction;
 import com.example.administrator.mapdev.Action.SurveyDataCaptureAction;
 import com.example.administrator.mapdev.tools.DrawTool;
 import com.example.administrator.mapdev.Action.GeometryEditorAction;
@@ -202,14 +206,18 @@ public class MainActivity extends AppCompatActivity implements
                 case R.id.survey_edit:
                     if (mLayerManager.hasMapScene()) {
                         //采集数据编辑
-                        setCurrentToolGroup(R.id.survey_edit_tool_group);
+                        //setCurrentToolGroup(R.id.survey_edit_tool_group);
+                        AttributeEditorAction attributeEditorAction = new AttributeEditorAction();
+                        startSupportActionMode(attributeEditorAction);
                     } else
                         MapApplication.showMessage("必须创建地图或打开地图才能采集数据编辑");
                     break;
                 case R.id.survey_draw:
                     if (mLayerManager.hasMapScene()) {
                         //地图标绘
-                        setCurrentToolGroup(R.id.survey_draw_tool_group);
+                        //setCurrentToolGroup(R.id.survey_draw_tool_group);
+                        DrawingAction drawingAction = new DrawingAction();
+                        startSupportActionMode(drawingAction);
                     } else
                         MapApplication.showMessage("必须创建地图或打开地图才能地图标绘");
                     break;
@@ -220,7 +228,9 @@ public class MainActivity extends AppCompatActivity implements
                 case R.id.photo_survey:
                     //采集现场照片
                     if (mLayerManager.hasMapScene()) {
-                        setCurrentToolGroup(R.id.photo_tool_group);
+                        //setCurrentToolGroup(R.id.photo_tool_group);
+                        PhotoCaptureAction photoCaptureAction = new PhotoCaptureAction();
+                        startSupportActionMode(photoCaptureAction);
                     } else
                         MapApplication.showMessage("必须创建地图或打开地图才能采集现场照片");
                     break;
@@ -231,8 +241,11 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case R.id.gps_track:
                     //gps轨迹跟踪绘制
-                    if (mLayerManager.hasMapScene())
-                        setCurrentToolGroup(R.id.gps_track_tool_group);
+                    if (mLayerManager.hasMapScene()) {
+                        //setCurrentToolGroup(R.id.gps_track_tool_group);
+                        GpsRouteAction gpsRouteAction = new GpsRouteAction();
+                        startSupportActionMode(gpsRouteAction);
+                    }
                     else
                         MapApplication.showMessage("必须创建地图或打开地图才能GPS轨迹跟踪绘制");
                     break;
@@ -252,12 +265,12 @@ public class MainActivity extends AppCompatActivity implements
                 case R.id.map_view_setting:
                     //MeasuringTool measuringTool = new MeasuringTool(mMapView);
                     //startActionMode(measuringTool);
-                    // MeasuringAction measuringAction = new MeasuringAction(mMapView);
+                    //MeasuringAction measuringAction = new MeasuringAction(mMapView);
                     //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                   // toolbar.startActionMode(measuringTool);
+                    //toolbar.startActionMode(measuringTool);
                     //startSupportActionMode(measuringAction);
-                    GeometryEditorAction action = new GeometryEditorAction();
-                    startSupportActionMode(action);
+                    //GeometryEditorAction action = new GeometryEditorAction();
+                    //startSupportActionMode(action);
                     break;
                 case R.id.help_about:
                     showAboutDialog();
