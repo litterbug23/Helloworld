@@ -26,7 +26,7 @@
         app:fabSize="mini"
         android:src="@drawable/ic_gps_position"
         /> -->
-    <com.example.administrator.mapdev.RoundProgressBarWidthNumber
+    <com.example.administrator.mapdev.UI.RoundProgressBarWidthNumber
         android:id="@+id/progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="8dp"
         android:orientation="vertical">
-        <com.example.administrator.mapdev.StrokeTextView
+        <com.example.administrator.mapdev.UI.StrokeTextView
             android:id="@+id/map_scale_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             android:id="@+id/scale_view"
             android:src="@drawable/scale"
             android:layout_gravity="center_horizontal"/>
-        <com.example.administrator.mapdev.StrokeTextView
+        <com.example.administrator.mapdev.UI.StrokeTextView
             android:id="@+id/map_scale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

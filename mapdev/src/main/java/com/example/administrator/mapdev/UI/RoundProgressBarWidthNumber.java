@@ -1,4 +1,4 @@
-package com.example.administrator.mapdev;
+package com.example.administrator.mapdev.UI;
 
 /**
  * Created by Administrator on 2016/4/3.
@@ -11,10 +11,12 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
+import com.example.administrator.mapdev.R;
+
 /**
  * Created by Administrator on 2016/4/3.
  */
-public class RoundProgressBarWidthNumber extends HorizontalProgressBarWithNumber  {
+public class RoundProgressBarWidthNumber extends HorizontalProgressBarWithNumber {
 	/**
 	 * mRadius of view
 	 */

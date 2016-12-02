@@ -1,4 +1,4 @@
-package com.example.administrator.mapdev;
+package com.example.administrator.mapdev.UI;
 
 /**
  * Created by Administrator on 2016/4/3.

@@ -4,8 +4,6 @@ import android.location.Location;
 
 import org.litepal.crud.DataSupport;
 
-import java.util.Date;
-
 /**
  * Created by Administrator on 2016/3/25.
  */

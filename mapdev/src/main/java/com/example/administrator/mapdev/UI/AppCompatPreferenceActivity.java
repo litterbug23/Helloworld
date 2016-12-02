@@ -1,4 +1,4 @@
-package com.example.administrator.mapdev;
+package com.example.administrator.mapdev.UI;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

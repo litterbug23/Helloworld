@@ -6,7 +6,7 @@
               android:background="@color/back_color"
               android:textColor="#000000"
               android:orientation="vertical"
-              tools:context="com.example.administrator.mapdev.FileBrowserFragment">
+              tools:context="com.example.administrator.mapdev.UI.FileBrowserFragment">
 
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,7 +19,7 @@
         android:theme="@style/AppBarTheme"
         app:title="@string/file_browser"
         />
-    <com.example.administrator.mapdev.FileSelectView
+    <com.example.administrator.mapdev.UI.FileSelectView
         android:id="@+id/fileListView"
         android:layout_width="fill_parent"
         android:layout_height="0dip"

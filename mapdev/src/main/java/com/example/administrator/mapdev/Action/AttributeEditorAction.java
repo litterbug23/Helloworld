@@ -5,18 +5,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.esri.core.geodatabase.Geodatabase;
-import com.esri.core.geodatabase.GeodatabaseFeatureServiceTable;
-import com.esri.core.geodatabase.GeodatabaseFeatureTable;
-import com.esri.core.geodatabase.ShapefileFeature;
-import com.esri.core.geodatabase.ShapefileFeatureTable;
-import com.esri.core.map.Feature;
-import com.esri.core.table.FeatureTable;
-import com.esri.core.table.TableException;
 import com.example.administrator.mapdev.R;
-
-import java.io.FileNotFoundException;
-import java.util.List;
 
 /**
  * 属性编辑类

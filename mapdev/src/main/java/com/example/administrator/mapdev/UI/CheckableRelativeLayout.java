@@ -1,9 +1,8 @@
-package com.example.administrator.mapdev;
+package com.example.administrator.mapdev.UI;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Checkable;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 public class CheckableRelativeLayout extends RelativeLayout implements Checkable {

@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -13,14 +12,10 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -28,11 +23,8 @@ import android.widget.Toast;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
-import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.Graphic;
-import com.esri.core.map.GraphicsUtil;
 import com.esri.core.symbol.PictureMarkerSymbol;
-import com.esri.core.symbol.SimpleMarkerSymbol;
 
 import org.litepal.LitePalApplication;
 import org.litepal.crud.DataSupport;
@@ -41,7 +33,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +44,7 @@ import java.util.Map;
  * 照片绘制将由PhotoSurveyLayer负责
  */
 public class PhotoSurveyManager {
+
     private GraphicsLayer userDrawerLayer;
     private LayersManager layersManager;
     private Context context = LitePalApplication.getContext();

@@ -3,8 +3,6 @@ package com.example.administrator.mapdev;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Environment;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import org.gdal.gdal.gdal;

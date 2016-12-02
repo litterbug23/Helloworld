@@ -4,39 +4,23 @@ import android.app.Dialog;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.esri.android.map.ags.ArcGISFeatureLayer;
-import com.esri.android.map.popup.Popup;
-import com.esri.core.geodatabase.ShapefileFeature;
 import com.esri.core.geometry.Point;
 import com.esri.android.map.FeatureLayer;
-import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
 import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
 import com.esri.android.map.popup.PopupContainer;
-import com.esri.android.toolkit.map.MapViewHelper;
-import com.esri.core.geometry.Envelope;
-import com.esri.core.internal.util.LocalGDBUtil;
-import com.esri.core.map.CallbackListener;
 import com.esri.core.map.Feature;
-import com.esri.core.map.FeatureResult;
 import com.esri.core.map.FeatureSet;
-import com.esri.core.map.Field;
 import com.esri.core.map.Graphic;
-import com.esri.core.table.FeatureTable;
 import com.esri.core.tasks.SpatialRelationship;
 import com.esri.core.tasks.query.QueryParameters;
 import com.example.administrator.mapdev.LayersManager;
 import com.example.administrator.mapdev.R;
-
-import java.util.Iterator;
-import java.util.concurrent.Future;
 
 /**
  * Created by Administrator on 2016/4/25.

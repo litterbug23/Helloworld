@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:theme="@style/AppTheme">
 
-    <com.example.administrator.mapdev.FileSelectView
+    <com.example.administrator.mapdev.UI.FileSelectView
         android:id="@+id/fileListView"
         android:layout_width="match_parent"
         android:layout_height="350dp"

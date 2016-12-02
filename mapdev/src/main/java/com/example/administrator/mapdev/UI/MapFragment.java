@@ -1,4 +1,4 @@
-package com.example.administrator.mapdev;
+package com.example.administrator.mapdev.UI;
 
 import android.content.Context;
 import android.location.Location;
@@ -33,6 +33,14 @@ import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.Graphic;
 import com.esri.core.runtime.LicenseResult;
+import com.example.administrator.mapdev.Compass;
+import com.example.administrator.mapdev.GpsLocationService;
+import com.example.administrator.mapdev.GpsRouteTracker;
+import com.example.administrator.mapdev.LayersManager;
+import com.example.administrator.mapdev.MapApplication;
+import com.example.administrator.mapdev.PhotoSurveyManager;
+import com.example.administrator.mapdev.R;
+import com.example.administrator.mapdev.SensorService;
 import com.example.administrator.mapdev.tools.AttributeTool;
 import com.example.administrator.mapdev.tools.DrawTool;
 import com.example.administrator.mapdev.tools.MeasureTool;
@@ -40,7 +48,6 @@ import com.example.administrator.mapdev.tools.ToolsManager;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 /**
