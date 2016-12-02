@@ -150,7 +150,7 @@ public class LayersManager extends MapSceneManager {
         return this;
     }
 
-    LayersManager(MapView mapView) {
+    public LayersManager(MapView mapView) {
         this.mapView = mapView;
         context = mapView.getContext();
         mapView.setOnStatusChangedListener(StatusChangeListener);

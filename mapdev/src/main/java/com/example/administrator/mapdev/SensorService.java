@@ -7,8 +7,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
-import java.text.NumberFormat;
-
 /**
  * Created by Administrator on 2016/3/25.
  */

@@ -1,4 +1,4 @@
-package com.example.administrator.mapdev;
+package com.example.administrator.mapdev.UI;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.administrator.mapdev.GpsRouteTracker;
+import com.example.administrator.mapdev.MapApplication;
+import com.example.administrator.mapdev.R;
 
 /**
  * Created by Administrator on 2016/4/19.

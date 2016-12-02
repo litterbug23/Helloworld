@@ -5,9 +5,7 @@ import com.esri.android.map.MapView;
 import com.example.administrator.mapdev.LayersManager;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

@@ -1,4 +1,4 @@
-package com.example.administrator.mapdev;
+package com.example.administrator.mapdev.UI;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -20,6 +20,9 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
+import com.example.administrator.mapdev.GpsRouteTracker;
+import com.example.administrator.mapdev.MapApplication;
+import com.example.administrator.mapdev.R;
 
 /**
  * Created by Administrator on 2016/4/18.

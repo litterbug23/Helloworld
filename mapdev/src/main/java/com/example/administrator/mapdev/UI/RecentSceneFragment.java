@@ -1,4 +1,4 @@
-package com.example.administrator.mapdev;
+package com.example.administrator.mapdev.UI;
 
 
 import android.os.Bundle;
@@ -10,6 +10,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+
+import com.example.administrator.mapdev.MapApplication;
+import com.example.administrator.mapdev.MapScene;
+import com.example.administrator.mapdev.MapSceneManager;
+import com.example.administrator.mapdev.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -5,15 +5,11 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Location;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuInflater;
 
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.LocationDisplayManager;
 import com.esri.android.map.MapView;
 import com.esri.android.map.event.OnSingleTapListener;
-import com.esri.core.geometry.MultiPath;
 import com.esri.core.geometry.MultiPoint;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;

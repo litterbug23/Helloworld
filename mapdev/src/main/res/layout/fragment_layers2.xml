@@ -6,7 +6,7 @@
               android:orientation="vertical"
               android:background="@color/back_color"
               android:textColor="#000000"
-             tools:context="com.example.administrator.mapdev.Layers2Fragment">
+             tools:context="com.example.administrator.mapdev.UI.Layers2Fragment">
 
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"

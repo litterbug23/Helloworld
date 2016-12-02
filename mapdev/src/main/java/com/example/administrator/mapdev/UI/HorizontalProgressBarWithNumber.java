@@ -1,13 +1,14 @@
-package com.example.administrator.mapdev;
+package com.example.administrator.mapdev.UI;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.ProgressBar;
+
+import com.example.administrator.mapdev.R;
 
 /**
  * Created by Administrator on 2016/4/1.

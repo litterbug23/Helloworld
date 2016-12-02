@@ -3,7 +3,6 @@ package com.example.administrator.mapdev.tools;
 import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
 import com.example.administrator.mapdev.LayersManager;
-import com.example.administrator.mapdev.MapApplication;
 
 /**
  * Created by Administrator on 2016/4/24.

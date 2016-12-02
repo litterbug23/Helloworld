@@ -1,4 +1,4 @@
-package com.example.administrator.mapdev;
+package com.example.administrator.mapdev.UI;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -26,8 +26,11 @@ import com.example.administrator.mapdev.Action.DrawingAction;
 import com.example.administrator.mapdev.Action.GpsRouteAction;
 import com.example.administrator.mapdev.Action.PhotoCaptureAction;
 import com.example.administrator.mapdev.Action.SurveyDataCaptureAction;
+import com.example.administrator.mapdev.LayersManager;
+import com.example.administrator.mapdev.MapApplication;
+import com.example.administrator.mapdev.R;
+import com.example.administrator.mapdev.SurveyDataExport;
 import com.example.administrator.mapdev.tools.DrawTool;
-import com.example.administrator.mapdev.Action.GeometryEditorAction;
 
 import java.io.File;
 import java.lang.reflect.Method;

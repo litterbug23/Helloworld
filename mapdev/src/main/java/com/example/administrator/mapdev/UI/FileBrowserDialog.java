@@ -1,16 +1,18 @@
-package com.example.administrator.mapdev;
+package com.example.administrator.mapdev.UI;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.example.administrator.mapdev.IFileSelectCallback;
+import com.example.administrator.mapdev.MapApplication;
+import com.example.administrator.mapdev.R;
 
 import java.util.HashMap;
 import java.util.Map;
