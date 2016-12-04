@@ -113,7 +113,7 @@ public class MapFragment extends Fragment {
                 mAttributeTool = new AttributeTool(mLayersManager);
                 mToolsManager.registerTool(DrawTool.class, mDrawTool);
                 mToolsManager.registerTool(MeasureTool.class, mMeasureTool);
-                mToolsManager.registerTool(AttributeTool.class,mAttributeTool);
+                mToolsManager.registerTool(AttributeTool.class, mAttributeTool);
 
                 mMapView.setOnSingleTapListener(new OnSingleTapListener() {
                     public void onSingleTap(float x, float y) {
@@ -481,7 +481,7 @@ public class MapFragment extends Fragment {
         }
     }
 
-    public void searchFeature(){
+    public void searchFeature() {
         if (mMapView.isLoaded()) {
             mToolsManager.setCurrentTool(AttributeTool.class);
             mToolsManager.getCurrentTool().activate(AttributeTool.ATTRIBUTE_SHOW);
@@ -490,7 +490,7 @@ public class MapFragment extends Fragment {
         }
     }
 
-    public void resetTool(){
+    public void resetTool() {
         if (mMapView.isLoaded()) {
             mToolsManager.reset();
         }

@@ -84,7 +84,7 @@ public class FileBrowserFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_file_browser, container, false);
 
 		final Toolbar toolbar = (Toolbar) view.findViewById(R.id.file_toolbar);
-		toolbar.setNavigationIcon(R.drawable.ic_action_back);
+		toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
 		toolbar.setTitle(mInitialDir);
 		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 			@Override

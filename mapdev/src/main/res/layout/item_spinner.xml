@@ -12,7 +12,8 @@
     android:minWidth="100dp"
     android:padding="10dp"
     android:textSize="16sp"
-    android:layout_alignParentLeft="true">
+    android:layout_alignParentLeft="true"
+    android:text="属性名称">
   </TextView>
   <Spinner
     android:id="@+id/field_value_spinner"
@@ -20,6 +21,7 @@
     android:layout_height="wrap_content"
     android:textSize="14sp" 
     android:maxHeight="30dp"
-    android:layout_alignParentRight="true">
+    android:layout_alignParentLeft="true"
+    android:layout_marginLeft="150dp">
     </Spinner>
 </RelativeLayout>

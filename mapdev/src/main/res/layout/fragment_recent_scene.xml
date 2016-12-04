@@ -1,30 +1,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:orientation="vertical"
-android:background="@color/back_color"
-android:textColor="#000000"
-tools:context="com.example.administrator.mapdev.UI.RecentSceneFragment"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="@color/back_color"
+              android:orientation="vertical"
+              android:textColor="#000000"
+              tools:context="com.example.administrator.mapdev.UI.RecentSceneFragment"
     >
 
-<android.support.v7.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/recent_scene_toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:background="?attr/colorPrimary"
-    android:popupTheme="@style/AppBarTheme"
-    android:theme="@style/AppBarTheme"
-    app:title="@string/open_recent_map"
-    />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/recent_scene_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:popupTheme="@style/AppBarTheme"
+        android:theme="@style/AppBarTheme"
+        app:title="@string/open_recent_map"
+        />
 
     <ListView
+        android:id="@+id/recent_scene_listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/recent_scene_listView" />
+        android:layout_height="wrap_content"/>
 
 
 </LinearLayout>

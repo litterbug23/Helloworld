@@ -57,7 +57,7 @@ public class GpsRouteViewFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_route, container, false);
 		final Toolbar toolbar = (Toolbar) view.findViewById(R.id.route_toolbar);
-		toolbar.setNavigationIcon(R.drawable.ic_action_back);
+		toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
 		mSwipeListView = (SwipeMenuListView) view.findViewById(R.id.routeListView);
 		mAdapter = new DataAdapter();
 		mSwipeListView.setAdapter(mAdapter);

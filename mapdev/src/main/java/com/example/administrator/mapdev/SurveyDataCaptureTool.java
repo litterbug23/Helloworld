@@ -29,7 +29,7 @@ import java.util.List;
 public class SurveyDataCaptureTool {
     //GPS取点,手动取点,编辑撤销，结束保存
     private SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.DIAMOND);
-    private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(Color.YELLOW, 3);
+    private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(Color.rgb(220,68,17), 3);
     private SimpleFillSymbol fillSymbol = new SimpleFillSymbol(Color.argb(150, 253, 205, 68));
     private LocationDisplayManager locationDisplayManager;
     private LayersManager layersManager;

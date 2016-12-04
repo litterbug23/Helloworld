@@ -3,6 +3,7 @@ package com.example.administrator.mapdev;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.gdal.gdal.gdal;
@@ -166,10 +167,14 @@ public class MapApplication extends LitePalApplication {
 	}
 
 	private void initGdalOgr(){
-		ogr.RegisterAll();
-		// 为了支持中文路径，请添加下面这句代码
-		gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
-		// 为了使属性表字段支持中文，请添加下面这句
-		gdal.SetConfigOption("SHAPE_ENCODING","");
+		try {
+			ogr.RegisterAll();
+			// 为了支持中文路径，请添加下面这句代码
+			gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+			// 为了使属性表字段支持中文，请添加下面这句
+			gdal.SetConfigOption("SHAPE_ENCODING", "");
+		}catch (java.lang.UnsatisfiedLinkError e){
+			Log.d("GDAL",e.getMessage());
+		}
 	}
 }

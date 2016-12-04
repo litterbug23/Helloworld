@@ -51,7 +51,7 @@ public class DrawTool extends BaseTool {
         mapOnTouchListener = new DrawTouchListener(this.mapView.getContext(),
                 this.mapView);
 
-        this.markerSymbol =new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.DIAMOND);
+        this.markerSymbol = new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.DIAMOND);
         this.lineSymbol = new SimpleLineSymbol(Color.YELLOW, 3);
         this.fillSymbol = new SimpleFillSymbol(Color.argb(150, 253, 205, 68));
         this.fillSymbol.setOutline(new SimpleLineSymbol(Color.argb(255, 73, 137, 243), 2));

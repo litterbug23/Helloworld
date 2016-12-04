@@ -12,20 +12,26 @@
         android:icon="@drawable/ic_play_circle_outline_24dp"
         android:orderInCategory="40"
         android:title="@string/gps_track_start"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:showAsAction="always|withText"
+        tools:ignore="AppCompatResource"/>
     <item
         android:id="@+id/gps_track_stop"
         android:checked="true"
         android:icon="@drawable/ic_pause_circle_outline_24dp"
         android:orderInCategory="41"
         android:title="@string/gps_track_stop"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:showAsAction="always|withText"
+        tools:ignore="AppCompatResource"/>
     <item
         android:id="@+id/gps_track_discard"
         android:checked="true"
         android:icon="@drawable/ic_clear_24dp"
         android:orderInCategory="42"
         android:title="@string/gps_track_discard"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:showAsAction="always|withText"
+        tools:ignore="AppCompatResource"/>
     <!--</group>-->
 </menu>
