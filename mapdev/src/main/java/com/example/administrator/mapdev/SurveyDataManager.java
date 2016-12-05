@@ -346,6 +346,7 @@ public final class SurveyDataManager {
                 continue;
             switch (ogrFieldType) {
                 case ogr.OFTString:
+                    String strFieldValue = value.toString();
                     oFeature.SetField(fieldName, value.toString());
                     break;
                 case ogr.OFTInteger:
@@ -419,9 +420,9 @@ public final class SurveyDataManager {
         //导出shp文件名称
         String strVectorFile = base.getAbsolutePath() + "/" + SurveyData.GeoTypeStrings[geoType] + ".shp";
         // 为了支持中文路径，请添加下面这句代码
-        gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+        gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "YES");
         // 为了使属性表字段支持中文，请添加下面这句
-        gdal.SetConfigOption("SHAPE_ENCODING", "");
+        gdal.SetConfigOption("SHAPE_ENCODING", "CP936");
         //创建数据，这里以创建ESRI的shp文件为例
         String strDriverName = "ESRI Shapefile";
         org.gdal.ogr.Driver oDriver = ogr.GetDriverByName(strDriverName);

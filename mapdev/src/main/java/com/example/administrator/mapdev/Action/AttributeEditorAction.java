@@ -61,7 +61,8 @@ public class AttributeEditorAction implements ActionMode.Callback {
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-
+        //退出采集编辑模式
+        attributeEditorTool.deactivate();
     }
 
 }

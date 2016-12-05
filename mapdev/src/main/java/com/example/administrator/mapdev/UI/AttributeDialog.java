@@ -7,12 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.esri.core.map.Feature;
+import com.esri.core.map.Field;
 import com.esri.core.map.Graphic;
 import com.example.administrator.mapdev.MapApplication;
 import com.example.administrator.mapdev.R;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,6 +24,8 @@ import java.util.Map;
  */
 public class AttributeDialog  extends Dialog {
     private Feature feature;
+    private List<Field> fields;
+    private AttributeListAdapter attributeListAdapter;
 
     public AttributeDialog(Context context) {
         super(context);
@@ -54,12 +60,12 @@ public class AttributeDialog  extends Dialog {
      * 设置要显示的对话框的属性信息
      * @param feature
      */
-    public void setAttribute(Feature feature){
+    public void setAttribute(List<Field> fields , Feature feature){
         if(feature==null){
             MapApplication.showMessage("未能选择要素对象");
         }
         this.feature=feature;
-
+        this.fields = fields;
     }
 
     @Override
@@ -74,6 +80,10 @@ public class AttributeDialog  extends Dialog {
     private View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_attribute, container, false);
         initEvent(view);
+        attributeListAdapter = new AttributeListAdapter(getContext(),
+                this.fields,this.feature);
+        ListView listView = (ListView) view.findViewById(R.id.attribute_list_view);
+        listView.setAdapter(attributeListAdapter);
         return view;
     }
 
@@ -89,7 +99,9 @@ public class AttributeDialog  extends Dialog {
             @Override
             public void onClick(View v) {
                 if (yesOnclickListener != null) {
-                    if (yesOnclickListener.onYesClick()) {
+                    //更新属性值
+                    Map<String,Object> attributes = attributeListAdapter.updateAttributes();
+                    if (yesOnclickListener.onYesClick(attributes)) {
                         selfThis.dismiss();
                     }
                 }
@@ -111,7 +123,7 @@ public class AttributeDialog  extends Dialog {
      * 设置确定按钮和取消被点击的接口
      */
     public interface onYesOnclickListener {
-        boolean onYesClick();
+        boolean onYesClick(Map<String,Object> attributes);
     }
 
     public interface onNoOnclickListener {

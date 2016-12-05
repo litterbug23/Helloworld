@@ -177,4 +177,18 @@ public class MapApplication extends LitePalApplication {
 			Log.d("GDAL",e.getMessage());
 		}
 	}
+
+	public boolean isLicenseVaild(){
+		java.text.SimpleDateFormat sdf=new java.text.SimpleDateFormat("yyyyMMdd");
+		String date="20170105";
+		try {
+			java.util.Date dt = sdf.parse(date);
+			java.util.Date now=new java.util.Date();
+			if( now.getTime() <= dt.getTime() )
+				return true;
+		}catch (java.text.ParseException e){
+			Log.d("License",e.getMessage());
+		}
+		return false;
+	}
 }

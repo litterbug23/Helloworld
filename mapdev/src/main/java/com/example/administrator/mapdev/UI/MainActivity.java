@@ -387,6 +387,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void openCreateSceneFragment() {
+        if(!MapApplication.instance().isLicenseVaild()) {
+            MapApplication.showMessage("License已经到期，其使用正式版本");
+            return;
+        }
         MapSceneFragment mapSceneFragment = MapSceneFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
                 .add(android.R.id.content, mapSceneFragment).addToBackStack(null)
@@ -394,6 +398,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void openRecentSceneFragment() {
+        if(!MapApplication.instance().isLicenseVaild()) {
+            MapApplication.showMessage("License已经到期，其使用正式版本");
+            return;
+        }
         RecentSceneFragment recentSceneFragment = new RecentSceneFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(android.R.id.content, recentSceneFragment).addToBackStack(null)
@@ -454,7 +462,7 @@ public class MainActivity extends AppCompatActivity implements
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setIcon(R.mipmap.ic_launcher);
         builder.setTitle("版权信息 1.1.26");
-        builder.setMessage("江西省国土资源勘测规划院版权所有\n北京立智创新科技有限公司技术支持\n");
+        builder.setMessage("江西省国土资源勘测规划院版权所有\n试用版本有效期至2017.01.05\n");
         builder.setPositiveButton("确定", null);
         builder.show();
     }
