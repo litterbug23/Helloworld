@@ -97,16 +97,16 @@ public class PhotoSurveyManager {
         return sensorService.getLastKnowCameraAzimuth();
     }
 
-    public void takePhotoAction(String imagePath, String comment) {
+    /**
+     * 采集照片数据，并将相关数据写入数据库中
+     * @param imagePath
+     * @param location
+     * @param comment
+     */
+    public void takePhotoAction(String imagePath,Location location,String comment) {
         MapScene mapScene = getCurrentScene();
         if (mapScene == null) {
             MapApplication.showMessage("当前没有打开地图，不能进行照片采集");
-            return;
-        }
-        //创建位置服务和方向服务
-        Location location = getLocation();
-        if (location == null) {
-            Toast.makeText(context, "未获得GPS或者网络定位信号", Toast.LENGTH_SHORT).show();
             return;
         }
         double azimuth = getCameraAzimuth();
@@ -126,6 +126,16 @@ public class PhotoSurveyManager {
         photoSurveyMap.put(photoSurvey.getId(), photoSurvey);
         //在地图显示拍摄照片的缩略图
         showPhotoMark(photoSurvey);
+    }
+
+    public void takePhotoAction(String imagePath, String comment) {
+        //创建位置服务和方向服务
+        Location location = layersManager.getCalibrateLocation();
+        if (location == null) {
+            Toast.makeText(context, "未获得GPS或者网络定位信号", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        takePhotoAction(imagePath,location,comment);
     }
 
     private MapScene getCurrentScene() {

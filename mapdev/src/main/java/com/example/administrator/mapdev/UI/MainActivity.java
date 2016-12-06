@@ -2,6 +2,7 @@ package com.example.administrator.mapdev.UI;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.esri.android.map.MapView;
+import com.esri.core.geometry.Point;
 import com.example.administrator.mapdev.Action.AttributeEditorAction;
 import com.example.administrator.mapdev.Action.DrawingAction;
 import com.example.administrator.mapdev.Action.GpsRouteAction;
@@ -94,6 +96,11 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
+    /**
+     * 工具栏响应事件
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
@@ -127,6 +134,8 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.reset_tool:
                 mMapFragment.resetTool();
+                break;
+            case R.id.map_exit:
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -164,6 +173,9 @@ public class MainActivity extends AppCompatActivity implements
         mNavigationView.setNavigationItemSelectedListener(onNavigationItemSelected);
     }
 
+    /**
+     * 菜单面板工具
+     */
     NavigationView.OnNavigationItemSelectedListener onNavigationItemSelected = new NavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -287,9 +299,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     static private int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 10;
+    static private int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE_POS=11;
     static private String currentCaptureImage;
-
-    private void openCamera() {
+    static private Location location ;
+    /**
+     * 采集照片（调用拍照Activity进行拍照)
+     */
+    public void openCamera() {
         java.util.Date now = new java.util.Date();
         currentCaptureImage = mApplication.getPhotoPath() + "/" + String.valueOf(now.getTime()) + ".jpg";
         File saveImageFile = new File(currentCaptureImage);
@@ -299,12 +315,32 @@ public class MainActivity extends AppCompatActivity implements
         startActivityForResult(cameraIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
+    public void openCamera(Location point){
+        java.util.Date now = new java.util.Date();
+        currentCaptureImage = mApplication.getPhotoPath() + "/" + String.valueOf(now.getTime()) + ".jpg";
+        File saveImageFile = new File(currentCaptureImage);
+        Uri uri = Uri.fromFile(saveImageFile);
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        //cameraIntent.putExtra("Location",point);
+        location=point;
+        startActivityForResult(cameraIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE_POS);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 if (currentCaptureImage != null) {
                     mMapFragment.takePhotoAction(currentCaptureImage, "");
+                }
+            }
+        }
+        else if( requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE_POS ) {
+            if (resultCode == RESULT_OK) {
+                if (currentCaptureImage != null) {
+                    //Location point = data.getParcelableExtra("Location");
+                    mMapFragment.takePhotoAction(currentCaptureImage, location,"");
                 }
             }
         }
@@ -341,14 +377,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private String getDefaultStartDirectory() {
-//        File path;
-//        if (Environment.getExternalStorageDirectory().isDirectory()
-//                && Environment.getExternalStorageDirectory().canRead()) {
-//            path = Environment.getExternalStorageDirectory();
-//        } else {
-//            path = new File("/");
-//        }
-//        mCurrentPath = path.toString();
         mCurrentPath = mApplication.getDataPath();
         return mCurrentPath;
     }
@@ -369,7 +397,6 @@ public class MainActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
                 .add(android.R.id.content, layers2Fragment).addToBackStack(null)
                 .commit();
-        //changeToolbar();
     }
 
     private void openRouteFragment() {

@@ -70,7 +70,6 @@ public class MapFragment extends Fragment {
     private Compass mCompass;
     private double mScaleWidthMeter;
     private double mScreenWidthMeter;   //屏幕宽度(单位米）
-    private PhotoSurveyManager mPhotoSurveyDrawer;
     private ToolsManager mToolsManager;
     private DrawTool mDrawTool;
     private MeasureTool mMeasureTool;
@@ -274,6 +273,7 @@ public class MapFragment extends Fragment {
         zoomInButton.setOnClickListener(OnZoomInClick);
         ImageButton zoomOutButton = (ImageButton) view.findViewById(R.id.map_zoom_out);
         zoomOutButton.setOnClickListener(OnZoomOutClick);
+        //地图比例尺
         mMapScaleUnit = (TextView) view.findViewById(R.id.map_scale_text);
         mMapScale = (TextView) view.findViewById(R.id.map_scale);
         mMapScaleView = (ImageView) view.findViewById(R.id.scale_view);
@@ -337,16 +337,22 @@ public class MapFragment extends Fragment {
 //					mLayerManager.loadMapLayers();
 //			}
 //		});
-        //调查图层
-        mPhotoSurveyDrawer = new PhotoSurveyManager(mLayersManager, mGpsLocationService, mApplication.getSensorService());
     }
 
     public void takePhotoAction(String imagePath, String comment) {
         if (mMapView.isLoaded())
-            mPhotoSurveyDrawer.takePhotoAction(imagePath, comment);
+            mLayersManager.getPhotoSurveyManager().takePhotoAction(imagePath, comment);
         else
             Toast.makeText(getContext(), "当前没有地图数据，不能采集图片", Toast.LENGTH_SHORT).show();
     }
+
+    public void takePhotoAction(String imagePath, Location location, String comment) {
+        if (mMapView.isLoaded())
+            mLayersManager.getPhotoSurveyManager().takePhotoAction(imagePath, location, comment);
+        else
+            Toast.makeText(getContext(), "当前没有地图数据，不能采集图片", Toast.LENGTH_SHORT).show();
+    }
+
 
     /**
      * 将GPS坐标转换为地图投影坐标
@@ -367,7 +373,13 @@ public class MapFragment extends Fragment {
      * @param location
      */
     private void centerAt(Location location) {
+        //location = mLayersManager.getCalibrateLocation(location);
         Point position = locationToPoint(location);
+        //中心点定位坐标校正
+        double x = position.getX() + mLayersManager.getCurrentScene().getCalibrationLong();
+        double y = position.getY() + mLayersManager.getCurrentScene().getCalibrationLat();
+        position.setX(x);
+        position.setY(y);
         mMapView.centerAt(position, true);
         updateMapScaleView();
     }
@@ -441,7 +453,7 @@ public class MapFragment extends Fragment {
     public void loadPhotoSurveyData() {
         if (mMapView.isLoaded()) {
             mProgressBar.setVisibility(View.VISIBLE);
-            mPhotoSurveyDrawer.loadPhotoSurveyData(mProgressBar);
+            mLayersManager.getPhotoSurveyManager().loadPhotoSurveyData(mProgressBar);
             mProgressBar.setVisibility(View.INVISIBLE);
         } else {
             Toast.makeText(getContext(), "当前没有数据图层加载，不能加载采集点数据", Toast.LENGTH_SHORT).show();
@@ -453,7 +465,7 @@ public class MapFragment extends Fragment {
      */
     public void asyncLoadPhotoSurveyData() {
         if (mMapView.isLoaded()) {
-            mPhotoSurveyDrawer.asyncLoadPhotoSurveyData(mProgressBar);
+            mLayersManager.getPhotoSurveyManager().asyncLoadPhotoSurveyData(mProgressBar);
         } else {
             Toast.makeText(getContext(), "当前没有数据图层加载，不能加载采集点数据", Toast.LENGTH_SHORT).show();
         }

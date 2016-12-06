@@ -11,6 +11,7 @@ import com.esri.android.map.FeatureLayer;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.GroupLayer;
 import com.esri.android.map.Layer;
+import com.esri.android.map.LocationDisplayManager;
 import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
 import com.esri.android.map.RasterLayer;
@@ -68,6 +69,7 @@ public class LayersManager extends MapSceneManager {
     private GraphicsLayer drawerLayer;              //活动图层（所有临时绘制都在活动图层）
     private GraphicsLayer userDrawerLayer;          //用户绘制图层需要序列化保存
     private PhotoSurveyLayer photoSurveyLayer;         //存储实地采集照片的信息(点图层）
+    private PhotoSurveyManager photoSurveyManager;     //采集照片管理工具
     private SurveyDataManager surveyDataManager;
     private SurveyDataLayer surveyPointLayer;      //采集点数据
     private SurveyDataLayer surveyPolylineLayer;   //采集线数据
@@ -94,8 +96,15 @@ public class LayersManager extends MapSceneManager {
     }
 
     /**
+     * 采集照片数据管理类 （负责采集照片数据的采集、存取和导出）
+     * @return
+     */
+    public PhotoSurveyManager getPhotoSurveyManager() {
+        return photoSurveyManager;
+    }
+
+    /**
      * 活动图层，是置顶图层
-     *
      * @return
      */
     public GraphicsLayer getDrawerLayer() {
@@ -104,7 +113,6 @@ public class LayersManager extends MapSceneManager {
 
     /**
      * 临时图层，目前主要用来存储GPS信息
-     *
      * @return
      */
     public GraphicsLayer getUserDrawerLayer() {
@@ -125,7 +133,6 @@ public class LayersManager extends MapSceneManager {
 
     /**
      * 获得照片图层
-     *
      * @return
      */
     public PhotoSurveyLayer getPhotoSurveyLayer() {
@@ -168,8 +175,12 @@ public class LayersManager extends MapSceneManager {
         String dataCache = db.getPath();
         Log.d("LayerManager", dataCache);
         //Toast.makeText(context,dataCache,Toast.LENGTH_LONG).show();
+        //缺省地图操作（工具操作结束后，恢复缺省地图操作)
         defaultTouchListener = new MapOnTouchListener(this.mapView.getContext(),
                 this.mapView);
+        photoSurveyManager = new PhotoSurveyManager(this,
+                MapApplication.instance().getGpsLocationService(),
+                MapApplication.instance().getSensorService());
     }
 
     public MapOnTouchListener getDefaultTouchListener(){
@@ -865,4 +876,61 @@ public class LayersManager extends MapSceneManager {
         return wgs84ToMapProject(point);
     }
 
+    /**
+     * 地图坐标转换为经纬度坐标
+     * @param point
+     * @return
+     */
+    public Point mapProjectToWgs84(Point point) {
+        if (!wgs84.equals(getMapView().getSpatialReference())) {
+            Point position = (Point) GeometryEngine.project(point, getMapView().getSpatialReference(),wgs84 );
+            return position;
+        } else {
+            return point;
+        }
+    }
+
+    /**
+     * 获得校正后的坐标值
+     * @param location
+     * @return
+     */
+    public Location getCalibrateLocation(Location location) {
+        Point point = wgs84ToMapProject(location);
+        double x = point.getX() + getCurrentScene().getCalibrationLong();
+        double y = point.getY() + getCurrentScene().getCalibrationLat();
+        point.setX(x);
+        point.setY(y);
+        Point wgsPoint = mapProjectToWgs84(point);
+        location.setLongitude(wgsPoint.getX());
+        location.setLatitude(wgsPoint.getY());
+        return location;
+    }
+
+    /**
+     * 获得校正后的当前经纬度坐标值
+     * @return
+     */
+    public Location getCalibrateLocation() {
+        Location location = getLocation();
+        if(location != null) {
+            return getCalibrateLocation(location);
+        }
+        return location;
+    }
+
+    /**
+     * 获得当前GPS坐标
+     * @return
+     */
+    public Location getLocation() {
+        LocationDisplayManager locationDisplayManager= mapView.getLocationDisplayManager();
+        Location location = locationDisplayManager.getLocation();
+        if (location == null) {
+            MapApplication.showMessage("GPS定位未开启，准备开启GPS定位");
+            if (!locationDisplayManager.isStarted())
+                locationDisplayManager.start();
+        }
+        return location;
+    }
 }

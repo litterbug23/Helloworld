@@ -40,7 +40,7 @@ public class SurveyDataLayer extends GraphicsLayer {
     }
 
     private SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.DIAMOND);
-    private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(Color.rgb(220,68,17), 3);
+    private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(Color.rgb(11,216,19), 3);
     private SimpleFillSymbol fillSymbol = new SimpleFillSymbol(Color.argb(172, 61, 237, 16));
 
     private SurveyDataManager surveyDataManager;

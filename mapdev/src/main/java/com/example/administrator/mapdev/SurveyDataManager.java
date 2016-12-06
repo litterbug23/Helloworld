@@ -49,9 +49,9 @@ import java.util.Map;
  * 2、从数据库中加载数据，排除当前已经加载的数据
  */
 public final class SurveyDataManager {
+
     static String TAG="SurveyDataManager";
-    private Map<Long, SurveyData> surveyDataMap = new LinkedHashMap<>();
-    private Map<String, Integer> surveyFields = new LinkedHashMap<>();
+    //esri属性字段与ogr属性字段类型转换
     public static SparseIntArray esriFieldToOgrFieldType = new SparseIntArray() {{
         put(Field.esriFieldTypeInteger, ogr.OFTInteger);
         put(Field.esriFieldTypeSmallInteger, ogr.OFTInteger);
@@ -62,9 +62,11 @@ public final class SurveyDataManager {
         put(Field.esriFieldTypeBlob, ogr.OFTBinary);
     }};
 
+    private Map<Long, SurveyData> surveyDataMap = new LinkedHashMap<>();
+    private Map<String, Integer> surveyFields = new LinkedHashMap<>();
+
     public SurveyDataManager() {
         initAttributeFields();
-        //testSave();
     }
 
     /**
