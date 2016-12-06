@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ import java.util.Map;
  * 2、从数据库中加载数据，排除当前已经加载的数据
  */
 public final class SurveyDataManager {
-
+    static String TAG="SurveyDataManager";
     private Map<Long, SurveyData> surveyDataMap = new LinkedHashMap<>();
     private Map<String, Integer> surveyFields = new LinkedHashMap<>();
     public static SparseIntArray esriFieldToOgrFieldType = new SparseIntArray() {{
@@ -146,7 +147,7 @@ public final class SurveyDataManager {
             MapScene mapScene = MapApplication.instance().getLayersManager().getCurrentScene();
             surveyData.setMapScene(mapScene);
         } catch (IOException e) {
-            Log.d("SurveyData", e.getMessage());
+            Log.d(TAG, e.getMessage());
         }
         return surveyData;
     }
@@ -184,11 +185,11 @@ public final class SurveyDataManager {
             Graphic graphic = new Graphic(geometry, symbol, attributes, data.getDrawOrder());
             return graphic;
         } catch (StreamCorruptedException e) {
-            Log.d("SurveyData", e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (IOException e) {
-            Log.d("SurveyData", e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (ClassNotFoundException e) {
-            Log.d("SurveyData", e.getMessage());
+            Log.d(TAG, e.getMessage());
         }
         return null;
     }
@@ -227,9 +228,9 @@ public final class SurveyDataManager {
             bos.close();
             surveyData.setGeometry(bytes);
         } catch (StreamCorruptedException e) {
-            Log.d("SurveyData", e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (IOException e) {
-            Log.d("SurveyData", e.getMessage());
+            Log.d(TAG, e.getMessage());
         }
         surveyData.update(surveyData.getBaseObjId());
     }
@@ -250,9 +251,9 @@ public final class SurveyDataManager {
             bos.close();
             surveyData.setSymbolStyle(bytes);
         } catch (StreamCorruptedException e) {
-            Log.d("SurveyData", e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (IOException e) {
-            Log.d("SurveyData", e.getMessage());
+            Log.d(TAG, e.getMessage());
         }
         surveyData.update(surveyData.getBaseObjId());
     }
@@ -273,9 +274,9 @@ public final class SurveyDataManager {
             bos.close();
             surveyData.setAttributes(bytes);
         } catch (StreamCorruptedException e) {
-            Log.d("SurveyData", e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (IOException e) {
-            Log.d("SurveyData", e.getMessage());
+            Log.d(TAG, e.getMessage());
         }
         surveyData.update(surveyData.getBaseObjId());
     }
@@ -346,7 +347,12 @@ public final class SurveyDataManager {
                 continue;
             switch (ogrFieldType) {
                 case ogr.OFTString:
-                    oFeature.SetField(fieldName, value.toString());
+                    try {
+                        String strFieldValue = value.toString();
+                        oFeature.SetField(fieldName, new String(strFieldValue.getBytes("UTF-8"), "GB2312"));
+                    }catch (UnsupportedEncodingException e){
+                        Log.d(TAG,e.getMessage());
+                    }
                     break;
                 case ogr.OFTInteger:
                     try {
@@ -419,9 +425,9 @@ public final class SurveyDataManager {
         //导出shp文件名称
         String strVectorFile = base.getAbsolutePath() + "/" + SurveyData.GeoTypeStrings[geoType] + ".shp";
         // 为了支持中文路径，请添加下面这句代码
-        gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+        gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "YES");
         // 为了使属性表字段支持中文，请添加下面这句
-        gdal.SetConfigOption("SHAPE_ENCODING", "");
+        gdal.SetConfigOption("SHAPE_ENCODING", "CP936");
         //创建数据，这里以创建ESRI的shp文件为例
         String strDriverName = "ESRI Shapefile";
         org.gdal.ogr.Driver oDriver = ogr.GetDriverByName(strDriverName);

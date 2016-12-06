@@ -34,8 +34,6 @@ import com.example.administrator.mapdev.tools.DrawTool;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements
         FileBrowserFragment.OnFragmentInteractionListener,
@@ -193,10 +191,7 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case R.id.layer_manager:
                     //openLayersFragment();
-                    if (mLayerManager.hasMapScene())
-                        openLayers2Fragment();
-                    else
-                        MapApplication.showMessage("必须打开地图或创建地图才能使用图层管理");
+                    openLayers2Fragment();
                     break;
                 case R.id.survey_data:
                     //采集数据
@@ -266,14 +261,7 @@ public class MainActivity extends AppCompatActivity implements
                         MapApplication.showMessage("必须创建地图或打开地图才能使用GPS路径查看功能");
                     break;
                 case R.id.map_view_setting:
-                    //MeasuringTool measuringTool = new MeasuringTool(mMapView);
-                    //startActionMode(measuringTool);
-                    //MeasuringAction measuringAction = new MeasuringAction(mMapView);
-                    //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                    //toolbar.startActionMode(measuringTool);
-                    //startSupportActionMode(measuringAction);
-                    //GeometryEditorAction action = new GeometryEditorAction();
-                    //startSupportActionMode(action);
+                    openMapSettingFragment();
                     break;
                 case R.id.help_about:
                     showAboutDialog();
@@ -322,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    //两秒内按返回键两次退出程序
+    //两秒内按返回键两次退出程序`
     private long exitTime = 0;
 
     @Override
@@ -365,61 +353,6 @@ public class MainActivity extends AppCompatActivity implements
         return mCurrentPath;
     }
 
-    static final Set<Integer> toolGroupIds = new HashSet() {
-        {
-            add(R.id.survey_data_tool_group);
-            add(R.id.survey_edit_tool_group);
-            add(R.id.photo_tool_group);
-            add(R.id.gps_track_tool_group);
-            add(R.id.survey_draw_tool_group);
-        }
-    };
-    int currentToolGroupId = -1;
-
-    public boolean isCurrentToolGroupVisible() {
-        return currentToolGroupId != -1;
-    }
-
-    public interface OnCurrentToolGroupChangedListener {
-        void onChanged(int oldToolGroupId, int newToolGroupId);
-    }
-
-    OnCurrentToolGroupChangedListener onCurrentToolGroupChanged = null;
-
-    public void setOnCurrentToolGroupChanged(OnCurrentToolGroupChangedListener onCurrentToolGroupChanged) {
-        this.onCurrentToolGroupChanged = onCurrentToolGroupChanged;
-    }
-
-    /**
-     * 切换工具条
-     *
-     * @param toolGroupId
-     */
-    public void setCurrentToolGroup(int toolGroupId) {
-        if (toolGroupIds.contains(toolGroupId)) {
-            int oldToolGroupId = currentToolGroupId;
-            currentToolGroupId = toolGroupId;
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            for (int groupId : toolGroupIds) {
-                toolbar.getMenu().setGroupVisible(groupId, false);
-            }
-            toolbar.getMenu().setGroupVisible(currentToolGroupId, true);
-            if (onCurrentToolGroupChanged != null) {
-                onCurrentToolGroupChanged.onChanged(oldToolGroupId, currentToolGroupId);
-            }
-        } else {
-            int oldToolGroupId = currentToolGroupId;
-            currentToolGroupId = -1;
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            for (int groupId : toolGroupIds) {
-                toolbar.getMenu().setGroupVisible(groupId, false);
-            }
-            if (onCurrentToolGroupChanged != null) {
-                onCurrentToolGroupChanged.onChanged(oldToolGroupId, currentToolGroupId);
-            }
-        }
-    }
-
     private void openLayersFragment() {
         LayersFragment layersFragment = LayersFragment.newInstance(mLayerManager, "", "");
         getSupportFragmentManager().beginTransaction()
@@ -428,6 +361,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void openLayers2Fragment() {
+        if (!mLayerManager.hasMapScene()) {
+            MapApplication.showMessage("必须打开地图或创建地图才能使用图层管理");
+            return ;
+        }
         Layers2Fragment layers2Fragment = Layers2Fragment.newInstance(this.mLayerManager);
         getSupportFragmentManager().beginTransaction()
                 .add(android.R.id.content, layers2Fragment).addToBackStack(null)
@@ -450,13 +387,21 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void openCreateSceneFragment() {
-        SceneFragment sceneFragment = SceneFragment.newInstance();
+        if(!MapApplication.instance().isLicenseVaild()) {
+            MapApplication.showMessage("License已经到期，其使用正式版本");
+            return;
+        }
+        MapSceneFragment mapSceneFragment = MapSceneFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content, sceneFragment).addToBackStack(null)
+                .add(android.R.id.content, mapSceneFragment).addToBackStack(null)
                 .commit();
     }
 
     private void openRecentSceneFragment() {
+        if(!MapApplication.instance().isLicenseVaild()) {
+            MapApplication.showMessage("License已经到期，其使用正式版本");
+            return;
+        }
         RecentSceneFragment recentSceneFragment = new RecentSceneFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(android.R.id.content, recentSceneFragment).addToBackStack(null)
@@ -470,6 +415,18 @@ public class MainActivity extends AppCompatActivity implements
             surveyDataExport.exportSurveyData();
         }else
             MapApplication.showMessage("必须创建地图或打开地图才能进行采集数据导出");
+    }
+
+    private void openMapSettingFragment(){
+        if (!mLayerManager.hasMapScene()) {
+            MapApplication.showMessage("必须创建地图或打开地图");
+            return ;
+        }
+        //地图设置窗口
+        MapSettingFragment mapSettingFragment = MapSettingFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                .add(android.R.id.content, mapSettingFragment).addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -505,7 +462,7 @@ public class MainActivity extends AppCompatActivity implements
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setIcon(R.mipmap.ic_launcher);
         builder.setTitle("版权信息 1.1.26");
-        builder.setMessage("江西省国土资源勘测规划院版权所有\n北京立智创新科技有限公司技术支持\n");
+        builder.setMessage("江西省国土资源勘测规划院版权所有\n试用版本有效期至2017.01.05\n");
         builder.setPositiveButton("确定", null);
         builder.show();
     }

@@ -51,7 +51,7 @@ public class Layers2Fragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_layers2, container, false);
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.scene_toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

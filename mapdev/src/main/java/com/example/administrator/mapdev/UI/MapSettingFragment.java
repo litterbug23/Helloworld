@@ -1,110 +1,199 @@
 package com.example.administrator.mapdev.UI;
 
-import android.app.Activity;
-import android.net.Uri;
+import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.azeesoft.lib.colorpicker.ColorPickerDialog;
+import com.esri.android.map.MapView;
+import com.esri.android.map.event.OnLongPressListener;
+import com.esri.android.map.event.OnSingleTapListener;
+import com.esri.core.geometry.Point;
+import com.example.administrator.mapdev.LayersManager;
+import com.example.administrator.mapdev.MapApplication;
+import com.example.administrator.mapdev.MapScene;
 import com.example.administrator.mapdev.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MapSettingFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MapSettingFragment#newInstance} factory method to
- * create an instance of this fragment.
+
  */
 public class MapSettingFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
+    private MapScene mapScene;
+    private MapView mapView;
+    private LayersManager layersManager;
     /**
      * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment MapSettingFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MapSettingFragment newInstance(String param1, String param2) {
+    public static MapSettingFragment newInstance() {
         MapSettingFragment fragment = new MapSettingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     public MapSettingFragment() {
         // Required empty public constructor
+        layersManager = MapApplication.instance().getLayersManager();
+        mapScene = layersManager.getCurrentScene();
+        mapView = layersManager.getMapView();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map_setting, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        View view = inflater.inflate(R.layout.fragment_map_setting, container, false);
+        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.recent_scene_toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onButtonPressed();
+            }
+        });
+        EditText txtLongitude = (EditText) view.findViewById(R.id.txt_longitude);
+        EditText txtLatitude = (EditText) view.findViewById(R.id.txt_latitude);
+        txtLongitude.setText(String.valueOf(mapScene.getCalibrationLong()));
+        txtLatitude.setText(String.valueOf(mapScene.getCalibrationLat()));
+        Button btnCalibration = (Button) view.findViewById(R.id.btn_touch_map);
+        btnCalibration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //如果GPS没有获得定位信息
+                if( !mapView.getLocationDisplayManager().isStarted() ){
+                    MapApplication.showMessage("GPS没有获得定位信息");
+                    return ;
+                }
+                hideFragment();
+                MapApplication.showMessage("长按地图获得校正点坐标");
+                doCaptureByMapTouch();
+            }
+        });
+        final Button btnColorPick = (Button) view.findViewById(R.id.btn_color_pick);
+        btnColorPick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ColorPickerDialog colorPickerDialog = ColorPickerDialog.createColorPickerDialog(MapSettingFragment.this.getContext());
+                colorPickerDialog.setOnColorPickedListener(
+                        new ColorPickerDialog.OnColorPickedListener() {
+                            @Override
+                            public void onColorPicked(int color, String hexVal) {
+                                btnColorPick.setTextColor(color);
+                            }
+                        }
+                );
+                colorPickerDialog.show();
+            }
+        });
+        EditText txtWktString = (EditText) view.findViewById(R.id.txt_wktString);
+        txtWktString.setText(mapScene.getWktExt());
+        return view;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    private void onButtonPressed() {
+        View view = getView();
+        EditText txtLongitude = (EditText) view.findViewById(R.id.txt_longitude);
+        EditText txtLatitude = (EditText) view.findViewById(R.id.txt_latitude);
+        //保存信息
+        try {
+            double longitude = Double.valueOf(txtLongitude.getText().toString());
+            mapScene.setCalibrationLong(longitude);
+        } catch (NumberFormatException e) {
+            Log.d("MapSetting", e.getMessage());
+        }
+        try {
+            double latitude = Double.valueOf(txtLatitude.getText().toString());
+            mapScene.setCalibrationLat(latitude);
+        } catch (NumberFormatException e) {
+            Log.d("MapSetting", e.getMessage());
+        }
+        int id = mapScene.getId();
+        mapScene.update(id);
+        //弹出窗口
+        getFragmentManager().popBackStack();
+    }
+
+    private void updateCalibration(double longitude,double latitude){
+        View view = getView();
+        EditText txtLongitude = (EditText) view.findViewById(R.id.txt_longitude);
+        EditText txtLatitude = (EditText) view.findViewById(R.id.txt_latitude);
+        txtLatitude.setText( String.valueOf(latitude) );
+        txtLongitude.setText(String.valueOf(longitude));
+        mapScene.setCalibrationLong(longitude);
+        mapScene.setCalibrationLat(latitude);
+        int id = mapScene.getId();
+        mapScene.update(id);
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * 恢复显示窗口
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    private void showFragment(){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.show(this);
+        transaction.commit();
+    }
+
+    /**
+     * 暂时隐藏窗口
+     */
+    private void hideFragment(){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.hide(this);
+        transaction.commit();
+    }
+
+    /**
+     * 手动地图上取点
+     */
+    private void doCaptureByMapTouch() {
+        final OnLongPressListener longPressListener = mapView.getOnLongPressListener();
+        mapView.setOnLongPressListener(new OnLongPressListener() {
+            @Override
+            public boolean onLongPress(float v, float v1) {
+                Location location = mapView.getLocationDisplayManager().getLocation();
+                if (location == null) {
+                    return false;
+                }
+                Point gpsPoint = layersManager.wgs84ToMapProject(location);
+                Point point = mapView.toMapPoint(v, v1);
+                Point offset = new Point();
+                offset.setX(point.getX() - gpsPoint.getX());
+                offset.setY(point.getY() - gpsPoint.getY());
+                updateCalibration(offset.getX(),offset.getY());
+                showFragment();
+                mapView.setOnLongPressListener(longPressListener);
+                return true;
+            }
+        });
     }
 
 }

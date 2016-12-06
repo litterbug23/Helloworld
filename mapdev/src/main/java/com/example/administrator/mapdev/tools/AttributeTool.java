@@ -48,7 +48,7 @@ public class AttributeTool extends BaseTool {
 
     class SingleTapListener extends MapOnTouchListener {
         private static final long serialVersionUID = 1L;
-        AttributeListAdapter listAdapter;
+        AttributeListAdapterEx listAdapter;
 
         public SingleTapListener(Context context, MapView mapView) {
             super(context, mapView);
@@ -80,7 +80,7 @@ public class AttributeTool extends BaseTool {
                         continue;
                     if (layer instanceof FeatureLayer) {
                         FeatureLayer featureLayer = (FeatureLayer) layer;
-                        listAdapter = new AttributeListAdapter(mapView.getContext(), featureLayer, "");
+                        listAdapter = new AttributeListAdapterEx(mapView.getContext(), featureLayer, "");
 //                        featureLayer.selectFeatures(queryParameters, FeatureLayer.SelectionMode.NEW, new CallbackListener<FeatureResult>() {
 //                            @Override
 //                            public void onCallback(FeatureResult objects) {
@@ -148,9 +148,9 @@ public class AttributeTool extends BaseTool {
     }
 
     class PopupDialogEx extends Dialog {
-        private AttributeListAdapter listAdapter;
+        private AttributeListAdapterEx listAdapter;
 
-        public PopupDialogEx(Context context, AttributeListAdapter listAdapter) {
+        public PopupDialogEx(Context context, AttributeListAdapterEx listAdapter) {
             super(context, R.style.AppDialogTheme);
             this.listAdapter = listAdapter;
         }

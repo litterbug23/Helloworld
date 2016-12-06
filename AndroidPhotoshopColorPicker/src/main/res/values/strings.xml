@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">颜色选择</string>
+    <string name="action_settings">设置</string>
+    <string name="select">选择</string>
+    <string name="close">关闭</string>
+    <string name="pick">拾取</string>
+    <string name="cancel">取消</string>
+    <string name="done">确定</string>
+</resources>

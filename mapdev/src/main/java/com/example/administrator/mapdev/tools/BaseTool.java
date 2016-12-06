@@ -19,6 +19,7 @@ public abstract class BaseTool {
         //super(MapApplication.getContext(), layersManager.getMapView());
         this.layersManager = layersManager;
         this.mapView = layersManager.getMapView();
+        this.defaultTouchListener=layersManager.getDefaultTouchListener();
     }
 
     public boolean isActive() {

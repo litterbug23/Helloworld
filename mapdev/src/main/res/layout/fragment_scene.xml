@@ -15,7 +15,7 @@
         android:background="@color/back_color"
         android:orientation="vertical"
         android:textColor="#000000"
-        tools:context="com.example.administrator.mapdev.UI.SceneFragment"
+        tools:context="com.example.administrator.mapdev.UI.MapSceneFragment"
         >
 
         <android.support.v7.widget.Toolbar

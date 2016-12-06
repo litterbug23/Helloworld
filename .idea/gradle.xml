@@ -10,6 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/AndroidPhotoshopColorPicker" />
             <option value="$PROJECT_DIR$/mapdev" />
             <option value="$PROJECT_DIR$/sensortest" />
           </set>

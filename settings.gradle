@@ -1,1 +1,1 @@
-include ':mapdev', ':sensortest'
+include ':mapdev', ':sensortest', ':AndroidPhotoshopColorPicker'

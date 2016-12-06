@@ -49,7 +49,7 @@ public class GpsRouteExportFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_route_export, container, false);
 		final Toolbar toolbar = (Toolbar) view.findViewById(R.id.route_toolbar2);
-		toolbar.setNavigationIcon(R.drawable.ic_action_back);
+		toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
 		mListView = (ListView) view.findViewById(R.id.routeListView2);
 		DataAdapter adapter = new DataAdapter();
 		mListView.setAdapter(adapter);

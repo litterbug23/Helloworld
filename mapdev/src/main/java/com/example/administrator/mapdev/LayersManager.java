@@ -11,6 +11,7 @@ import com.esri.android.map.FeatureLayer;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.GroupLayer;
 import com.esri.android.map.Layer;
+import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
 import com.esri.android.map.RasterLayer;
 import com.esri.android.map.event.OnStatusChangedListener;
@@ -60,12 +61,10 @@ public class LayersManager extends MapSceneManager {
     private MapView mapView;
     private Context context;
     private double screenWidthMeter;
+    private MapOnTouchListener defaultTouchListener;
     private List<LayerItemData> layerItems = new ArrayList<>();
     private SQLiteDatabase db = Connector.getDatabase();
     private OnStatusChangedListener onStatusChangedListener = null;
-    //private FeatureLayer surveyLayer;   //存储实地采集照片的信息(点图层）
-    //private FeatureLayer userPolylineLayer; //存储用户绘制的点信息
-    //private FeatureLayer userPolygonLayer;  //存储用户绘制的面信息
     private GraphicsLayer drawerLayer;              //活动图层（所有临时绘制都在活动图层）
     private GraphicsLayer userDrawerLayer;          //用户绘制图层需要序列化保存
     private PhotoSurveyLayer photoSurveyLayer;         //存储实地采集照片的信息(点图层）
@@ -110,6 +109,18 @@ public class LayersManager extends MapSceneManager {
      */
     public GraphicsLayer getUserDrawerLayer() {
         return userDrawerLayer;
+    }
+
+    public GroupLayer getRasterGroupLayer() {
+        return rasterGroupLayer;
+    }
+
+    public GroupLayer getVectorGroupLayer() {
+        return vectorGroupLayer;
+    }
+
+    public GroupLayer getDynamicGroupLayer() {
+        return dynamicGroupLayer;
     }
 
     /**
@@ -157,6 +168,12 @@ public class LayersManager extends MapSceneManager {
         String dataCache = db.getPath();
         Log.d("LayerManager", dataCache);
         //Toast.makeText(context,dataCache,Toast.LENGTH_LONG).show();
+        defaultTouchListener = new MapOnTouchListener(this.mapView.getContext(),
+                this.mapView);
+    }
+
+    public MapOnTouchListener getDefaultTouchListener(){
+        return defaultTouchListener;
     }
 
     @Override

@@ -9,23 +9,31 @@
         android:icon="@drawable/ic_add_label"
         android:orderInCategory="30"
         android:title="@string/add_label"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:showAsAction="always|withText"
+        tools:ignore="AppCompatResource"/>
     <item
         android:id="@+id/add_polyline"
         android:icon="@drawable/ic_add_polyline"
         android:orderInCategory="31"
         android:title="@string/add_polyline"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:showAsAction="always|withText"
+        tools:ignore="AppCompatResource"/>
     <item
         android:id="@+id/add_polygon"
         android:icon="@drawable/ic_add_polygon"
         android:orderInCategory="32"
         android:title="@string/add_polygon"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:showAsAction="always|withText"
+        tools:ignore="AppCompatResource"/>
     <item
         android:id="@+id/free_hand"
         android:icon="@drawable/ic_gesture_24dp"
         android:orderInCategory="33"
         android:title="@string/free_hand"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:showAsAction="always|withText"
+        tools:ignore="AppCompatResource"/>
 </menu>

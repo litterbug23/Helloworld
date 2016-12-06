@@ -9,14 +9,18 @@
         android:icon="@drawable/ic_border_color_24dp"
         android:orderInCategory="10"
         android:title="@string/geometry_editor"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:showAsAction="always|withText"
+        tools:ignore="AppCompatResource"/>
     <item
         android:id="@+id/attribute_editor"
         android:checked="true"
         android:icon="@drawable/ic_assignment_24dp"
         android:orderInCategory="11"
         android:title="@string/attribute_editor"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:showAsAction="always|withText"
+        tools:ignore="AppCompatResource"/>
     <item
         android:id="@+id/undo_editor"
         android:checked="true"
@@ -41,5 +45,7 @@
         android:icon="@drawable/ic_clear_24dp"
         android:orderInCategory="14"
         android:title="@string/geometry_delete"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:showAsAction="always|withText"
+        tools:ignore="AppCompatResource"/>
 </menu>
