@@ -1,7 +1,11 @@
 package com.example.administrator.mapdev.tools;
 
+import android.graphics.Color;
+
 import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
+import com.esri.core.symbol.SimpleLineSymbol;
+import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.example.administrator.mapdev.LayersManager;
 
 /**

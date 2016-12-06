@@ -29,7 +29,7 @@ import java.util.List;
 public class SurveyDataCaptureTool {
     //GPS取点,手动取点,编辑撤销，结束保存
     private SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.DIAMOND);
-    private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(Color.rgb(220,68,17), 3);
+    private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(Color.YELLOW, 3);
     private SimpleFillSymbol fillSymbol = new SimpleFillSymbol(Color.argb(172, 61, 237, 16));
     private LocationDisplayManager locationDisplayManager;
     private LayersManager layersManager;
@@ -40,8 +40,8 @@ public class SurveyDataCaptureTool {
     private MultiPoint multiPoint = null;
     private Graphic pointsGraphic = null;
     private GraphicsLayer graphicsLayer;
-    private int pointsGID=0;
-    private int polylineGID=0;
+    private int pointsGID = 0;
+    private int polylineGID = 0;
 
 
     public SurveyDataCaptureTool() {
@@ -58,15 +58,15 @@ public class SurveyDataCaptureTool {
         polylineGraphic = new Graphic(polyline, lineSymbol);
         pointsGraphic = new Graphic(multiPoint, markerSymbol);
         graphicsLayer = layersManager.getDrawerLayer();
-        if(polylineGID!=0)
+        if (polylineGID != 0)
             graphicsLayer.removeGraphic(polylineGID);
         polylineGID = graphicsLayer.addGraphic(polylineGraphic);
-        if(pointsGID!=0)
+        if (pointsGID != 0)
             graphicsLayer.removeGraphic(pointsGID);
         pointsGID = graphicsLayer.addGraphic(pointsGraphic);
     }
 
-    public void unInitSurveyDataCaptureTool(){
+    public void unInitSurveyDataCaptureTool() {
         clear();
     }
 
@@ -74,7 +74,7 @@ public class SurveyDataCaptureTool {
         //return gpsLocationService.getCurrentBestLocation();
         Location location = locationDisplayManager.getLocation();
         if (location == null) {
-            if(!locationDisplayManager.isStarted())
+            if (!locationDisplayManager.isStarted())
                 locationDisplayManager.start();
         }
         return location;
@@ -137,6 +137,11 @@ public class SurveyDataCaptureTool {
             return;
         }
         Point point = layersManager.wgs84ToMapProject(location);
+        //校正位置坐标
+        double x = point.getX() + layersManager.getCurrentScene().getCalibrationLong();
+        double y = point.getY() + layersManager.getCurrentScene().getCalibrationLat();
+        point.setX(x);
+        point.setY(y);
         addPoint(point);
     }
 
@@ -173,7 +178,7 @@ public class SurveyDataCaptureTool {
                 polygon.lineTo(undoHistories.get(i));
             }
             polygon.lineTo(undoHistories.get(0));
-            Graphic graphic = new Graphic(polygon, fillSymbol);
+            Graphic graphic = new Graphic(polygon, surveyDataLayer.getFillSymbol());
             surveyDataLayer.addGraphic(graphic);
         } else {
             SurveyDataLayer surveyDataLayer = layersManager.getSurveyPolylineLayer();
@@ -182,7 +187,7 @@ public class SurveyDataCaptureTool {
             for (int i = 1; i < undoHistories.size(); i++) {
                 polyline.lineTo(undoHistories.get(i));
             }
-            SimpleLineSymbol _lineSymbol = new SimpleLineSymbol(Color.argb(255, 27, 188, 95), 3);
+            SimpleLineSymbol _lineSymbol = surveyDataLayer.getLineSymbol();
             Graphic graphic = new Graphic(polyline, _lineSymbol);
             surveyDataLayer.addGraphic(graphic);
         }
