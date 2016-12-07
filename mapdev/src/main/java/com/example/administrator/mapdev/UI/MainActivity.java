@@ -190,16 +190,10 @@ public class MainActivity extends AppCompatActivity implements
                     openRecentSceneFragment();
                     break;
                 case R.id.import_raster:
-                    if (mLayerManager.hasMapScene())
-                        openFileBrowser(RASTER_DATA_TYPE);
-                    else
-                        MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
+                    openFileBrowser(RASTER_DATA_TYPE);
                     break;
                 case R.id.import_vector:
-                    if (mLayerManager.hasMapScene())
-                        openFileBrowser(SHP_DATA_TYPE);
-                    else
-                        MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
+                    openFileBrowser(SHP_DATA_TYPE);
                     break;
                 case R.id.layer_manager:
                     //openLayersFragment();
@@ -248,6 +242,9 @@ public class MainActivity extends AppCompatActivity implements
                     if (mMapFragment != null) {
                         mMapFragment.asyncLoadPhotoSurveyData();
                     }
+                    break;
+                case R.id.photo_survey_export:
+                    exportPhotoSurveyData();
                     break;
                 case R.id.gps_track:
                     //gps轨迹跟踪绘制
@@ -367,6 +364,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void openFileBrowser(int dataType) {
+        if (!mLayerManager.hasMapScene()) {
+            MapApplication.showMessage("必须创建地图或打开地图才能导入图层");
+            return ;
+        }
         String suffix = ".tiff;.tif;.img;";
         if (dataType == 1)
             suffix = ".shp;";
@@ -415,7 +416,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void openCreateSceneFragment() {
         if(!MapApplication.instance().isLicenseVaild()) {
-            MapApplication.showMessage("License已经到期，其使用正式版本");
+            MapApplication.showMessage("License已经到期，请使用正式版本");
             return;
         }
         MapSceneFragment mapSceneFragment = MapSceneFragment.newInstance();
@@ -426,7 +427,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void openRecentSceneFragment() {
         if(!MapApplication.instance().isLicenseVaild()) {
-            MapApplication.showMessage("License已经到期，其使用正式版本");
+            MapApplication.showMessage("License已经到期，请使用正式版本");
             return;
         }
         RecentSceneFragment recentSceneFragment = new RecentSceneFragment();
@@ -440,6 +441,16 @@ public class MainActivity extends AppCompatActivity implements
         if (mLayerManager.hasMapScene()) {
             SurveyDataExport surveyDataExport = new SurveyDataExport(this);
             surveyDataExport.exportSurveyData();
+        }else
+            MapApplication.showMessage("必须创建地图或打开地图才能进行采集数据导出");
+    }
+
+    private void exportPhotoSurveyData() {
+        //导出采集照片信息数据
+        if (mLayerManager.hasMapScene()) {
+            if( mLayerManager.getPhotoSurveyManager().exportPhotoSurveyData() ){
+                MapApplication.showMessage("采集照片数导出成功");
+            }
         }else
             MapApplication.showMessage("必须创建地图或打开地图才能进行采集数据导出");
     }

@@ -10,7 +10,7 @@ import java.util.Date;
 public class PhotoSurvey extends DataSupport {
 
 	private String photoImage;
-	private long date;
+	private Date date;
 	private double longitude;
 	private double latitude;
 	private double altitude;
@@ -33,16 +33,12 @@ public class PhotoSurvey extends DataSupport {
 	 *
 	 * @return
 	 */
-	public long getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(long date) {
-		this.date = date;
-	}
-
 	public void setDate(Date date) {
-		this.date = date.getTime();
+		this.date = date;
 	}
 
 	public double getLongitude() {

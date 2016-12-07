@@ -50,7 +50,10 @@ import java.util.Map;
  */
 public final class SurveyDataManager {
 
-    static String TAG="SurveyDataManager";
+    public static String TAG="SurveyDataManager";
+    private Map<Long, SurveyData> surveyDataMap = new LinkedHashMap<>();
+    private Map<String, Integer> surveyFields = new LinkedHashMap<>();
+
     //esri属性字段与ogr属性字段类型转换
     public static SparseIntArray esriFieldToOgrFieldType = new SparseIntArray() {{
         put(Field.esriFieldTypeInteger, ogr.OFTInteger);
@@ -61,9 +64,6 @@ public final class SurveyDataManager {
         put(Field.esriFieldTypeString, ogr.OFTString);
         put(Field.esriFieldTypeBlob, ogr.OFTBinary);
     }};
-
-    private Map<Long, SurveyData> surveyDataMap = new LinkedHashMap<>();
-    private Map<String, Integer> surveyFields = new LinkedHashMap<>();
 
     public SurveyDataManager() {
         initAttributeFields();

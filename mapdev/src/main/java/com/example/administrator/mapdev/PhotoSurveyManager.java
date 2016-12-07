@@ -16,16 +16,28 @@ import android.location.Location;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.esri.android.map.GraphicsLayer;
+import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
+import com.esri.core.map.Field;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.PictureMarkerSymbol;
+import com.example.administrator.mapdev.tools.GeometryUtils;
 
+import org.gdal.gdal.gdal;
+import org.gdal.ogr.DataSource;
+import org.gdal.ogr.Feature;
+import org.gdal.ogr.FeatureDefn;
+import org.gdal.ogr.FieldDefn;
+import org.gdal.ogr.Layer;
+import org.gdal.ogr.ogr;
+import org.gdal.osr.SpatialReference;
 import org.litepal.LitePalApplication;
 import org.litepal.crud.DataSupport;
 
@@ -33,6 +45,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,22 +61,59 @@ import java.util.Map;
  */
 public class PhotoSurveyManager {
 
+    public static String TAG = "PhotoSurveyManager";
     private GraphicsLayer userDrawerLayer;
     private LayersManager layersManager;
     private Context context = LitePalApplication.getContext();
     private GpsLocationService gpsLocationService;
     private SensorService sensorService;
     private Map<Long, PhotoSurvey> photoSurveyMap = new HashMap<>();
+    protected List<Field> fields;
 
     //private List<PhotoSurvey> photoSurveyList=null;
     public PhotoSurveyManager(LayersManager layersManager, GpsLocationService gpsLocationService, SensorService sensorService) {
         initPhotoSurveyDrawer(layersManager, gpsLocationService, sensorService);
+        initFields();
     }
 
-    public void initPhotoSurveyDrawer(LayersManager layersManager, GpsLocationService gpsLocationService, SensorService sensorService) {
+    protected void initPhotoSurveyDrawer(LayersManager layersManager, GpsLocationService gpsLocationService, SensorService sensorService) {
         this.layersManager = layersManager;
         this.gpsLocationService = gpsLocationService;
         this.sensorService = sensorService;
+    }
+
+    /**
+     * 初始化字段信息（照片的字段信息）
+     */
+    protected void initFields() {
+        //TODO: 暂时固定属性字段
+        fields = new ArrayList<>();
+        //photoImage;azimuth;altitude;date;staff; comment;
+        try {
+            Field field = new Field("photoImage", "照片名称", Field.toEsriFieldType(Field.esriFieldTypeString));
+            fields.add(field);
+            field = new Field("azimuth", "方位角", Field.toEsriFieldType(Field.esriFieldTypeSingle));
+            fields.add(field);
+            field = new Field("altitude", "高程", Field.toEsriFieldType(Field.esriFieldTypeSingle));
+            fields.add(field);
+            field = new Field("date", "采集日期", Field.toEsriFieldType(Field.esriFieldTypeDate));
+            fields.add(field);
+            field = new Field("staff", "采集人员", Field.toEsriFieldType(Field.esriFieldTypeString));
+            fields.add(field);
+            field = new Field("comment", "描述信息", Field.toEsriFieldType(Field.esriFieldTypeString));
+            fields.add(field);
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
+    }
+
+    /**
+     * 获得采集字段（属性编辑等需要使用）
+     *
+     * @return
+     */
+    public List<Field> getFields() {
+        return fields;
     }
 
     public Location getLocation() {
@@ -99,11 +152,12 @@ public class PhotoSurveyManager {
 
     /**
      * 采集照片数据，并将相关数据写入数据库中
+     *
      * @param imagePath
      * @param location
      * @param comment
      */
-    public void takePhotoAction(String imagePath,Location location,String comment) {
+    public void takePhotoAction(String imagePath, Location location, String comment) {
         MapScene mapScene = getCurrentScene();
         if (mapScene == null) {
             MapApplication.showMessage("当前没有打开地图，不能进行照片采集");
@@ -119,7 +173,7 @@ public class PhotoSurveyManager {
         photoSurvey.setPhotoImage(imagePath);
         photoSurvey.setStaff(mapScene.getUserName());
         Date now = new Date();
-        photoSurvey.setDate(now.getTime());
+        photoSurvey.setDate(now);
         photoSurvey.setMapScene(mapScene);
         //保存数据到数据库
         photoSurvey.save();
@@ -135,14 +189,149 @@ public class PhotoSurveyManager {
             Toast.makeText(context, "未获得GPS或者网络定位信号", Toast.LENGTH_SHORT).show();
             return;
         }
-        takePhotoAction(imagePath,location,comment);
+        takePhotoAction(imagePath, location, comment);
+    }
+
+    public static String getEncoding(String str) {
+        String encode = "GB2312";
+        try {
+            if (str.equals(new String(str.getBytes(encode), encode))) {
+                String s = encode;
+                return s;
+            }
+        } catch (Exception exception) {
+        }
+        encode = "ISO-8859-1";
+        try {
+
+            if (str.equals(new String(str.getBytes(encode), encode))) {
+                String s1 = encode;
+                return s1;
+            }
+        } catch (Exception exception1) {
+        }
+        encode = "UTF-8";
+        try {
+            if (str.equals(new String(str.getBytes(encode), encode))) {
+                String s2 = encode;
+                return s2;
+            }
+        } catch (Exception exception2) {
+        }
+        encode = "GBK";
+        try {
+            if (str.equals(new String(str.getBytes(encode), encode))) {
+                String s3 = encode;
+                return s3;
+            }
+        } catch (Exception exception3) {
+        }
+        return "";
+    }
+
+    /**
+     * 将采集点照片数据转换为OGR格式数据
+     *
+     * @param photoSurvey 照片数据
+     * @param oFeature    填充Feature
+     * @return 是否填充Feature成功
+     */
+    public boolean photoSurveyToOGRFeature(PhotoSurvey photoSurvey, Feature oFeature) {
+        //转换属性信息
+        String photoPath=photoSurvey.getPhotoImage();
+        String encoding = getEncoding(photoPath);
+        try {
+            photoPath = new String(photoPath.getBytes(encoding), "UTF-8");
+        }catch (UnsupportedEncodingException e) {
+            Log.d(TAG,e.getMessage());
+        }
+        oFeature.SetField("photoImage", photoPath);
+        oFeature.SetField("azimuth", photoSurvey.getAzimuth());
+        oFeature.SetField("staff", photoSurvey.getStaff());
+        oFeature.SetField("comment", photoSurvey.getComment());
+        Date date = photoSurvey.getDate();
+        oFeature.SetField("date", date.getYear(), date.getMonth(), date.getDay(),
+                date.getHours(), date.getMinutes(), date.getSeconds(), 8);
+        //转换图形信息
+        Point geometry = new Point(photoSurvey.getLongitude(), photoSurvey.getLatitude());
+        geometry = layersManager.wgs84ToMapProject(geometry);
+        String wkt = GeometryUtils.GeometryToWKT(geometry);
+        org.gdal.ogr.Geometry geom = org.gdal.ogr.Geometry.CreateFromWkt(wkt);
+        if (geom == null)
+            return false;
+        oFeature.SetGeometry(geom);
+        return true;
     }
 
     /**
      * 导出照片采集数据到指定目录
      */
-    public void exportPhotoSurveyData() {
-
+    public boolean exportPhotoSurveyData() {
+        MapScene mapScene = getCurrentScene();
+        int sceneId = mapScene.getId();
+        List<PhotoSurvey> dbPhotoSurveyList = DataSupport.where("mapScene_id = ?", String.valueOf(sceneId)).
+                find(PhotoSurvey.class);
+        if (dbPhotoSurveyList == null)
+            return false;
+        //获得投影坐标系
+        com.esri.core.geometry.SpatialReference spatialRef = layersManager.getMapView().getSpatialReference();
+        if (spatialRef == null)
+            return false;
+        //导出数据根目录
+        String outputPath = MapApplication.instance().getOutputPath();
+        String sceneName = mapScene.getSceneName();
+        File base = new File(outputPath + "/" + sceneName);
+        if (!base.exists())
+            base.mkdir();
+        //导出shp文件名称
+        String strVectorFile = base.getAbsolutePath() + "/采集照片.shp";
+        // 为了支持中文路径，请添加下面这句代码
+        gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+        // 为了使属性表字段支持中文，请添加下面这句
+        gdal.SetConfigOption("SHAPE_ENCODING", "UTF-8");
+        //创建数据，这里以创建ESRI的shp文件为例
+        String strDriverName = "ESRI Shapefile";
+        org.gdal.ogr.Driver oDriver = ogr.GetDriverByName(strDriverName);
+        if (oDriver == null) {
+            Log.d(TAG, strVectorFile + " 驱动不可用！\n");
+            return false;
+        }
+        //如果存在该数据，则删除数据
+        DataSource oDS = oDriver.Open(strVectorFile);
+        if (oDS != null) {
+            oDriver.DeleteDataSource(strVectorFile);
+        }
+        // 创建数据源
+        oDS = oDriver.CreateDataSource(strVectorFile, null);
+        if (oDS == null) {
+            Log.d(TAG, "创建矢量文件【" + strVectorFile + "】失败！\n");
+            return false;
+        }
+        String wkt = spatialRef.getText();
+        // 创建图层，创建一个多边形图层，这里没有指定空间参考，如果需要的话，需要在这里进行指定
+        SpatialReference sr = new SpatialReference(wkt); //osr.SRS_WKT_WGS84
+        Layer oLayer = oDS.CreateLayer("PhotoSurvey", sr, 1, null); //1 表示点图层
+        if (oLayer == null) {
+            Log.d(TAG, "图层创建失败！\n");
+            return false;
+        }
+        // 下面创建属性表
+        for (Field field : fields) {
+            int ogrFieldType = SurveyDataManager.esriFieldToOgrFieldType.get(field.getFieldType());
+            String fieldName = field.getName();
+            FieldDefn oField = new FieldDefn(fieldName, ogrFieldType);
+            oLayer.CreateField(oField, 1);
+        }
+        //下面填充图形数据和属性值
+        FeatureDefn oDefn = oLayer.GetLayerDefn();
+        for (PhotoSurvey photoSurvey : dbPhotoSurveyList) {
+            Feature oFeature = new Feature(oDefn);
+            if (photoSurveyToOGRFeature(photoSurvey, oFeature)) {
+                oLayer.CreateFeature(oFeature);
+            }
+        }
+        oDS.SyncToDisk();
+        return true;
     }
 
     private MapScene getCurrentScene() {
