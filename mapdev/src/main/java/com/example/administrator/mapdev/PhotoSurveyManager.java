@@ -138,6 +138,13 @@ public class PhotoSurveyManager {
         takePhotoAction(imagePath,location,comment);
     }
 
+    /**
+     * 导出照片采集数据到指定目录
+     */
+    public void exportPhotoSurveyData() {
+
+    }
+
     private MapScene getCurrentScene() {
         MapScene mapScene = MapApplication.instance().getLayersManager().getCurrentScene();
         return mapScene;
@@ -157,7 +164,7 @@ public class PhotoSurveyManager {
         String thumbnailPath = getThumbnailPath(imagePath);
         Bitmap smallBitmap = loadThumbnail(imagePath, thumbnailPath);
         Resources resources = context.getResources();
-        Drawable drawable = null;
+        Drawable drawable;
         if (smallBitmap != null) {
             //处理图片为空的情况
             drawable = new BitmapDrawable(MapApplication.getContext().getResources(), smallBitmap);

@@ -16,7 +16,7 @@ public class PhotoSurvey extends DataSupport {
 	private double altitude;
 	private double azimuth;
 	private String staff;
-	private String comment;
+	private String comment;		//照片描述（备注信息信息）
 	private MapScene mapScene;	//照片采集也与地图关联，采集后的照片将按照地图进行组织
 
 	public MapScene getMapScene() {

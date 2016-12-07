@@ -81,6 +81,7 @@ public final class SurveyDataManager {
      * 初始化字段类型表（暂时使用固定类型的字段)
      */
     private void initAttributeFields() {
+        //TODO 暂时使用固定类型的字段，将来需要调整为可扩展字段
         surveyFields.put("XZQDM", Field.esriFieldTypeInteger);
         surveyFields.put("XMC", Field.esriFieldTypeString);
         surveyFields.put("JCBH", Field.esriFieldTypeInteger);
@@ -429,7 +430,7 @@ public final class SurveyDataManager {
         // 为了支持中文路径，请添加下面这句代码
         gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "YES");
         // 为了使属性表字段支持中文，请添加下面这句
-        gdal.SetConfigOption("SHAPE_ENCODING", "CP936");
+        gdal.SetConfigOption("SHAPE_ENCODING", "");
         //创建数据，这里以创建ESRI的shp文件为例
         String strDriverName = "ESRI Shapefile";
         org.gdal.ogr.Driver oDriver = ogr.GetDriverByName(strDriverName);

@@ -82,6 +82,7 @@ public class GeometryEditorTool extends BaseTool {
         Geometry geometry = feature.getGeometry();
 
     }
+
     /**
      * 编辑操作：
      * 1、长按顶点，选中顶点，缺省开始顶点编辑

@@ -13,7 +13,6 @@ import com.esri.core.symbol.SimpleFillSymbol;
 import com.esri.core.symbol.SimpleLineSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
-import com.example.administrator.mapdev.tools.FeatureLayerUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -31,17 +30,19 @@ public class SurveyDataLayer extends GraphicsLayer {
         POLYLINE(2),
         POLYGON(3);
         private int a;
+
         public int value() {
             return this.a;
         }
+
         GeoType(int val) {
             this.a = val;
         }
     }
 
-    private SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.DIAMOND);
-    private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(Color.rgb(11,216,19), 3);
-    private SimpleFillSymbol fillSymbol = new SimpleFillSymbol(Color.argb(172, 61, 237, 16));
+    private SimpleMarkerSymbol markerSymbol;
+    private SimpleLineSymbol lineSymbol;
+    private SimpleFillSymbol fillSymbol;
 
     private SurveyDataManager surveyDataManager;
     private Map<Integer, Long> graphics = new LinkedHashMap<>();
@@ -50,26 +51,27 @@ public class SurveyDataLayer extends GraphicsLayer {
 
     public SurveyDataLayer() {
         super();
-        fillSymbol.setOutline(new SimpleLineSymbol(Color.argb(255, 73, 137, 243), 2));
+        initDefaultSymbol();
     }
 
     public SurveyDataLayer(RenderingMode mode) {
         super(mode);
+        initDefaultSymbol();
     }
 
     public SurveyDataLayer(MarkerRotationMode rotationMode) {
         super(rotationMode);
-        fillSymbol.setOutline(new SimpleLineSymbol(Color.argb(255, 73, 137, 243), 2));
+        initDefaultSymbol();
     }
 
     public SurveyDataLayer(SpatialReference sr, Envelope fullextent) {
         super(sr, fullextent);
-        fillSymbol.setOutline(new SimpleLineSymbol(Color.argb(255, 73, 137, 243), 2));
+        initDefaultSymbol();
     }
 
     public SurveyDataLayer(SpatialReference sr, Envelope fullextent, RenderingMode mode) {
         super(sr, fullextent, mode);
-        fillSymbol.setOutline(new SimpleLineSymbol(Color.argb(255, 73, 137, 243), 2));
+        initDefaultSymbol();
     }
 
     public SimpleMarkerSymbol getMarkerSymbol() {
@@ -96,29 +98,30 @@ public class SurveyDataLayer extends GraphicsLayer {
         this.fillSymbol = fillSymbol;
     }
 
-    protected void setDefaultSymbol(Graphic graphic){
-        //样式不能为空样式
-        if(graphic.getSymbol() == null ){
-            switch (geoType){
-                case POINT:
-                    super.updateGraphic(graphic.getUid(),markerSymbol);
-                    break;
-                case POLYGON:
-                    super.updateGraphic(graphic.getUid(),fillSymbol);
-                    break;
-                case POLYLINE:
-                    super.updateGraphic(graphic.getUid(),lineSymbol);
-                    break;
-            }
+    /**
+     * 获得缺省样式
+     *
+     * @return
+     */
+    public Symbol getDefaultSymbol() {
+        switch (getGeoType()) {
+            case POINT:
+                return markerSymbol;
+            case POLYGON:
+                return fillSymbol;
+            case POLYLINE:
+                return lineSymbol;
+            default:
+                return markerSymbol;
         }
     }
 
     @Override
     public int addGraphic(Graphic graphic) {
-        if(graphic==null)
+        if (graphic == null)
             return -1;
         int id = super.addGraphic(graphic);
-        setDefaultSymbol(graphic);
+        //添加数据，同时将新添加的数据写入到数据库中
         SurveyData data = SurveyDataManager.toSurveyData(graphic);
         surveyDataManager.saveSurveyData(data);
         return id;
@@ -127,9 +130,9 @@ public class SurveyDataLayer extends GraphicsLayer {
     @Override
     public int[] addGraphics(Graphic[] graphics) {
         int[] ids = super.addGraphics(graphics);
-        for(int id : ids ) {
+        //添加数据，同时将新添加的数据写入到数据库中
+        for (int id : ids) {
             Graphic graphic = graphics[id];
-            setDefaultSymbol(graphic);
             SurveyData data = SurveyDataManager.toSurveyData(graphic);
             surveyDataManager.saveSurveyData(data);
         }
@@ -143,7 +146,10 @@ public class SurveyDataLayer extends GraphicsLayer {
 
     @Override
     public void updateGraphic(int id, Graphic graphic) {
+        if (id == -1 || graphic == null)
+            return;
         super.updateGraphic(id, graphic);
+        //更新数据，同时更新数据写入到数据库中
         SurveyData surveyData = getSurveyData(id);
         long dbIdx = surveyData.getBaseObjId();
         SurveyData newData = SurveyDataManager.toSurveyData(graphic);
@@ -153,7 +159,7 @@ public class SurveyDataLayer extends GraphicsLayer {
     @Override
     public void updateGraphics(int[] ids, Graphic[] graphics) {
         super.updateGraphics(ids, graphics);
-        for(int id : ids ) {
+        for (int id : ids) {
             SurveyData surveyData = getSurveyData(id);
             long dbIdx = surveyData.getBaseObjId();
             SurveyData newData = SurveyDataManager.toSurveyData(graphics[id]);
@@ -193,7 +199,7 @@ public class SurveyDataLayer extends GraphicsLayer {
     @Override
     public void updateGraphics(int[] ids, int drawOrder) {
         super.updateGraphics(ids, drawOrder);
-        for(int id : ids ) {
+        for (int id : ids) {
             SurveyData surveyData = getSurveyData(id);
             surveyData.setDrawOrder(drawOrder);
             surveyData.update(surveyData.getBaseObjId());
@@ -210,7 +216,7 @@ public class SurveyDataLayer extends GraphicsLayer {
     @Override
     public void removeGraphics(int[] ids) {
         super.removeGraphics(ids);
-        for(int id : ids ) {
+        for (int id : ids) {
             SurveyData surveyData = getSurveyData(id);
             surveyDataManager.deleteSurveyData(surveyData);
         }
@@ -233,9 +239,19 @@ public class SurveyDataLayer extends GraphicsLayer {
         initFields();
     }
 
-    protected void initFields(){
+    /**
+     * 初始化样式
+     */
+    protected void initDefaultSymbol() {
+        markerSymbol = new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.DIAMOND);
+        lineSymbol = new SimpleLineSymbol(Color.rgb(11, 216, 19), 3);
+        fillSymbol = new SimpleFillSymbol(Color.argb(172, 61, 237, 16));
+        fillSymbol.setOutline(new SimpleLineSymbol(Color.argb(255, 73, 137, 243), 2));
+    }
+
+    protected void initFields() {
         //TODO: 暂时固定属性字段
-        Map<String, Integer> surveyFields=surveyDataManager.getSurveyFields();
+        Map<String, Integer> surveyFields = getSurveyDataManager().getSurveyFields();
         fields = new ArrayList<>(surveyFields.size());
         for (Map.Entry<String, Integer> entry : surveyFields.entrySet()) {
             int fieldTypeInteger = entry.getValue();
@@ -244,17 +260,18 @@ public class SurveyDataLayer extends GraphicsLayer {
             try {
                 Field field = new Field(fieldName, fieldName, fieldType);
                 fields.add(field);
-            }catch (Exception e){
-                Log.d("SurveyData",e.getMessage());
+            } catch (Exception e) {
+                Log.d("SurveyData", e.getMessage());
             }
         }
     }
 
     /**
      * 获得属性字段定义信息
+     *
      * @return
      */
-    public List<Field> getFields(){
+    public List<Field> getFields() {
         return fields;
     }
 
@@ -263,11 +280,12 @@ public class SurveyDataLayer extends GraphicsLayer {
      */
     public void loadSurveyDataSet() {
         //只返回数据集合中没有的数据
-        List<SurveyData> surveyDatas = surveyDataManager.loadSurveyDataSet(geoType.value());
-        if (surveyDatas == null)
+        List<SurveyData> surveyDataList = getSurveyDataManager().loadSurveyDataSet(geoType.value());
+        if (surveyDataList == null)
             return;
-        for (SurveyData data : surveyDatas) {
+        for (SurveyData data : surveyDataList) {
             Graphic graphic = SurveyDataManager.fromSurveyData(data);
+            //第一次加载采集数据时，使用基类方式加载数据
             int id = super.addGraphic(graphic);
             data.setGraphic(graphic);
             graphics.put(id, data.getBaseObjId());

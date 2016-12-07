@@ -178,7 +178,7 @@ public class SurveyDataCaptureTool {
                 polygon.lineTo(undoHistories.get(i));
             }
             polygon.lineTo(undoHistories.get(0));
-            Graphic graphic = new Graphic(polygon, surveyDataLayer.getFillSymbol());
+            Graphic graphic = new Graphic(polygon, surveyDataLayer.getDefaultSymbol());
             surveyDataLayer.addGraphic(graphic);
         } else {
             SurveyDataLayer surveyDataLayer = layersManager.getSurveyPolylineLayer();
@@ -187,8 +187,7 @@ public class SurveyDataCaptureTool {
             for (int i = 1; i < undoHistories.size(); i++) {
                 polyline.lineTo(undoHistories.get(i));
             }
-            SimpleLineSymbol _lineSymbol = surveyDataLayer.getLineSymbol();
-            Graphic graphic = new Graphic(polyline, _lineSymbol);
+            Graphic graphic = new Graphic(polyline, surveyDataLayer.getDefaultSymbol());
             surveyDataLayer.addGraphic(graphic);
         }
         clear();
