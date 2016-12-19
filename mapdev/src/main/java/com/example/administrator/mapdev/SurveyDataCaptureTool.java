@@ -42,12 +42,15 @@ public class SurveyDataCaptureTool {
     private GraphicsLayer graphicsLayer;
     private int pointsGID = 0;
     private int polylineGID = 0;
-
+    MapView mapView;
+    OnSingleTapListener defaultListener;
 
     public SurveyDataCaptureTool() {
         fillSymbol.setOutline(new SimpleLineSymbol(Color.argb(255, 73, 137, 243), 2));
         layersManager = MapApplication.instance().getLayersManager();
         locationDisplayManager = layersManager.getMapView().getLocationDisplayManager();
+        mapView = layersManager.getMapView();
+        defaultListener = mapView.getOnSingleTapListener();
     }
 
     public void initSurveyDataCaptureTool() {
@@ -68,6 +71,7 @@ public class SurveyDataCaptureTool {
 
     public void unInitSurveyDataCaptureTool() {
         clear();
+        mapView.setOnSingleTapListener(defaultListener);
     }
 
     private Location getLocation() {
@@ -149,8 +153,6 @@ public class SurveyDataCaptureTool {
      * 手动地图上取点
      */
     public void doCaptureByMapTouch() {
-        final MapView mapView = layersManager.getMapView();
-        final OnSingleTapListener defaultListener = mapView.getOnSingleTapListener();
         mapView.setOnSingleTapListener(new OnSingleTapListener() {
             @Override
             public void onSingleTap(float v, float v1) {

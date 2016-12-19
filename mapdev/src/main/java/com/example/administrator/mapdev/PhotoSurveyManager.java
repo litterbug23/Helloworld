@@ -13,6 +13,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
@@ -22,7 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.esri.android.map.GraphicsLayer;
-import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.map.Field;
@@ -46,8 +46,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -150,6 +148,43 @@ public class PhotoSurveyManager {
         return sensorService.getLastKnowCameraAzimuth();
     }
 
+    private String gpsInfoConvert(double gpsInfo) {
+        gpsInfo = Math.abs(gpsInfo);
+        String dms = Location.convert(gpsInfo, Location.FORMAT_SECONDS);
+        String[] splits = dms.split(":");
+        String[] seconds = (splits[2]).split("\\.");
+        String second;
+        if (seconds.length == 0) {
+            second = splits[2];
+        } else {
+            second = seconds[0];
+        }
+        return splits[0] + "/1," + splits[1] + "/1," + second + "/1";
+    }
+
+    public void writePositionExif(String imagePath, Location location) {
+        try {
+            ExifInterface exif = new ExifInterface(imagePath);
+            // 经度
+            String strLongitude = gpsInfoConvert(location.getLongitude());
+            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, strLongitude);
+            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF,
+                    location.getLongitude() > 0.0f ? "E" : "W");
+            // 纬度
+            String strLatitude = gpsInfoConvert(location.getLatitude());
+            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, strLatitude);
+            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE_REF,
+                    location.getLatitude() > 0.0f ? "N" : "S");
+            //方位
+            String strOrientation = String.valueOf(getCameraAzimuth());
+            exif.setAttribute(ExifInterface.TAG_ORIENTATION, strOrientation);
+            exif.saveAttributes();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 采集照片数据，并将相关数据写入数据库中
      *
@@ -163,6 +198,7 @@ public class PhotoSurveyManager {
             MapApplication.showMessage("当前没有打开地图，不能进行照片采集");
             return;
         }
+        writePositionExif(imagePath, location);
         double azimuth = getCameraAzimuth();
         PhotoSurvey photoSurvey = new PhotoSurvey();
         photoSurvey.setLongitude(location.getLongitude());
@@ -193,38 +229,38 @@ public class PhotoSurveyManager {
     }
 
     public static String getEncoding(String str) {
-        String encode = "GB2312";
-        try {
-            if (str.equals(new String(str.getBytes(encode), encode))) {
-                String s = encode;
-                return s;
-            }
-        } catch (Exception exception) {
-        }
-        encode = "ISO-8859-1";
-        try {
-
-            if (str.equals(new String(str.getBytes(encode), encode))) {
-                String s1 = encode;
-                return s1;
-            }
-        } catch (Exception exception1) {
-        }
+        String encode;
         encode = "UTF-8";
         try {
-            if (str.equals(new String(str.getBytes(encode), encode))) {
+            if (str.equals(new String(str.getBytes(), encode))) {
                 String s2 = encode;
                 return s2;
             }
         } catch (Exception exception2) {
         }
+        encode = "GB2312";
+        try {
+            if (str.equals(new String(str.getBytes(), encode))) {
+                String s = encode;
+                return s;
+            }
+        } catch (Exception exception) {
+        }
         encode = "GBK";
         try {
-            if (str.equals(new String(str.getBytes(encode), encode))) {
+            if (str.equals(new String(str.getBytes(), encode))) {
                 String s3 = encode;
                 return s3;
             }
         } catch (Exception exception3) {
+        }
+        encode = "ISO-8859-1";
+        try {
+            if (str.equals(new String(str.getBytes(), encode))) {
+                String s1 = encode;
+                return s1;
+            }
+        } catch (Exception exception1) {
         }
         return "";
     }
@@ -239,13 +275,15 @@ public class PhotoSurveyManager {
     public boolean photoSurveyToOGRFeature(PhotoSurvey photoSurvey, Feature oFeature) {
         //转换属性信息
         String photoPath=photoSurvey.getPhotoImage();
-        String encoding = getEncoding(photoPath);
-        try {
-            photoPath = new String(photoPath.getBytes(encoding), "UTF-8");
-        }catch (UnsupportedEncodingException e) {
-            Log.d(TAG,e.getMessage());
-        }
-        oFeature.SetField("photoImage", photoPath);
+        File file = new File(photoPath);
+        String fileName = file.getName();
+//        try {
+//            String encoding=getEncoding(photoPath);
+//            photoPath = new String(photoPath.getBytes(encoding), "GB2312");
+//        }catch (UnsupportedEncodingException e) {
+//            Log.d(TAG,e.getMessage());
+//        }
+        oFeature.SetField("photoImage", fileName);
         oFeature.SetField("azimuth", photoSurvey.getAzimuth());
         oFeature.SetField("staff", photoSurvey.getStaff());
         oFeature.SetField("comment", photoSurvey.getComment());
@@ -286,9 +324,9 @@ public class PhotoSurveyManager {
         //导出shp文件名称
         String strVectorFile = base.getAbsolutePath() + "/采集照片.shp";
         // 为了支持中文路径，请添加下面这句代码
-        gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+        gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "YES");
         // 为了使属性表字段支持中文，请添加下面这句
-        gdal.SetConfigOption("SHAPE_ENCODING", "UTF-8");
+        gdal.SetConfigOption("SHAPE_ENCODING", "GB2312");
         //创建数据，这里以创建ESRI的shp文件为例
         String strDriverName = "ESRI Shapefile";
         org.gdal.ogr.Driver oDriver = ogr.GetDriverByName(strDriverName);

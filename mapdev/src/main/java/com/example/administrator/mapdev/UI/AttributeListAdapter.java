@@ -69,11 +69,11 @@ public class AttributeListAdapter extends BaseAdapter {
             AttributeItem attributeItem = new AttributeItem();
             attributeItem.setField(field);
             Object value = attributes.get(field.getName()); //TODO: 确认是用Name还是Alias
-            //if(fieldType == FeatureLayerUtils.FieldType.STRING){
-            //    attributeItem.setValue(decodeUTF8(value));
-            //}else
-            //    attributeItem.setValue(value);
-            attributeItem.setValue(value);
+            if(fieldType == FeatureLayerUtils.FieldType.STRING){
+                attributeItem.setValue(decodeUTF8(value));
+            }else
+                attributeItem.setValue(value);
+            //attributeItem.setValue(value);
             items.add(attributeItem);
         }
     }
@@ -134,6 +134,13 @@ public class AttributeListAdapter extends BaseAdapter {
         return container;
     }
 
+    String getDisplayFieldName(Field field) {
+        if(field.getAlias() != null && field.getAlias().length()>0 ) {
+            return field.getAlias();
+        }
+      return field.getName();
+    }
+
     /**
      * Helper method to create a spinner for a field and insert it into the View
      * container. This uses, the String[] to create the list, and selects the
@@ -146,7 +153,7 @@ public class AttributeListAdapter extends BaseAdapter {
                 .findViewById(R.id.field_alias_txt);
         Spinner spinner = (Spinner) container
                 .findViewById(R.id.field_value_spinner);
-        fieldAlias.setText(field.getAlias());
+        fieldAlias.setText( getDisplayFieldName(field));
         spinner.setPrompt(field.getAlias());
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
                 this.context, android.R.layout.simple_spinner_item, values);
@@ -169,7 +176,7 @@ public class AttributeListAdapter extends BaseAdapter {
                 .findViewById(R.id.field_alias_txt);
         Button dateButton = (Button) container
                 .findViewById(R.id.field_date_btn);
-        fieldAlias.setText(field.getAlias());
+        fieldAlias.setText( getDisplayFieldName(field));
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(date);
         dateButton.setText(formatter.format(c.getTime()));
@@ -189,7 +196,7 @@ public class AttributeListAdapter extends BaseAdapter {
                 .findViewById(R.id.field_alias_txt);
         EditText fieldValue = (EditText) container
                 .findViewById(R.id.field_value_txt);
-        fieldAlias.setText(field.getName());
+        fieldAlias.setText( getDisplayFieldName(field));
         // set the length of the text field and its value
         if (field.getLength() > 0) {
             InputFilter.LengthFilter filter = new InputFilter.LengthFilter(
@@ -315,9 +322,8 @@ public class AttributeListAdapter extends BaseAdapter {
             return null;
         if (value instanceof String) {
             String valueString = (String) value;
-            String encoding = getEncoding(valueString);
             try {
-                String encodeString = new String(valueString.getBytes(encoding), "UTF-8");
+                String encodeString = new String(valueString.getBytes("GB2312"), "UTF-8");
                 return encodeString;
             } catch (UnsupportedEncodingException e) {
                 Log.d(TAG, e.getMessage());
@@ -327,38 +333,38 @@ public class AttributeListAdapter extends BaseAdapter {
     }
 
     public static String getEncoding(String str) {
-        String encode = "GB2312";
-        try {
-            if (str.equals(new String(str.getBytes(encode), encode))) {
-                String s = encode;
-                return s;
-            }
-        } catch (Exception exception) {
-        }
-        encode = "ISO-8859-1";
-        try {
-
-            if (str.equals(new String(str.getBytes(encode), encode))) {
-                String s1 = encode;
-                return s1;
-            }
-        } catch (Exception exception1) {
-        }
+        String encode;
         encode = "UTF-8";
         try {
-            if (str.equals(new String(str.getBytes(encode), encode))) {
+            if (str.equals(new String(str.getBytes(), encode))) {
                 String s2 = encode;
                 return s2;
             }
         } catch (Exception exception2) {
         }
+        encode = "GB2312";
+        try {
+            if (str.equals(new String(str.getBytes(), encode))) {
+                String s = encode;
+                return s;
+            }
+        } catch (Exception exception) {
+        }
         encode = "GBK";
         try {
-            if (str.equals(new String(str.getBytes(encode), encode))) {
+            if (str.equals(new String(str.getBytes(), encode))) {
                 String s3 = encode;
                 return s3;
             }
         } catch (Exception exception3) {
+        }
+        encode = "ISO-8859-1";
+        try {
+            if (str.equals(new String(str.getBytes(), encode))) {
+                String s1 = encode;
+                return s1;
+            }
+        } catch (Exception exception1) {
         }
         return "";
     }
