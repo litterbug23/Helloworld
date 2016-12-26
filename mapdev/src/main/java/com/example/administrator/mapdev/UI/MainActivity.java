@@ -135,6 +135,9 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.reset_tool:
                 mMapFragment.resetTool();
                 break;
+            case R.id.map_view_setting:
+                openMapSettingFragment();
+                break;
             case R.id.map_exit:
                 break;
         }
@@ -499,7 +502,7 @@ public class MainActivity extends AppCompatActivity implements
     public void showAboutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
         builder.setIcon(R.mipmap.ic_launcher);
-        builder.setTitle("版权信息 1.1.26");
+        builder.setTitle("版权信息 1.1.28");
         builder.setMessage("江西省国土资源勘测规划院版权所有\n试用版本有效期至2017.01.05\n");
         builder.setPositiveButton("确定", null);
         builder.show();

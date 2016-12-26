@@ -66,6 +66,7 @@ public class LayersManager extends MapSceneManager {
     private List<LayerItemData> layerItems = new ArrayList<>();
     private SQLiteDatabase db = Connector.getDatabase();
     private OnStatusChangedListener onStatusChangedListener = null;
+    private GraphicsLayer locaionDrawerLayer;           //暂时gps绘制图层
     private GraphicsLayer drawerLayer;              //活动图层（所有临时绘制都在活动图层）
     private GraphicsLayer userDrawerLayer;          //用户绘制图层需要序列化保存
     private PhotoSurveyLayer photoSurveyLayer;         //存储实地采集照片的信息(点图层）
@@ -101,6 +102,11 @@ public class LayersManager extends MapSceneManager {
      */
     public PhotoSurveyManager getPhotoSurveyManager() {
         return photoSurveyManager;
+    }
+
+
+    public GraphicsLayer getLocaionDrawerLayer() {
+        return locaionDrawerLayer;
     }
 
     /**
@@ -354,6 +360,10 @@ public class LayersManager extends MapSceneManager {
         }
 
         SpatialReference mapSpatialRef = mapView.getSpatialReference();
+        locaionDrawerLayer= new GraphicsLayer(mapSpatialRef, mapView.getMaxExtent());
+        locaionDrawerLayer.setMinScale(mapView.getMinScale());
+        locaionDrawerLayer.setMaxScale(0);
+        mapView.addLayer(locaionDrawerLayer);
         userDrawerLayer = new GraphicsLayer(mapSpatialRef, mapView.getMaxExtent());
         userDrawerLayer.setMinScale(mapView.getMinScale());
         userDrawerLayer.setMaxScale(0);
@@ -902,9 +912,10 @@ public class LayersManager extends MapSceneManager {
         point.setX(x);
         point.setY(y);
         Point wgsPoint = mapProjectToWgs84(point);
-        location.setLongitude(wgsPoint.getX());
-        location.setLatitude(wgsPoint.getY());
-        return location;
+        Location newLocation= new Location(location);
+        newLocation.setLongitude(wgsPoint.getX());
+        newLocation.setLatitude(wgsPoint.getY());
+        return newLocation;
     }
 
     /**
