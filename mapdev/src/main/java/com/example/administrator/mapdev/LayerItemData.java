@@ -10,6 +10,24 @@ import org.litepal.crud.DataSupport;
  */
 public class LayerItemData extends DataSupport {
 
+//	public static enum GeometryType {
+//		UNKNOWN(0),
+//		POINT(1),
+//		POLYLINE(2),
+//		POLYGON(3),
+//		RASTER(4),
+//		GRAPHIC(5);
+//		private int a;
+//
+//		public int value() {
+//			return this.a;
+//		}
+//
+//		private GeometryType(int val) {
+//			this.a = val;
+//		}
+//	}
+
 	public static int UNKNOWN = 0;
 	public static int POINT = 1;
 	public static int POLYLINE = 2;
@@ -49,10 +67,6 @@ public class LayerItemData extends DataSupport {
 	private int orderId; 	//图层在地图中的叠加次序
 
 	private boolean visible=true;
-
-	private String layerSymbol;		//图层样式
-
-	private String labelFieldName;	//图层标注字段名称
 
 	private MapScene mapScene;
 
@@ -131,20 +145,4 @@ public class LayerItemData extends DataSupport {
 	}
 
 	public boolean isVisible() { return visible;}
-
-	public String getLayerSymbol() {
-		return layerSymbol;
-	}
-
-	public void setLayerSymbol(String layerSymbol) {
-		this.layerSymbol = layerSymbol;
-	}
-
-	public String getLabelFieldName() {
-		return labelFieldName;
-	}
-
-	public void setLabelFieldName(String labelFieldName) {
-		this.labelFieldName = labelFieldName;
-	}
 }
