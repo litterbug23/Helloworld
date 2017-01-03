@@ -2,7 +2,9 @@ package com.example.administrator.mapdev.UI;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,11 +71,11 @@ public class AttributeListAdapter extends BaseAdapter {
             AttributeItem attributeItem = new AttributeItem();
             attributeItem.setField(field);
             Object value = attributes.get(field.getName()); //TODO: 确认是用Name还是Alias
-            if(fieldType == FeatureLayerUtils.FieldType.STRING){
-                attributeItem.setValue(decodeUTF8(value));
-            }else
-                attributeItem.setValue(value);
-            //attributeItem.setValue(value);
+//            if(fieldType == FeatureLayerUtils.FieldType.STRING){
+//                attributeItem.setValue(decodeUTF8(value));
+//            }else
+//                attributeItem.setValue(value);
+            attributeItem.setValue(value);
             items.add(attributeItem);
         }
     }
@@ -100,37 +102,43 @@ public class AttributeListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View container = null;
-        View valueView = null;
-        AttributeItem item = (AttributeItem) getItem(position);
-        //判断字段类型 NUMBER, STRING, DECIMAL, DATE
-        FeatureLayerUtils.FieldType fieldType = FeatureLayerUtils.FieldType.determineFieldType(item.getField());
-        switch (fieldType) {
-            case STRING:
-                container = inflater.inflate(R.layout.item_text, null);
-                valueView = createAttributeRow(container, item.getField(),
-                        item.getValue());
-                item.setView(valueView);
-                break;
-            case NUMBER:
-                container = inflater.inflate(R.layout.item_number, null);
-                valueView = createAttributeRow(container, item.getField(),
-                        item.getValue());
-                item.setView(valueView);
-                break;
-            case DECIMAL:
-                container = inflater.inflate(R.layout.item_decimal, null);
-                valueView = createAttributeRow(container, item.getField(),
-                        item.getValue());
-                item.setView(valueView);
-                break;
-            case DATE:
-                container = inflater.inflate(R.layout.item_date, null);
-                long date = Long.parseLong(item.getValue().toString());
-                Button dateButton = createDateButtonFromLongValue(container,
-                        item.getField(), date);
-                item.setView(dateButton);
-                break;
+        if(convertView == null) {
+            View valueView;
+            AttributeItem item = (AttributeItem) getItem(position);
+            //判断字段类型 NUMBER, STRING, DECIMAL, DATE
+            FeatureLayerUtils.FieldType fieldType = FeatureLayerUtils.FieldType.determineFieldType(item.getField());
+            switch (fieldType) {
+                case STRING:
+                    container = inflater.inflate(R.layout.item_text, null);
+                    valueView = createAttributeRow(container, item.getField(),
+                            item.getValue());
+                    item.setView(valueView);
+                    break;
+                case NUMBER:
+                    container = inflater.inflate(R.layout.item_number, null);
+                    valueView = createAttributeRow(container, item.getField(),
+                            item.getValue());
+                    item.setView(valueView);
+                    break;
+                case DECIMAL:
+                    container = inflater.inflate(R.layout.item_decimal, null);
+                    valueView = createAttributeRow(container, item.getField(),
+                            item.getValue());
+                    item.setView(valueView);
+                    break;
+                case DATE:
+                    container = inflater.inflate(R.layout.item_date, null);
+                    long date = Long.parseLong(item.getValue().toString());
+                    Button dateButton = createDateButtonFromLongValue(container,
+                            item.getField(), date);
+                    item.setView(dateButton);
+                    break;
+            }
+            convertView = container;
+        } else {
+            container = convertView;
         }
+
         return container;
     }
 
@@ -317,6 +325,7 @@ public class AttributeListAdapter extends BaseAdapter {
         return attributes;
     }
 
+
     private Object decodeUTF8(Object value) {
         if (value == null)
             return null;
@@ -388,4 +397,38 @@ public class AttributeListAdapter extends BaseAdapter {
         }
     }
 
+    class ViewHolder {
+        TextView mTextView;
+        EditText mEditText;
+        MyTextWatcher mTextWatcher;
+
+        //动态更新TextWathcer的position
+        public void updatePosition(int position) {
+            mTextWatcher.updatePosition(position);
+        }
+    }
+
+    class MyTextWatcher implements TextWatcher {
+        //由于TextWatcher的afterTextChanged中拿不到对应的position值，所以自己创建一个子类
+        private int mPosition;
+
+        public void updatePosition(int position) {
+            mPosition = position;
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            items.get(mPosition).setValue(s.toString());
+        }
+    }
 }

@@ -15,7 +15,6 @@ import com.esri.android.map.LocationDisplayManager;
 import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
 import com.esri.android.map.RasterLayer;
-import com.esri.android.map.ags.ArcGISLocalTiledLayer;
 import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.android.map.ogc.kml.KmlLayer;
 import com.esri.core.geodatabase.Geodatabase;
@@ -67,6 +66,7 @@ public class LayersManager extends MapSceneManager {
     private List<LayerItemData> layerItems = new ArrayList<>();
     private SQLiteDatabase db = Connector.getDatabase();
     private OnStatusChangedListener onStatusChangedListener = null;
+    private GraphicsLayer locaionDrawerLayer;           //暂时gps绘制图层
     private GraphicsLayer drawerLayer;              //活动图层（所有临时绘制都在活动图层）
     private GraphicsLayer userDrawerLayer;          //用户绘制图层需要序列化保存
     private PhotoSurveyLayer photoSurveyLayer;         //存储实地采集照片的信息(点图层）
@@ -102,6 +102,11 @@ public class LayersManager extends MapSceneManager {
      */
     public PhotoSurveyManager getPhotoSurveyManager() {
         return photoSurveyManager;
+    }
+
+
+    public GraphicsLayer getLocaionDrawerLayer() {
+        return locaionDrawerLayer;
     }
 
     /**
@@ -355,6 +360,10 @@ public class LayersManager extends MapSceneManager {
         }
 
         SpatialReference mapSpatialRef = mapView.getSpatialReference();
+        locaionDrawerLayer= new GraphicsLayer(mapSpatialRef, mapView.getMaxExtent());
+        locaionDrawerLayer.setMinScale(mapView.getMinScale());
+        locaionDrawerLayer.setMaxScale(0);
+        mapView.addLayer(locaionDrawerLayer);
         userDrawerLayer = new GraphicsLayer(mapSpatialRef, mapView.getMaxExtent());
         userDrawerLayer.setMinScale(mapView.getMinScale());
         userDrawerLayer.setMaxScale(0);
@@ -584,12 +593,12 @@ public class LayersManager extends MapSceneManager {
         int oneIndex = getLayerIndex(groupLayer, oneLayer);
         int twoIndex = getLayerIndex(groupLayer, twoLayer);
         Layer[] layers = groupLayer.getLayers();
-        for(int i=0 ; i< layers.length ; i++){
+        for (int i = 0; i < layers.length; i++) {
             groupLayer.removeLayer(0);
         }
         List<Layer> layerList = Arrays.asList(layers);
         Collections.swap(layerList, oneIndex, twoIndex);
-        Layer[] newLayers =new Layer[layers.length];
+        Layer[] newLayers = new Layer[layers.length];
         layerList.toArray(newLayers);
         groupLayer.addLayers(newLayers);
 //        groupLayer.removeLayer(oneIndex);
@@ -606,9 +615,9 @@ public class LayersManager extends MapSceneManager {
         one.setOrderId(two.getOrderId());
         two.setOrderId(orderId);
 
-        if( one.getId() != 0 )
+        if (one.getId() != 0)
             one.update(one.getId());
-        if(two.getId() != 0 )
+        if (two.getId() != 0)
             two.update(two.getId());
         return true;
     }
@@ -667,7 +676,7 @@ public class LayersManager extends MapSceneManager {
      *
      * @param path
      */
-    private void loadKMLLayer(String path) {
+    private void openKMLLayer(String path) {
         KmlLayer kmlLayer = new KmlLayer(path);
         mapView.addLayer(kmlLayer);
     }
@@ -677,7 +686,7 @@ public class LayersManager extends MapSceneManager {
      *
      * @param path
      */
-    private void loadGeoDatabase(String path) {
+    private void openGeoDatabase(String path) {
         try {
             Geodatabase geodatabase = new Geodatabase(path, true);
             List<GeodatabaseFeatureTable> featureTables = geodatabase.getGeodatabaseTables();
@@ -688,19 +697,6 @@ public class LayersManager extends MapSceneManager {
         } catch (FileNotFoundException e) {
             Toast.makeText(context, "geodatabase file doesn't exist", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    /**
-     * 打开切片图层
-     * 目前当切片图层按照栅格图层处理
-     * @param path
-     * @return
-     */
-    private Layer openLocalTiledLayer(String path){
-        String urlPath = "file://"+path;
-        ArcGISLocalTiledLayer localTiledLayer = new ArcGISLocalTiledLayer(urlPath);
-        rasterGroupLayer.addLayer(localTiledLayer);
-        return localTiledLayer;
     }
 
     /**
@@ -766,18 +762,6 @@ public class LayersManager extends MapSceneManager {
     }
 
     /**
-     * 加载新的矢量图层
-     *
-     * @param path
-     * @return
-     */
-    public void loadVectorLayer(String path) {
-        Layer layer = openVectorLayer(path);
-        if (layer != null)
-            saveLayerItemData(layer, path);
-    }
-
-    /**
      * 获得矢量图层的索引值
      *
      * @param vectorLayer
@@ -801,6 +785,18 @@ public class LayersManager extends MapSceneManager {
             }
         }
         return 0;
+    }
+
+    /**
+     * 加载新的矢量图层
+     *
+     * @param path
+     * @return
+     */
+    public void loadVectorLayer(String path) {
+        Layer layer = openVectorLayer(path);
+        if (layer != null)
+            saveLayerItemData(layer, path);
     }
 
     /**
@@ -916,9 +912,10 @@ public class LayersManager extends MapSceneManager {
         point.setX(x);
         point.setY(y);
         Point wgsPoint = mapProjectToWgs84(point);
-        location.setLongitude(wgsPoint.getX());
-        location.setLatitude(wgsPoint.getY());
-        return location;
+        Location newLocation= new Location(location);
+        newLocation.setLongitude(wgsPoint.getX());
+        newLocation.setLatitude(wgsPoint.getY());
+        return newLocation;
     }
 
     /**
