@@ -15,6 +15,7 @@ import com.esri.android.map.LocationDisplayManager;
 import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
 import com.esri.android.map.RasterLayer;
+import com.esri.android.map.ags.ArcGISLocalTiledLayer;
 import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.android.map.ogc.kml.KmlLayer;
 import com.esri.core.geodatabase.Geodatabase;
@@ -479,7 +480,7 @@ public class LayersManager extends MapSceneManager {
             return ;
         if (layer instanceof FeatureLayer) {
             LayerItemData layerItem = new LayerItemData();
-            layerItem.setOrderId(getVectorLayerInex(layer));
+            layerItem.setOrderId(getVectorLayerIndex(layer));
             layerItem.setDataSource(dataSource);
             layerItem.setLayerType(LayerItemData.FEATURE_LAYER);
             layerItem.setLayer(layer);
@@ -700,6 +701,19 @@ public class LayersManager extends MapSceneManager {
     }
 
     /**
+     * 打开切片图层
+     * 目前当切片图层按照栅格图层处理
+     * @param path
+     * @return
+     */
+    private Layer openLocalTiledLayer(String path){
+        String urlPath = "file://"+path;
+        ArcGISLocalTiledLayer localTiledLayer = new ArcGISLocalTiledLayer(urlPath);
+        rasterGroupLayer.addLayer(localTiledLayer);
+        return localTiledLayer;
+    }
+
+    /**
      * 打开矢量图层
      *
      * @param path
@@ -762,32 +776,6 @@ public class LayersManager extends MapSceneManager {
     }
 
     /**
-     * 获得矢量图层的索引值
-     *
-     * @param vectorLayer
-     * @return
-     */
-    private int getVectorLayerInex(Layer vectorLayer) {
-        Layer[] layers = vectorGroupLayer.getLayers();
-        for (int i = 0; i < layers.length; i++) {
-            if (vectorLayer == layers[i]) {
-                return i;
-            }
-        }
-        return 0;
-    }
-
-    private int getRasterLayerIndex(Layer rasterlayer) {
-        Layer[] layers = rasterGroupLayer.getLayers();
-        for (int i = 0; i < layers.length; i++) {
-            if (rasterlayer == layers[i]) {
-                return i;
-            }
-        }
-        return 0;
-    }
-
-    /**
      * 加载新的矢量图层
      *
      * @param path
@@ -797,6 +785,32 @@ public class LayersManager extends MapSceneManager {
         Layer layer = openVectorLayer(path);
         if (layer != null)
             saveLayerItemData(layer, path);
+    }
+
+    /**
+     * 获得矢量图层的索引值
+     *
+     * @param vectorLayer
+     * @return
+     */
+    private int getVectorLayerIndex(Layer vectorLayer) {
+        Layer[] layers = vectorGroupLayer.getLayers();
+        for (int i = 0; i < layers.length; i++) {
+            if (vectorLayer == layers[i]) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private int getRasterLayerIndex(Layer rasterLayer) {
+        Layer[] layers = rasterGroupLayer.getLayers();
+        for (int i = 0; i < layers.length; i++) {
+            if (rasterLayer == layers[i]) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     /**
