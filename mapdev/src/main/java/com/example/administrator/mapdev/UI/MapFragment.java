@@ -2,7 +2,6 @@ package com.example.administrator.mapdev.UI;
 
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,7 +33,6 @@ import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.Graphic;
 import com.esri.core.runtime.LicenseResult;
-import com.esri.core.symbol.MarkerSymbol;
 import com.example.administrator.mapdev.Compass;
 import com.example.administrator.mapdev.GpsLocationService;
 import com.example.administrator.mapdev.GpsRouteTracker;
@@ -43,7 +41,6 @@ import com.example.administrator.mapdev.MapApplication;
 import com.example.administrator.mapdev.PhotoSurveyManager;
 import com.example.administrator.mapdev.R;
 import com.example.administrator.mapdev.SensorService;
-import com.example.administrator.mapdev.tools.AttributeEditorTool;
 import com.example.administrator.mapdev.tools.AttributeTool;
 import com.example.administrator.mapdev.tools.DrawTool;
 import com.example.administrator.mapdev.tools.MeasureTool;
@@ -76,7 +73,7 @@ public class MapFragment extends Fragment {
     private ToolsManager mToolsManager;
     private DrawTool mDrawTool;
     private MeasureTool mMeasureTool;
-    private AttributeEditorTool mAttributeTool;
+    private AttributeTool mAttributeTool;
 
     private OnLongPressListener OnLongPress = new OnLongPressListener() {
         @Override
@@ -103,21 +100,19 @@ public class MapFragment extends Fragment {
                 LocationDisplayManager locationDisplayManager = mMapView.getLocationDisplayManager();
                 locationDisplayManager.start();
                 locationDisplayManager.setAllowNetworkLocation(true);
-                //暂时关闭位置服务显示定位图标功能
-                locationDisplayManager.setShowLocation(false);
-                locationDisplayManager.setAccuracyCircleOn(false);
-                locationDisplayManager.setShowPings(false);
+                locationDisplayManager.setShowLocation(true);
+                locationDisplayManager.setAccuracyCircleOn(true);
+                locationDisplayManager.setShowPings(true);
                 locationDisplayManager.setAutoPanMode(LocationDisplayManager.AutoPanMode.LOCATION);
-                locationDisplayManager.setLocationListener(OnLocationListener);
                 //初始化
                 mGpsRouteTracker = new GpsRouteTracker(mLayersManager);
                 mToolsManager = new ToolsManager(mLayersManager);
                 mDrawTool = new DrawTool(mLayersManager);
                 mMeasureTool = new MeasureTool(mLayersManager);
-                mAttributeTool = new AttributeEditorTool(mLayersManager);
+                mAttributeTool = new AttributeTool(mLayersManager);
                 mToolsManager.registerTool(DrawTool.class, mDrawTool);
                 mToolsManager.registerTool(MeasureTool.class, mMeasureTool);
-                mToolsManager.registerTool(AttributeEditorTool.class, mAttributeTool);
+                mToolsManager.registerTool(AttributeTool.class, mAttributeTool);
 
                 mMapView.setOnSingleTapListener(new OnSingleTapListener() {
                     public void onSingleTap(float x, float y) {
@@ -181,38 +176,6 @@ public class MapFragment extends Fragment {
             }
         }
     };
-
-    private LocationListener OnLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            if(mLayersManager !=null && mLayersManager.getLocaionDrawerLayer()!=null){
-                GraphicsLayer graphicsLayer = mLayersManager.getLocaionDrawerLayer();
-                try {
-                    LocationDisplayManager locationDisplayManager = mMapView.getLocationDisplayManager();
-                    MarkerSymbol markSymbol = locationDisplayManager.getLocationAcquiringSymbol();
-                    Location correctLocation = mLayersManager.getCalibrateLocation(location);
-                    Point point = mLayersManager.wgs84ToMapProject(correctLocation);
-                    graphicsLayer.removeAll();
-                    Graphic graphic = new Graphic(point,markSymbol);
-                    graphicsLayer.addGraphic(graphic);
-                }catch (Exception e){
-                }
-            }
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-    };
-
     private OnZoomListener OnZoomChange = new OnZoomListener() {
         @Override
         public void preAction(float v, float v1, double v2) {
@@ -225,13 +188,10 @@ public class MapFragment extends Fragment {
             updateMapScaleView();
         }
     };
-
     private View.OnClickListener OnGpsClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             LocationDisplayManager locationDisplayManager = mMapView.getLocationDisplayManager();
-            locationDisplayManager.setShowLocation(false);
-            locationDisplayManager.setShowPings(false);
             Location location = locationDisplayManager.getLocation();
             if (location != null)
                 centerAt(location);
@@ -248,7 +208,6 @@ public class MapFragment extends Fragment {
 //			}
         }
     };
-
 
     private View.OnClickListener OnZoomInClick = new View.OnClickListener() {
         @Override
@@ -536,7 +495,7 @@ public class MapFragment extends Fragment {
 
     public void searchFeature() {
         if (mMapView.isLoaded()) {
-            mToolsManager.setCurrentTool(AttributeEditorTool.class);
+            mToolsManager.setCurrentTool(AttributeTool.class);
             mToolsManager.getCurrentTool().activate(AttributeTool.ATTRIBUTE_SHOW);
         } else {
             Toast.makeText(getContext(), "当前没有数据图层加载，不能进行测量", Toast.LENGTH_SHORT).show();

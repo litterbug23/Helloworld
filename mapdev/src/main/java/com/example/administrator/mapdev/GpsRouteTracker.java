@@ -64,7 +64,7 @@ public class GpsRouteTracker {
 		markerSymbol = new SimpleMarkerSymbol(Color.BLUE, 8, SimpleMarkerSymbol.STYLE.CIRCLE);
 		mapView = layersManager.getMapView();
 		locationDisplayManager = mapView.getLocationDisplayManager();
-		graphicsLayer = layersManager.getDrawerLayer();
+		graphicsLayer = layersManager.getUserDrawerLayer();
 		this.layersManager = layersManager;
 		routeNameList = loadAllRouteNames();
 		routeTrackerStates = new HashMap<>();
