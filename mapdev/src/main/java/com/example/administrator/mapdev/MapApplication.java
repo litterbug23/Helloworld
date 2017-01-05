@@ -181,7 +181,7 @@ public class MapApplication extends LitePalApplication {
 	//TODO 临时授权方案（最终方案将采用RSA加密算法进行授权）
 	public boolean isLicenseVaild(){
 		java.text.SimpleDateFormat sdf=new java.text.SimpleDateFormat("yyyyMMdd");
-		String date="20170105";
+		String date="20170205";
 		try {
 			java.util.Date dt = sdf.parse(date);
 			java.util.Date now=new java.util.Date();
