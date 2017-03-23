@@ -1,1 +1,1 @@
-include ':mapdev', ':sensortest', ':AndroidPhotoshopColorPicker'
+include ':mapdev', ':sensortest', ':AndroidPhotoshopColorPicker', ':libzxing-master'
